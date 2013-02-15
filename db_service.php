@@ -1,4 +1,6 @@
 <?php
+include_once 'logger.php';
+
 class Folder {
     public $id;
     public $name;
@@ -58,16 +60,25 @@ class Update {
     }
 }
 class DbService {
-    // Static
+    private static $log;
     private static $instance;
-    public function getInstance() {
+
+    public static function init() {
+        self::$log = LogFacility::getLogger('DbService.class');
+    }
+
+    public static function getInstance() {
         if ( self::$instance !== null ) {
+            self::$log->debug('Returning existing service instance');
             return self::$instance;
         }
+        self::$log->debug('Creating new service instance');
         self::$instance = new DbService();
         if ( self::$instance->db === null ) {
+            self::$log->debug('Error creating DB connection');
             return null;
         }
+        self::$log->debug('Service instance created');
         return self::$instance;
     }
 
@@ -77,7 +88,7 @@ class DbService {
         try {
             $this->db = new SQLite3('reader.sqlite3', SQLITE3_OPEN_READWRITE);
         } catch ( Exception $ex ) {
-            print("Can't open DB: ". $ex->getMessage() ."\n");
+            self::$log->error("Can't open DB: ". $ex->getMessage() ."\n");
         }
     }
 
@@ -155,7 +166,6 @@ class DbService {
         return $feeds;
     }
 
-    // Hashmap of updates by feed id
     public function findLatestUpdates() {
         $st = $this->db->prepare('SELECT u.id, u.updated, u.count, u.new, u.feed_id '.
            'FROM "update" u WHERE updated=(SELECT MAX(updated) FROM "update" WHERE feed_id=u.feed_id)');
@@ -166,4 +176,24 @@ class DbService {
         }
         return $updates;
     }
+
+    public function findPosts() {
+        $st = $this->db->prepare('SELECT id, title, ts, text, link, read, stared, guid, feed_id '.
+            'FROM post ORDER by ts DESC');
+        $results = $st->execute();
+        $posts = array();
+        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
+            $posts[] = new Post($row['title'], $row['ts'], $row['link'], $row['guid'], $row['text'], $row['feed_id'], $row['id']);
+        }
+        return $posts;
+    }
+
+    public function deleteReadPostBefore($date) {
+        $st = $this->db->prepare('DELETE FROM post WHERE ts <= :ts AND read = :read AND stared = :stared');
+        $st->bindValue(':ts', $date, SQLITE3_INTEGER);
+        $st->bindValue(':read', true, SQLITE3_INTEGER);
+        $st->bindValue(':stared', false, SQLITE3_INTEGER);
+        $st->execute();
+    }
 }
+DbService::init();
