@@ -2,9 +2,7 @@
 include 'db_service.php';
 include_once 'logger.php';
 
-LogFacility::addAppender(new FileLogAppender(Logger::TRACE, 'update.log'));
-LogFacility::setRootLoggerLevel(Logger::TRACE);
-LogFacility::setLoggerLevel('DbService', Logger::TRACE);
+include 'updater_config.php';
 
 $log = LogFacility::getLogger('update.php');
 $log->info('Starting RSS Update');
@@ -87,6 +85,7 @@ foreach ( $feeds as $feed ) {
         $log->trace('Not previously updated');
     }
 
+    $log->info("Updating {$feed->name}");
     $log->debug('Fetching feed...');
     $data = fetch_feed($feed->url);
 
@@ -104,7 +103,7 @@ foreach ( $feeds as $feed ) {
         }
     }
 
-    $log->debug(sprintf('Found %d posts, %d where new', $count, $new));
+    $log->info(sprintf('Found %d posts, %d where new', $count, $new));
     $service->createUpdate(new Update(time(), $count, $new, $feed->id));
 }
 

@@ -135,6 +135,9 @@ class Logger {
             LogFacility::processMessage($messageLevel, $this->label, $message);
         }
     }
+    public function setLevel($level) {
+        $this->loggerLevel = $level;
+    }
     public static function getLevelString($levelConstant) {
         switch ( $levelConstant ) {
         case self::ERROR: return 'ERROR';
