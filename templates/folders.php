@@ -8,5 +8,10 @@
     <p><img src='/static/images/php.gif'/></p>
     <h1>Reader Controller</h1>
     <h2><?php echo $date ?></h2>
+    <ul>
+    <?php foreach ( $feeds as $feed ) : ?>
+        <li><?php echo $feed->name ?></li>
+    <?php endforeach ?>
+    </ul>
 </body>
 </html>

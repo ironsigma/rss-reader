@@ -21,13 +21,30 @@ function page_error($code, $message, $url) {
 }
 
 // include path
-set_include_path(get_include_path() . PATH_SEPARATOR . APP_PATH . '/lib/php-router/');
+set_include_path(get_include_path()
+    . PATH_SEPARATOR . APP_PATH . '/model/'
+    . PATH_SEPARATOR . APP_PATH . '/lib/'
+    . PATH_SEPARATOR . APP_PATH . '/lib/logger/'
+    . PATH_SEPARATOR . APP_PATH . '/lib/php-router/'
+);
 
+function __autoload($class_name) {
+    include "$class_name.php";
+}
+
+// logging
+LogFacility::setRootLoggerLevel(Logger::TRACE);
+LogFacility::addAppender(new FileLogAppender(Logger::TRACE, APP_PATH .'/log/reader.log'));
+
+// database
+Database::setDatabase(APP_PATH .'/db/reader.sqlite3');
+
+// routing
 require 'php-router.php';
 
 $dispatcher = new Dispatcher();
 $dispatcher->setSuffix('Controller');
-$dispatcher->setClassPath(APP_PATH.'/controllers');
+$dispatcher->setClassPath(APP_PATH.'/modules');
 
 // class route
 $action_route = new Route('/:class');
