@@ -11,7 +11,7 @@ class Database {
 
     public static function getInstance() {
         if ( self::$database !== null ) {
-            self::$log->debug('Returning existing service instance');
+            self::$log->trace('Returning existing service instance');
             return self::$database;
         }
         try {
@@ -20,7 +20,7 @@ class Database {
             if ( self::$database === null ) {
                 throw new Exception('Error creating DB connection');
             }
-            self::$log->debug('Database instance created');
+            self::$log->trace('Database instance created');
         } catch ( Exception $ex ) {
             self::$log->error("Can't open DB: ". $ex->getMessage() ."\n");
         }
