@@ -10,7 +10,7 @@
     <h2><?php echo $date ?></h2>
     <ul>
     <?php foreach ( $feeds as $feed ) : ?>
-        <li><?php echo $feed->name ?></li>
+        <li><?php echo $feed->name ?> (<?php echo $feed->unread ?>)</li>
     <?php endforeach ?>
     </ul>
 </body>

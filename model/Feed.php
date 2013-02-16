@@ -6,6 +6,10 @@ class Feed {
     public $sort;
     public $update_freq;
     public $folder_id;
+
+    // transient
+    public $unread;
+
     public function __construct($name, $url, $sort, $update_freq, $folder_id=null, $id=null) {
         $this->name = $name;
         $this->url = $url;
