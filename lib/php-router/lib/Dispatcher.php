@@ -43,7 +43,7 @@ class Dispatcher
     {
         $base_class = trim($route->getMapClass());
         $method     = trim($route->getMapMethod($request_method));
-        $arguments  = $route->getMapArguments();
+        $arguments  = array_merge($_GET, $route->getMapArguments());
 
         if( '' === $base_class )
             throw new ClassNotSpecifiedException('Class Name not specified');

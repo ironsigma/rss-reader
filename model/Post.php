@@ -27,6 +27,7 @@ class Post {
             $data['link'],
             $data['guid'],
             $data['text'],
+            false, false,
             $data['feed_id']
         );
     }
