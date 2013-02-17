@@ -1,5 +1,5 @@
 <?php
-class UpdateDAO {
+class UpdateDao {
     public static function insert(Update $update) {
         $db = Database::getInstance();
         $st = $db->prepare('INSERT INTO update_log (ts, count, new, feed_id) VALUES (:ts, :count, :new, :id)');

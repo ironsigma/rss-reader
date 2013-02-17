@@ -5,12 +5,10 @@
     <meta charset="utf-8" />
 </head>
 <body>
-    <p><img src='/static/images/php.gif'/></p>
-    <h1>Reader Controller</h1>
-    <h2><?php echo $date ?></h2>
+    <h1>Reader v1.0</h1>
     <ul>
     <?php foreach ( $feeds as $feed ) : ?>
-        <li><?php echo $feed->name ?> (<?php echo $feed->unread ?>)</li>
+        <li><a href="/feed/<?php echo $feed->id ?>/articles?page=1"><?php echo $feed->name ?></a> (<?php echo $feed->unread ?>)</li>
     <?php endforeach ?>
     </ul>
 </body>

@@ -46,24 +46,24 @@ $dispatcher = new Dispatcher();
 $dispatcher->setSuffix('Controller');
 $dispatcher->setClassPath(APP_PATH.'/modules');
 
+// default
+$default_route = new Route('/');
+$default_route->setMapClass('Feed')
+    ->setMapMethod('handleRequest');
+
 // class route
 $action_route = new Route('/:class');
 $action_route->addDynamicElement(':class', ':class')
-    ->setMapMethod('handleRequest')
-    ->setMapMethod('handlePostRequest', 'POST')
-    ->setMapMethod('handlePutRequest', 'PUT')
-    ->setMapMethod('handleDeleteRequest', 'DELETE');
+    ->setMapMethod('handleRequest');
 
-// class-id route
-$action_id_route = new Route('/:class/:id');
+// class/method/id route
+$action_id_route = new Route('/:class/:id/:method');
 $action_id_route->addDynamicElement(':class', ':class')
     ->addDynamicElement(':id', ':id')
-    ->setMapMethod('handleRequest')
-    ->setMapMethod('handlePostRequest', 'POST')
-    ->setMapMethod('handlePutRequest', 'PUT')
-    ->setMapMethod('handleDeleteRequest', 'DELETE');
+    ->addDynamicElement(':method', ':method');
 
 $router = new Router();
+$router->addRoute('default', $default_route);
 $router->addRoute('action', $action_route);
 $router->addRoute('action-id', $action_id_route);
 

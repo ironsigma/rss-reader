@@ -1,5 +1,15 @@
 <?php
-class FeedDAO {
+class FeedDao {
+    public static function findById($id) {
+        $db = Database::getInstance();
+        $sql = 'SELECT id, name, url, sort_dir, update_freq, folder_id FROM feed WHERE id=:id';
+        $st = $db->prepare($sql);
+        $st->bindValue(':id', $id, SQLITE3_INTEGER);
+        $results = $st->execute();
+        $row = $results->fetchArray(SQLITE3_ASSOC);
+        return new Feed($row['name'], $row['url'], $row['sort_dir'], $row['update_freq'], $row['folder_id'], $row['id']);
+    }
+
     public static function insert($feed){
         $db = Database::getInstance();
         $st = $db->prepare('INSERT INTO feed (name, url, sort_dir, update_freq, folder_id) '.

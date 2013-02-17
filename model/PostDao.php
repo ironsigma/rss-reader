@@ -1,5 +1,39 @@
 <?php
 class PostDao {
+    public static function findAll($args) {
+        $db = Database::getInstance();
+        $st = $db->prepare('SELECT id, title, ts, text, link, read, stared, guid, feed_id '
+            .'FROM post WHERE read=:read AND feed_id=:feed_id '
+            .'ORDER BY ts '. $args['sort'] .' LIMIT :limit OFFSET :offset');
+        $st->bindValue(':read', $args['read'], SQLITE3_INTEGER);
+        $st->bindValue(':feed_id', $args['feed_id'], SQLITE3_INTEGER);
+        $st->bindValue(':limit', $args['limit'], SQLITE3_INTEGER);
+        $st->bindValue(':offset', $args['offset'], SQLITE3_INTEGER);
+        $results = $st->execute();
+        $posts = array();
+        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
+            $posts[] = new Post(
+                $row['title'],
+                $row['ts'],
+                $row['link'],
+                $row['guid'],
+                $row['text'],
+                $row['read'],
+                $row['stared'],
+                $row['feed_id'],
+                $row['id']
+            );
+        }
+        return $posts;
+    }
+    public static function countAll($args) {
+        $db = Database::getInstance();
+        $st = $db->prepare('SELECT count(*) FROM post WHERE read=:read AND feed_id=:feed_id');
+        $st->bindValue(':read', $args['read'], SQLITE3_INTEGER);
+        $st->bindValue(':feed_id', $args['feed_id'], SQLITE3_INTEGER);
+        $row = $st->execute()->fetchArray(SQLITE3_NUM);
+        return $row[0];
+    }
     public static function insert(Post $post) {
         $db = Database::getInstance();
         $st = $db->prepare('INSERT INTO post (title, ts, text, link, read, stared, guid, feed_id) '.

@@ -1,0 +1,15 @@
+.article {
+    border: 1px solid gray;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.article h1, .article h2 {
+    margin: 0;
+}
+.star {
+    float: right;
+}
+.star img {
+    width: 32px;
+    height: 32px;
+}
