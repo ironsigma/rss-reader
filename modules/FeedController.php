@@ -7,9 +7,10 @@ class FeedController {
         $template->display();
     }
     public function articles($args) {
+        $per_page = 10;
         $template = new Template('article_list.php');
 
-        $template->args = print_r($_GET, true);
+        $template->page = $args['page'];
         $template->feed = FeedDao::findById($args[':id']);
 
         $template->article_count = PostDao::countAll(array(
@@ -17,10 +18,12 @@ class FeedController {
             'read' => false,
         ));
 
+        $template->page_count = ceil($template->article_count / $per_page);
+
         $template->articles = PostDao::findAll(array(
             'feed_id' => $args[':id'],
-            'limit' => 25,
-            'offset' => 0,
+            'limit' => $per_page,
+            'offset' => $per_page * ($args['page']-1),
             'read' => false,
             'sort' => $template->feed->sort,
         ));

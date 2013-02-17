@@ -7,9 +7,11 @@ abstract class LogAppender {
 
     /**
      * Constructor
+     * If the level is NULL all messages passed will be logged.
+     * The specific Logger can also filter messages.
      * @param integer $appenderLevel level constant
      */
-    public function __construct($appenderLevel) {
+    public function __construct($appenderLevel=null) {
         $this->appenderLevel = $appenderLevel;
     }
 
@@ -22,7 +24,7 @@ abstract class LogAppender {
      * @param string $message The message to log
      */
     public function process($messageLevel, $label, $message) {
-        if (  $this->appenderLevel >= $messageLevel ) {
+        if (  $this->appenderLevel == null || $this->appenderLevel >= $messageLevel ) {
             $this->logMessage(Logger::getLevelString($messageLevel), $label, $message);
         }
     }

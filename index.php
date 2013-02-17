@@ -34,7 +34,8 @@ function __autoload($class_name) {
 
 // logging
 LogFacility::setRootLoggerLevel(Logger::TRACE);
-LogFacility::addAppender(new FileLogAppender(Logger::TRACE, APP_PATH .'/log/reader.log'));
+LogFacility::addAppender(new FileLogAppender(APP_PATH .'/log/reader.log'));
+LogFacility::setLoggerLevel('Database.class', Logger::WARN);
 
 // database
 Database::setDatabase(APP_PATH .'/db/reader.sqlite3');

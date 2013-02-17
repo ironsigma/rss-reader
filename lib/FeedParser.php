@@ -6,7 +6,7 @@ class FeedParser {
     public function __construct($url) {
         $this->url = $url;
         if ( self::$log === null ) {
-            self::$log = LogFacility::getLogger('FeedParser');
+            self::$log = LogFacility::getLogger('FeedParser.class');
         }
     }
 

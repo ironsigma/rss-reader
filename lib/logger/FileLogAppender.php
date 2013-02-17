@@ -5,7 +5,7 @@
  */
 class FileLogAppender extends LogAppender {
     protected $fileHandle = null;
-    public function __construct($level, $file) {
+    public function __construct($file, $level=null) {
         // init parent and open file
         parent::__construct($level);
         $this->fileHandle = fopen($file, 'ab');
