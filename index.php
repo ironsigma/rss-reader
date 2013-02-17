@@ -22,6 +22,7 @@ function page_error($code, $message, $url) {
 
 // include path
 set_include_path(get_include_path()
+    . PATH_SEPARATOR . APP_PATH . '/modules/'
     . PATH_SEPARATOR . APP_PATH . '/model/'
     . PATH_SEPARATOR . APP_PATH . '/lib/'
     . PATH_SEPARATOR . APP_PATH . '/lib/logger/'
@@ -55,7 +56,8 @@ $default_route->setMapClass('Feed')
 // class route
 $action_route = new Route('/:class');
 $action_route->addDynamicElement(':class', ':class')
-    ->setMapMethod('handleRequest');
+    ->setMapMethod('handleRequest')
+    ->setMapMethod('handlePostRequest', 'POST');
 
 // class/method/id route
 $action_id_route = new Route('/:class/:id/:method');

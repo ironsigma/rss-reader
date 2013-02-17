@@ -1,7 +1,7 @@
 <?php
 define('APP_VERSION', 'com.izylab.reader-v1');
 
-class AbstractController {
+class JsonController {
     protected function getRequestMethod() {
         return $_SERVER['REQUEST_METHOD'];
     }
