@@ -45,9 +45,9 @@ class FeedParser {
                 $posts[] = array (
                     'title' => (string) $entry->title,
                     'published' => $ts,
-                    'link' => (string) $entry->link,
+                    'link' => (string) $entry->link->attributes()->href,
                     'guid' => md5("{$entry->title}$ts"),
-                    'text' => $entry->summary
+                    'text' => $entry->content
                 );
             }
         }

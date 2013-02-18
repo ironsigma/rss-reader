@@ -36,7 +36,7 @@ class FeedController {
             $template->articles = PostDao::findAll(array(
                 'feed_id' => $args[':id'],
                 'limit' => $per_page,
-                'offset' => $per_page * ($args['page']-1),
+                'offset' => $per_page * ($template->page-1),
                 'read' => false,
                 'sort' => $template->feed->sort,
             ));
@@ -59,7 +59,7 @@ class FeedController {
      * Mark selected articles read.
      */
     public function read($args) {
-        PostDao::markRead($args['ids']);
+        PostDao::markRead(( $args['ids'] === 'all' ? null : $args['ids']), $args['feed']);
         header("Location: /feed/{$args[':id']}/articles?page={$args['page']}");
     }
 }

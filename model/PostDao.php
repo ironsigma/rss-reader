@@ -72,10 +72,15 @@ class PostDao {
         $st->bindValue(':stared', false, SQLITE3_INTEGER);
         $st->execute();
     }
-    public static function markRead($ids) {
+    public static function markRead($ids, $feed_id) {
         $db = Database::getInstance();
-        $st = $db->prepare('UPDATE post SET read=:read WHERE id IN('. $ids .')');
+        $sql = 'UPDATE post SET read=:read WHERE feed_id=:feed';
+        if ( $ids !== null ) {
+            $sql .= ' AND id IN('. $ids .')';
+        }
+        $st = $db->prepare($sql);
         $st->bindValue(':read', true, SQLITE3_INTEGER);
+        $st->bindValue(':feed', $feed_id, SQLITE3_INTEGER);
         $st->execute();
     }
     public static function updateStar($star, $id) {
