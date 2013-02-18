@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
 </head>
 <body>
+    <p><a href="/login?logout">Logout</a></p>
     <h1>Reader v1.0</h1>
     <ul>
     <?php foreach ( $feeds as $feed ) : ?>

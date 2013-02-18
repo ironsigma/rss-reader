@@ -33,6 +33,9 @@ function __autoload($class_name) {
     include "$class_name.php";
 }
 
+// Session
+UserSession::init();
+
 // logging
 LogFacility::setRootLoggerLevel(Logger::TRACE);
 LogFacility::addAppender(new FileLogAppender(APP_PATH .'/log/reader.log'));
@@ -59,7 +62,7 @@ $action_route->addDynamicElement(':class', ':class')
     ->setMapMethod('handleRequest')
     ->setMapMethod('handlePostRequest', 'POST');
 
-// class/method/id route
+// class/id/method route
 $action_id_route = new Route('/:class/:id/:method');
 $action_id_route->addDynamicElement(':class', ':class')
     ->addDynamicElement(':id', ':id')
@@ -70,11 +73,17 @@ $router->addRoute('default', $default_route);
 $router->addRoute('action', $action_route);
 $router->addRoute('action-id', $action_id_route);
 
-
 try {
 
     $url = get_url();
     $found_route = $router->findRoute($url, $_SERVER['REQUEST_METHOD']);
+    if (
+            $found_route->getMapClass() !== 'login' &&
+            $found_route->getMapClass() !== 'updater'
+       )
+    {
+        UserSession::requireLogin();
+    }
     $dispatcher->dispatch($found_route, null, $_SERVER['REQUEST_METHOD']);
 
 } catch ( RouteNotFoundException $e ) {
