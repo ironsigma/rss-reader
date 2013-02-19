@@ -1,3 +1,6 @@
+body {
+    background-color: #666;
+}
 #footer {
     text-align: center;
     color: gray;
@@ -5,12 +8,32 @@
     margin-bottom: 20px;
 }
 .article {
-    border: 1px solid gray;
-    padding: 10px;
+    border: 1px solid #ccc;
+    padding: 15px;
     margin-bottom: 10px;
+    width: 900px;
+    background-color: #f7f7f7;
 }
-.article h1, .article h2 {
+h1 {
+    color: #fff;
+}
+.article h2, .article h3 {
+    font-family: Arial;
     margin: 0;
+    margin-bottom: 5px;
+}
+.article h2 a {
+    color: #003399;
+    font-size: 22px;
+    text-decoration: none;
+}
+.article h3 {
+    font-size: 14px;
+    color: #777;
+}
+.article .text {
+    color: #333;
+    font-family: 'Grandesign Neue Serif';
 }
 .star {
     float: right;

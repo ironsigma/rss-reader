@@ -14,7 +14,6 @@ class FeedController {
      * Display article list
      */
     public function articles($args) {
-        $per_page = 10;
         $template = new Template('article_list.php');
 
         $template->feed = FeedDao::findById($args[':id']);
@@ -30,13 +29,13 @@ class FeedController {
         }
 
         if ( $template->article_count != 0 ) {
-            $template->page_count = ceil($template->article_count / $per_page);
+            $template->page_count = ceil($template->article_count / $template->feed->per_page);
             $template->page = min($template->page_count, $args['page']);
 
             $template->articles = PostDao::findAll(array(
                 'feed_id' => $args[':id'],
-                'limit' => $per_page,
-                'offset' => $per_page * ($template->page-1),
+                'limit' => $template->feed->per_page,
+                'offset' => $template->feed->per_page * ($template->page-1),
                 'read' => false,
                 'sort' => $template->feed->sort,
             ));

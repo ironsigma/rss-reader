@@ -41,13 +41,13 @@ class FeedParser {
         } elseif ( count($x->entry) !== 0 ) {
             self::$log->trace('Parsing as Atom feed');
             foreach( $x->entry as $entry ) {
-                $ts = strtotime($entry->published);
+                $ts = strtotime((string)$entry->published);
                 $posts[] = array (
                     'title' => (string) $entry->title,
                     'published' => $ts,
                     'link' => (string) $entry->link->attributes()->href,
-                    'guid' => md5("{$entry->title}$ts"),
-                    'text' => $entry->content
+                    'guid' => md5(((string)$entry->title).$ts),
+                    'text' => (string)$entry->content
                 );
             }
         }

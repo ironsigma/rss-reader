@@ -46,7 +46,7 @@
     <div class='article'>
         <div id="star_<?php echo $a->stared?'1':'0' ?>_<?php echo $a->id ?>" class='star'><img id="star_img_<?php echo $a->id ?>" src="/static/images/star_<?php echo $a->stared?'full':'empty' ?>.png"/></div>
         <h2><a href="<?php echo $a->link ?>"><?php echo $a->title ?></a></h2>
-        <h3><?php echo $a->id ?>: <?php echo date('D M j, Y &\m\d\a\s\h; g:i a', $a->ts) ?></h3>
+        <h3><?php echo date('D M j, Y &\m\d\a\s\h; g:i a', $a->ts) ?></h3>
         <div class='text'><?php echo $a->text ?></div>
     </div>
     <?php endforeach ?>
