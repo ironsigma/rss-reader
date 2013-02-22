@@ -1,4 +1,8 @@
 <?php
+/**
+ * Templating class
+ * @package com\izylab\reader
+ */
 class Template {
     protected static $template_dir = 'templates/';
     protected $vars;

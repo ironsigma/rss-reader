@@ -1,4 +1,8 @@
 <?php
+/**
+ * Update Log entry
+ * @package com\izylab\reader
+ */
 class Update {
     public $id;
     public $updated;

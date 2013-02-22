@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Automatic update controller
+ * @package com\izylab\reader
+ */
 class UpdaterController {
     private static $log;
 

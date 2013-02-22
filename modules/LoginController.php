@@ -1,4 +1,8 @@
 <?php
+/**
+ * User Login controller
+ * @package com\izylab\reader
+ */
 class LoginController {
     public function handleRequest($args) {
         if ( isset($args['logout']) ) {

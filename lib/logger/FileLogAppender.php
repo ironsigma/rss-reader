@@ -2,6 +2,7 @@
 /**
  * Minimal File appender.
  * Will open a file and write the timestamp, label and message to it.
+ * @package com\izylab\logger
  */
 class FileLogAppender extends LogAppender {
     protected $fileHandle = null;

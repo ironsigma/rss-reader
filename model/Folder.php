@@ -1,4 +1,8 @@
 <?php
+/**
+ * Folder entry
+ * @package com\izylab\reader
+ */
 class Folder {
     public $id;
     public $name;

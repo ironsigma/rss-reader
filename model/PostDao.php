@@ -1,4 +1,8 @@
 <?php
+/**
+ * Post DAO
+ * @package com\izylab\reader
+ */
 class PostDao {
     public static function findAll($args) {
         $db = Database::getInstance();

@@ -1,4 +1,8 @@
 <?php
+/**
+ * User Session
+ * @package com\izylab\reader
+ */
 class UserSession {
     public static function init() {
         session_start();

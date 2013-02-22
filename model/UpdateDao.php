@@ -1,4 +1,8 @@
 <?php
+/**
+ * Update Log DAO
+ * @package com\izylab\reader
+ */
 class UpdateDao {
     public static function insert(Update $update) {
         $db = Database::getInstance();

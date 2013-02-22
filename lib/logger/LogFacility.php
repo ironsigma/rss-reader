@@ -1,4 +1,8 @@
 <?php
+/**
+ * Logging Facility.
+ * @package com\izylab\logger
+ */
 class LogFacility {
     // loggers and appenders
     protected static $loggerList = array();

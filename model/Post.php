@@ -1,4 +1,8 @@
 <?php
+/**
+ * Post entry
+ * @package com\izylab\reader
+ */
 class Post {
     public $id;
     public $title;

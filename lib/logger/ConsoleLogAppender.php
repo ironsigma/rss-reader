@@ -2,6 +2,7 @@
 /**
  * Minimal console appender.
  * Will just echo the timestamp, label and message.
+ * @package com\izylab\logger
  */
 class ConsoleLogAppender extends LogAppender {
     public function logMessage($levelDescription, $label, $message) {

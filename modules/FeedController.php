@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Feed controller
+ * @package com\izylab\reader
+ */
 class FeedController {
     /*
      * Display feed list

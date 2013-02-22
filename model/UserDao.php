@@ -1,4 +1,8 @@
 <?php
+/**
+ * User DAO
+ * @package com\izylab\reader
+ */
 class UserDao {
     public static function insert(User $user) {
         $db = Database::getInstance();

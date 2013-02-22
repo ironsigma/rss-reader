@@ -1,6 +1,7 @@
 <?php
 /**
  * Logger class
+ * @package com\izylab\logger
  */
 class Logger {
     // level

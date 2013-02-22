@@ -1,4 +1,8 @@
 <?php
+/**
+ * Simple ATOM and RSS feed parser.
+ * @package com\izylab\reader
+ */
 class FeedParser {
     private static $log;
     protected $url;
@@ -19,7 +23,7 @@ class FeedParser {
 
         $posts = array();
         if ( $x === false || count($x) == 0) {
-            self::$log->warn('There doesn\'t seem to be any records in the feed id: '. $feed_id);
+            self::$log->warn('There doesn\'t seem to be any records in the feed');
             return $posts;
         }
 

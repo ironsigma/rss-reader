@@ -1,4 +1,8 @@
 <?php
+/**
+ * Feed DAO
+ * @package com\izylab\reader
+ */
 class FeedDao {
     public static function findById($id) {
         $db = Database::getInstance();

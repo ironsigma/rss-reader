@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Post controller
+ * @package com\izylab\reader
+ */
 class PostController extends JsonController {
     public function handlePostRequest($args) {
         $log = LogFacility::getLogger('PostController.class');

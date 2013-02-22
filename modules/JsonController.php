@@ -1,6 +1,10 @@
 <?php
 define('APP_VERSION', 'com.izylab.reader-v1');
 
+/**
+ * JSON Controller
+ * @package com\izylab\reader
+ */
 class JsonController {
     protected function getRequestMethod() {
         return $_SERVER['REQUEST_METHOD'];

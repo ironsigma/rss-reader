@@ -26,6 +26,7 @@ set_include_path(get_include_path()
     . PATH_SEPARATOR . APP_PATH . '/model/'
     . PATH_SEPARATOR . APP_PATH . '/lib/'
     . PATH_SEPARATOR . APP_PATH . '/lib/logger/'
+    . PATH_SEPARATOR . APP_PATH . '/lib/database/'
     . PATH_SEPARATOR . APP_PATH . '/lib/php-router/'
 );
 
@@ -45,8 +46,6 @@ LogFacility::setLoggerLevel('Database.class', Logger::WARN);
 Database::setDatabase(APP_PATH .'/db/reader.sqlite3');
 
 // routing
-require 'php-router.php';
-
 $dispatcher = new Dispatcher();
 $dispatcher->setSuffix('Controller');
 $dispatcher->setClassPath(APP_PATH.'/modules');

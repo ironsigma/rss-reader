@@ -1,4 +1,8 @@
 <?php
+/**
+ * Database
+ * @package com\izylab\reader
+ */
 class Database {
     private static $log;
     private static $database;

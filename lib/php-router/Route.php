@@ -4,6 +4,7 @@
  * @copyright Copyright (c) 2009, Rob Apodaca
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link http://robap.github.com/php-router/
+ * @package com\github\robap\php-router
  */
 class Route
 {

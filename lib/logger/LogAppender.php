@@ -1,6 +1,7 @@
 <?php
 /**
  * Abstract log appender.
+ * @package com\izylab\logger
  */
 abstract class LogAppender {
     protected $appenderLevel;

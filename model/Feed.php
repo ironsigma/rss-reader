@@ -1,4 +1,8 @@
 <?php
+/**
+ * Feed entry
+ * @package com\izylab\reader
+ */
 class Feed {
     public $id;
     public $name;

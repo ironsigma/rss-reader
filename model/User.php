@@ -1,4 +1,8 @@
 <?php
+/**
+ * User entry
+ * @package com\izylab\reader
+ */
 class User {
     public $id;
     public $username;
