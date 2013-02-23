@@ -1,10 +1,10 @@
-<?php $page_title = ' - '. $feed->name .' ('. $article_count .')' ?>
+<?php $page_title = ' - '. $feed_name .' ('. $article_count .')' ?>
 <?php $page_css = array('article.css') ?>
 <?php $page_js = array('jquery.js') ?>
 <?php include 'header_block.php' ?>
 
 <a href="/">Back To Feed List</a>
-<h1><?php echo $feed->name ?> (<?php echo $article_count ?>)</h1>
+<h1><?php echo $feed_name ?> (<?php echo $article_count ?>)</h1>
 <?php if ( $article_count === 0 ) : ?>
 <p>No unread items.</p>
 <?php else : ?>

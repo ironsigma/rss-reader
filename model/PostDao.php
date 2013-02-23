@@ -4,15 +4,9 @@
  * @package com\izylab\reader
  */
 class PostDao {
-    public static function findAll($args) {
-        $db = Database::getInstance();
-        $st = $db->prepare('SELECT id, title, ts, text, link, read, stared, guid, feed_id '
-            .'FROM post WHERE read=:read AND feed_id=:feed_id '
-            .'ORDER BY ts '. $args['sort'] .' LIMIT :limit OFFSET :offset');
-        $st->bindValue(':read', $args['read'], SQLITE3_INTEGER);
-        $st->bindValue(':feed_id', $args['feed_id'], SQLITE3_INTEGER);
-        $st->bindValue(':limit', $args['limit'], SQLITE3_INTEGER);
-        $st->bindValue(':offset', $args['offset'], SQLITE3_INTEGER);
+    public static function findAll($criteria) {
+        $st = $criteria->select('post',
+            'id, title, ts, text, link, read, stared, guid, feed_id');
         $results = $st->execute();
         $posts = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
@@ -35,6 +29,13 @@ class PostDao {
         $st = $db->prepare('SELECT count(*) FROM post WHERE read=:read AND feed_id=:feed_id');
         $st->bindValue(':read', $args['read'], SQLITE3_INTEGER);
         $st->bindValue(':feed_id', $args['feed_id'], SQLITE3_INTEGER);
+        $row = $st->execute()->fetchArray(SQLITE3_NUM);
+        return $row[0];
+    }
+    public static function countStared() {
+        $db = Database::getInstance();
+        $st = $db->prepare('SELECT count(*) FROM post WHERE stared=:stared');
+        $st->bindValue(':stared', true, SQLITE3_INTEGER);
         $row = $st->execute()->fetchArray(SQLITE3_NUM);
         return $row[0];
     }
