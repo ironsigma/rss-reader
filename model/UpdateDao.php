@@ -7,7 +7,7 @@ class UpdateDao {
     public static function insert(Update $update) {
         $db = Database::getInstance();
         $st = $db->prepare('INSERT INTO update_log (ts, count, new, feed_id) VALUES (:ts, :count, :new, :id)');
-        $st->bindValue(':ts', $update->updated, SQLITE3_INTEGER);
+        $st->bindValue(':ts', $update->ts, SQLITE3_INTEGER);
         $st->bindValue(':count', $update->count, SQLITE3_INTEGER);
         $st->bindValue(':new', $update->new, SQLITE3_INTEGER);
         $st->bindValue(':id', $update->feed_id, SQLITE3_INTEGER);
@@ -21,7 +21,7 @@ class UpdateDao {
         $results = $st->execute();
         $updates = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $updates[$row['feed_id']] = new Update($row['ts'], $row['count'], $row['new'], $row['feed_id'], $row['id']);
+            $updates[$row['feed_id']] = new Update($row);
         }
         return $updates;
     }

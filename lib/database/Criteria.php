@@ -77,11 +77,11 @@ class Criteria {
             $columns = implode(', ', $columns);
         }
         $sql = "SELECT $columns FROM $table";
+        $values = array();
         if ( count($this->operations ) == 0 ) {
-            return $sql;
+            return array('sql' => $sql, 'values' => $values);
         }
         $labels = array();
-        $values = array();
         foreach ( $this->operations as $op ) {
             switch ( $op['op'] ) {
             case 'null':

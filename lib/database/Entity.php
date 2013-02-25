@@ -1,12 +1,13 @@
 <?php
 abstract class Entity {
-    protected static $table;
-    protected static $columns;
     protected $values = array();
 
     public function __construct(array $values=null) {
-        foreach ( self::$columns as $key ) {
-            $this->values[$key] = null;
+        foreach ( static::$meta_data['columns'] as $col ) {
+            $this->values[$col] = null;
+        }
+        foreach ( static::$meta_data['properties'] as $prop ) {
+            $this->values[$prop] = null;
         }
         if ( $values ) {
             foreach ( $values as $key => $value ) {
@@ -29,20 +30,19 @@ abstract class Entity {
         return $this->values[$name];
     }
 
-    protected function addProperty($property, $value=null) {
-        $this->values[$property] = $value;
-    }
-
-    public static function init($table, $columns) {
-        self::$table = $table;
-        self::$columns = $columns;
+    public static function init($table, array $columns, array $properties=array()) {
+        static::$meta_data = array(
+            'table' => $table,
+            'columns' => $columns,
+            'properties' => $properties,
+        );
     }
 
     public static function getColumns() {
-        return self::$columns;
+        return static::$meta_data['columns'];
     }
 
     public static function getTable() {
-        return self::$table;
+        return static::$meta_data['table'];
     }
 }
