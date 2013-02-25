@@ -4,15 +4,20 @@
  * @package com\izylab\reader
  */
 class Criteria {
-    private static $log;
     private $operations = array();
     private $page = null;
     private $order = null;
 
-    public function __construct() {
-        if ( !self::$log ) {
-            self::$log = LogFacility::getLogger('Criteria.class');
-        }
+    public function getOperations() {
+        return $this->operations;
+    }
+
+    public function getPage() {
+        return $this->page;
+    }
+
+    public function getOrder() {
+        return $this->order;
     }
 
     public function equal($column, $value, $type) {
@@ -53,67 +58,6 @@ class Criteria {
     }
     public function page($limit, $offset) {
         $this->page = array('limit' => $limit, 'offset' => $offset);
-    }
-
-    /**
-     * Get select statement.
-     * @param string $table Table name
-     * @param string|array $columns Column names, can be an array, star '*', or comma separated names.
-     */
-    public function select($table, $columns='*') {
-        $db = Database::getInstance();
-        $data = $this->generateSqlData($table, $columns);
-        self::$log->trace($data['sql']);
-        $statement = $db->prepare($data['sql']);
-        foreach ( $data['values'] as $label => $val ) {
-            self::$log->trace("$label = {$val['value']}");
-            $statement->bindValue($label, $val['value'], $val['type']);
-        }
-        return $statement;
-    }
-
-    protected function generateSqlData($table, $columns) {
-        if ( is_array($columns) ) {
-            $columns = implode(', ', $columns);
-        }
-        $sql = "SELECT $columns FROM $table";
-        $values = array();
-        if ( count($this->operations ) == 0 ) {
-            return array('sql' => $sql, 'values' => $values);
-        }
-        $labels = array();
-        foreach ( $this->operations as $op ) {
-            switch ( $op['op'] ) {
-            case 'null':
-                $labels[] = "{$op['col']} IS NULL";
-                break;
-
-            case 'notnull':
-                $labels[] = "{$op['col']} NOT NULL";
-                break;
-
-            case 'in':
-                $isStr = is_string($op['val'][0]);
-                $glue = $isStr ? '\',\'' : ',';
-                $prepost = $isStr ? '\'' : '';
-                $labels[] = 'IN('. $prepost
-                    . implode($glue, SQLite3::escapeString($op['val']))
-                    . $prepost .')';
-                break;
-
-            default:
-                $labels[] = "{$op['col']}=:{$op['col']}";
-                $values[":{$op['col']}"] = array('value' => $op['val'], 'type' => $op['type']);
-            }
-        }
-        $sql .= ' WHERE '. implode(' AND ', $labels);
-        if ( $this->order ) {
-            $sql .= ' ORDER BY "'. $this->order['col'] .'" '. $this->order['sort'];
-        }
-        if ( $this->page ) {
-            $sql .= ' LIMIT '. $this->page['limit'] .' OFFSET '. $this->page['offset'];
-        }
-        return array('sql' => $sql, 'values' => $values);
     }
     protected function operation($operation, $column, $value=null, $type=null) {
         $this->operations[] = array(

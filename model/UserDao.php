@@ -18,7 +18,7 @@ class UserDao {
     public static function findByUsername($username) {
         $criteria = new Criteria();
         $criteria->equal('username', $username, SQLITE3_TEXT);
-        $st = $criteria->select(User::getTable(), User::getColumns());
+        $st = QueryBuilder::select(User::getTable(), User::getColumns(), $criteria);
         $results = $st->execute();
         $row = $results->fetchArray(SQLITE3_ASSOC);
         if ( !isset($row['id']) ) {

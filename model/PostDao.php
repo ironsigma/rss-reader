@@ -5,7 +5,7 @@
  */
 class PostDao {
     public static function findAll($criteria) {
-        $st = $criteria->select(Post::getTable(), Post::getColumns());
+        $st = QueryBuilder::select(Post::getTable(), Post::getColumns(), $criteria);
         $results = $st->execute();
         $posts = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {

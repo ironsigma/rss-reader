@@ -7,7 +7,7 @@ class FeedDao {
     public static function findById($id) {
         $criteria = new Criteria();
         $criteria->equal('id', $id, SQLITE3_INTEGER);
-        $st = $criteria->select(Feed::getTable(), Feed::getColumns());
+        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumns(), $criteria);
         $results = $st->execute();
         $row = $results->fetchArray(SQLITE3_ASSOC);
         return new Feed($row);
@@ -33,8 +33,7 @@ class FeedDao {
     }
 
     public static function findAll() {
-        $criteria = new Criteria();
-        $st = $criteria->select(Feed::getTable(), Feed::getColumns());
+        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumns(), new Criteria());
         $results = $st->execute();
         $feeds = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
