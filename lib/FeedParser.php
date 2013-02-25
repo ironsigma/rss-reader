@@ -34,7 +34,7 @@ class FeedParser {
                 $ts = strtotime($item->pubDate);
                 $posts[] = array(
                     'title' => (string) $item->title,
-                    'published' => $ts,
+                    'ts' => $ts,
                     'link' => (string) $item->link,
                     'guid' => md5("{$item->title}$ts"),
                     'text' => $item->description
@@ -48,7 +48,7 @@ class FeedParser {
                 $ts = strtotime((string)$entry->published);
                 $posts[] = array (
                     'title' => (string) $entry->title,
-                    'published' => $ts,
+                    'ts' => $ts,
                     'link' => (string) $entry->link->attributes()->href,
                     'guid' => md5(((string)$entry->title).$ts),
                     'text' => (string)$entry->content

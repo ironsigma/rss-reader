@@ -44,7 +44,7 @@ class UpdaterController {
             self::$log->debug('Loading posts...');
             foreach ( $posts as $post_data ) {
                 $post_data['feed_id'] = $feed->id;
-                $post = Post::fromArray($post_data);
+                $post = new Post($post_data);
                 $count ++;
                 if ( !PostDao::postExists($post) ) {
                     PostDao::insert($post);

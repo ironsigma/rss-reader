@@ -5,22 +5,11 @@
  */
 class PostDao {
     public static function findAll($criteria) {
-        $st = $criteria->select('post',
-            'id, title, ts, text, link, read, stared, guid, feed_id');
+        $st = $criteria->select(Post::getTable(), Post::getColumns());
         $results = $st->execute();
         $posts = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $posts[] = new Post(
-                $row['title'],
-                $row['ts'],
-                $row['link'],
-                $row['guid'],
-                $row['text'],
-                $row['read'],
-                $row['stared'],
-                $row['feed_id'],
-                $row['id']
-            );
+            $posts[] = new Post($row);
         }
         return $posts;
     }
