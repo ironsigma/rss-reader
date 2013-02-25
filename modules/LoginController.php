@@ -28,10 +28,6 @@ class LoginController {
         $template->display();
     }
     public function handlePostRequest($args) {
-        $log = LogFacility::getLogger('LoginController');
-        //$log->debug('args'. print_r($args, true));
-        //$log->debug('post'. print_r($_POST, true));
-
         // register
         if ( isset($args['register']) ) {
             if ( $_POST['password'] !== $_POST['password2'] ) {
@@ -44,7 +40,11 @@ class LoginController {
             }
             $salt = $this->createSalt();
             $hash = hash('sha256', $salt . $_POST['password']);
-            UserDao::insert(new User($_POST['username'], $hash, $salt));
+            UserDao::insert(new User(array(
+                'username' => $_POST['username'],
+                'password' => $hash,
+                'salt' => $salt
+            )));
             header("Location: /login?msg=0");
             return;
         }
