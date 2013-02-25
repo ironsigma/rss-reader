@@ -29,13 +29,11 @@ abstract class Entity {
         return $this->values[$name];
     }
 
-    protected function addProperty($property, $value) {
+    protected function addProperty($property, $value=null) {
         $this->values[$property] = $value;
     }
 
     public static function init($table, $columns) {
-        $log = LogFacility::getLogger('Entity');
-        $log->info('Columns set for table '. $table);
         self::$table = $table;
         self::$columns = $columns;
     }

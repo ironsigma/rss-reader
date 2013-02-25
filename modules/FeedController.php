@@ -39,7 +39,7 @@ class FeedController {
             ));
             $criteria->equal('feed_id', $args[':id'], SQLITE3_INTEGER);
             $criteria->false('read');
-            $criteria->orderBy('ts', $feed->sort);
+            $criteria->orderBy('ts', $feed->sort_dir);
         }
 
         if ( $template->article_count === 0 ) {

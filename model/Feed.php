@@ -3,25 +3,10 @@
  * Feed entry
  * @package com\izylab\reader
  */
-class Feed {
-    public $id;
-    public $name;
-    public $url;
-    public $sort;
-    public $update_freq;
-    public $per_page;
-    public $folder_id;
-
-    // transient
-    public $unread;
-
-    public function __construct($name, $url, $sort, $update_freq, $per_page, $folder_id=null, $id=null) {
-        $this->name = $name;
-        $this->url = $url;
-        $this->folder_id = $folder_id;
-        $this->id = $id;
-        $this->update_freq = $update_freq;
-        $this->per_page = $per_page;
-        $this->sort = $sort;
+class Feed extends Entity {
+    public function __construct($values=null) {
+        $this->addProperty('unread');
+        parent::__construct($values);
     }
 }
+Feed::init('feed', array('id', 'name', 'url', 'sort_dir', 'update_freq', 'per_page', 'folder_id'));

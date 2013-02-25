@@ -5,13 +5,12 @@
  */
 class FeedDao {
     public static function findById($id) {
-        $db = Database::getInstance();
-        $sql = 'SELECT id, name, url, sort_dir, update_freq, per_page, folder_id FROM feed WHERE id=:id';
-        $st = $db->prepare($sql);
-        $st->bindValue(':id', $id, SQLITE3_INTEGER);
+        $criteria = new Criteria();
+        $criteria->equal('id', $id, SQLITE3_INTEGER);
+        $st = $criteria->select(Feed::getTable(), Feed::getColumns());
         $results = $st->execute();
         $row = $results->fetchArray(SQLITE3_ASSOC);
-        return new Feed($row['name'], $row['url'], $row['sort_dir'], $row['update_freq'], $row['per_page'], $row['folder_id'], $row['id']);
+        return new Feed($row);
     }
 
     public static function insert($feed){
@@ -20,7 +19,7 @@ class FeedDao {
             'VALUES (:name, :url, :sort, :update, :freq, :id)');
         $st->bindValue(':name', $feed->name, SQLITE3_TEXT);
         $st->bindValue(':url', $feed->url, SQLITE3_TEXT);
-        $st->bindValue(':sort', $feed->sort, SQLITE3_TEXT);
+        $st->bindValue(':sort', $feed->sort_dir, SQLITE3_TEXT);
         $st->bindValue(':freq', $feed->update_freq, SQLITE3_INTEGER);
 
         if ( $feed->folder_id === null ) {
@@ -34,12 +33,12 @@ class FeedDao {
     }
 
     public static function findAll() {
-        $db = Database::getInstance();
-        $st = $db->prepare('SELECT id, name, url, sort_dir, update_freq, per_page, folder_id FROM feed');
+        $criteria = new Criteria();
+        $st = $criteria->select(Feed::getTable(), Feed::getColumns());
         $results = $st->execute();
         $feeds = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $feeds[] = new Feed($row['name'], $row['url'], $row['sort_dir'], $row['update_freq'], $row['per_page'], $row['folder_id'], $row['id']);
+            $feeds[] = new Feed($row);
         }
         return $feeds;
     }
@@ -54,10 +53,7 @@ class FeedDao {
         $results = $st->execute();
         $feeds = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $feed = new Feed($row['name'], $row['url'], $row['sort_dir'],
-                $row['update_freq'], $row['per_page'], $row['folder_id'], $row['id']);
-            $feed->unread = $row['unread'];
-            $feeds[] = $feed;
+            $feeds[] = new Feed($row);
         }
         return $feeds;
     }
