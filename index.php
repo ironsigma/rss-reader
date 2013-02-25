@@ -41,6 +41,7 @@ UserSession::init();
 LogFacility::setRootLoggerLevel(Logger::TRACE);
 LogFacility::addAppender(new FileLogAppender(APP_PATH .'/log/reader.log'));
 LogFacility::setLoggerLevel('Database.class', Logger::WARN);
+LogFacility::setLoggerLevel('UpdaterController.class', Logger::WARN);
 
 // database
 Database::setDatabase(APP_PATH .'/db/reader.sqlite3');
