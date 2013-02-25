@@ -49,7 +49,7 @@ class FeedDao {
             .'FROM FEED f LEFT JOIN post p ON p.feed_id = f.id '
             .'WHERE p.read=:read GROUP BY f.id ORDER BY f.name';
         $st = $db->prepare($sql);
-        $st->bindValue(':read', false, SQLITE3_INTEGER);
+        $st->bindValue(':read', 0, SQLITE3_INTEGER);
         $results = $st->execute();
         $feeds = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {

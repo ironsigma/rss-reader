@@ -35,7 +35,7 @@ class FeedController {
             $per_page = $feed->per_page;
             $template->article_count = PostDao::countAll(array(
                 'feed_id' => $args[':id'],
-                'read' => false,
+                'read' => 0,
             ));
             $criteria->equal('feed_id', $args[':id'], SQLITE3_INTEGER);
             $criteria->false('read');

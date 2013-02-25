@@ -24,7 +24,7 @@ class PostDao {
     public static function countStared() {
         $db = Database::getInstance();
         $st = $db->prepare('SELECT count(*) FROM post WHERE stared=:stared');
-        $st->bindValue(':stared', true, SQLITE3_INTEGER);
+        $st->bindValue(':stared', 1, SQLITE3_INTEGER);
         $row = $st->execute()->fetchArray(SQLITE3_NUM);
         return $row[0];
     }
@@ -62,8 +62,8 @@ class PostDao {
         $db = Database::getInstance();
         $st = $db->prepare('DELETE FROM post WHERE ts <= :ts AND read = :read AND stared = :stared');
         $st->bindValue(':ts', $date, SQLITE3_INTEGER);
-        $st->bindValue(':read', true, SQLITE3_INTEGER);
-        $st->bindValue(':stared', false, SQLITE3_INTEGER);
+        $st->bindValue(':read', 1, SQLITE3_INTEGER);
+        $st->bindValue(':stared', 0, SQLITE3_INTEGER);
         $st->execute();
     }
     public static function markRead($ids, $feed_id) {
@@ -73,7 +73,7 @@ class PostDao {
             $sql .= ' AND id IN('. $ids .')';
         }
         $st = $db->prepare($sql);
-        $st->bindValue(':read', true, SQLITE3_INTEGER);
+        $st->bindValue(':read', 1, SQLITE3_INTEGER);
         $st->bindValue(':feed', $feed_id, SQLITE3_INTEGER);
         $st->execute();
     }

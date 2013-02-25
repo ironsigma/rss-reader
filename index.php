@@ -39,7 +39,7 @@ UserSession::init();
 
 // logging
 LogFacility::setRootLoggerLevel(Logger::TRACE);
-LogFacility::addAppender(new FileLogAppender(APP_PATH .'/log/reader.log'));
+LogFacility::addAppender(new FileLogAppender('/var/log/lighttpd/reader-app.log'));
 LogFacility::setLoggerLevel('Database.class', Logger::WARN);
 LogFacility::setLoggerLevel('UpdaterController.class', Logger::WARN);
 

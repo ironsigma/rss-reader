@@ -43,10 +43,10 @@ class Criteria {
         $this->operation('notnull', $column);
     }
     public function true($column) {
-        $this->operation('true', $column, true, SQLITE3_INTEGER);
+        $this->operation('true', $column, 1, SQLITE3_INTEGER);
     }
     public function false($column) {
-        $this->operation('false', $column, false, SQLITE3_INTEGER);
+        $this->operation('false', $column, 0, SQLITE3_INTEGER);
     }
     public function orderBy($column, $sort) {
         $this->order = array('col' => $column, 'sort' => $sort);
