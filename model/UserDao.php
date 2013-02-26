@@ -5,15 +5,10 @@
  */
 class UserDao {
     public static function insert(User $user) {
-        $db = Database::getInstance();
-        $st = $db->prepare('INSERT INTO user (username, password, salt) '.
-            'VALUES (:uname, :pass, :salt)');
-
-        $st->bindValue(':uname', $user->username, SQLITE3_TEXT);
-        $st->bindValue(':pass', $user->password, SQLITE3_TEXT);
-        $st->bindValue(':salt', $user->salt, SQLITE3_TEXT);
+        $st = QueryBuilder::insert(User::getTable(), User::getColumns(), $user, array('id'));
         $st->execute();
-        $user->id = $db->lastInsertRowID();
+        $user->id = Database::lastInsertRowID();
+        return $user;
     }
     public static function findByUsername($username) {
         $criteria = new Criteria();

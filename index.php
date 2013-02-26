@@ -42,6 +42,7 @@ LogFacility::setRootLoggerLevel(Logger::TRACE);
 LogFacility::addAppender(new FileLogAppender('/var/log/lighttpd/reader-app.log'));
 LogFacility::setLoggerLevel('Database.class', Logger::WARN);
 LogFacility::setLoggerLevel('UpdaterController.class', Logger::WARN);
+LogFacility::setLoggerLevel('FeedParser.class', Logger::WARN);
 
 // database
 Database::setDatabase(APP_PATH .'/db/reader.sqlite3');

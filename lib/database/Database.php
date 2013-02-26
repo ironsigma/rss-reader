@@ -35,5 +35,9 @@ class Database {
         self::$dbName = $dbName;
     }
 
+    public static function lastInsertRowID() {
+        return self::getInstance()->lastInsertRowID();
+    }
+
 }
 Database::init();

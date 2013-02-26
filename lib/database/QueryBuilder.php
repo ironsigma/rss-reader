@@ -72,5 +72,43 @@ class QueryBuilder {
         }
         return array('sql' => $sql, 'values' => $values);
     }
+
+    public static function insert($table, array $columns, $entity, array $exclude=array()) {
+        $sql_and_values = self::generateInsertSqlAndValues($table, $columns, $entity->getValues(), $exclude);
+        $db = Database::getInstance();
+        self::$log->trace($sql_and_values['sql']);
+        $statement = $db->prepare($sql_and_values['sql']);
+        foreach ( $sql_and_values['values'] as $label => $val ) {
+            self::$log->trace("$label = {$val['value']}");
+            $statement->bindValue($label, $val['value'], $val['type']);
+        }
+        return $statement;
+    }
+
+    protected static function generateInsertSqlAndValues($table, array $columns, array $entity_values, array $exclude) {
+        $cols = array();
+        $values = array();
+        $labels = array();
+        foreach ( $columns as $col ) {
+            if ( in_array($col, $exclude) ) {
+                continue;
+            }
+            $cols[] = $col;
+            $labels[] = ':'. $col;
+            $value = $entity_values[$col];
+            switch ( gettype($value) ) {
+            case 'boolean': $type = SQLITE3_INTEGER; $value ? 1 : 0; break;
+            case 'integer': $type = SQLITE3_INTEGER; break;
+            case 'double':  $type = SQLITE3_FLOAT;   break;
+            case 'string':  $type = SQLITE3_TEXT; break;
+            case 'NULL':    $type = SQLITE3_NULL;    break;
+            default:
+                throw new Exception('Invalid data type');
+            }
+            $values[':'.$col] = array('value' => $value, 'type' => $type);
+        }
+        $sql = "INSERT INTO $table (". implode(', ', $cols) .') VALUES ('. join(', ', $labels) . ')';
+        return array('sql' => $sql, 'values' => $values);
+    }
 }
 QueryBuilder::init();

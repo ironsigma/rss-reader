@@ -45,4 +45,8 @@ abstract class Entity {
     public static function getTable() {
         return static::$meta_data['table'];
     }
+
+    public function getValues() {
+        return $this->values;
+    }
 }
