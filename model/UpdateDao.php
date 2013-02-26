@@ -5,14 +5,10 @@
  */
 class UpdateDao {
     public static function insert(Update $update) {
-        $db = Database::getInstance();
-        $st = $db->prepare('INSERT INTO update_log (ts, count, new, feed_id) VALUES (:ts, :count, :new, :id)');
-        $st->bindValue(':ts', $update->ts, SQLITE3_INTEGER);
-        $st->bindValue(':count', $update->count, SQLITE3_INTEGER);
-        $st->bindValue(':new', $update->new, SQLITE3_INTEGER);
-        $st->bindValue(':id', $update->feed_id, SQLITE3_INTEGER);
+        $st = QueryBuilder::insert(Update::getTable(), Update::getColumns(), $update, array('id'));
         $st->execute();
-        $update->id = $db->lastInsertRowID();
+        $update->id = Database::lastInsertRowID();
+        return $update;
     }
     public static function findLatestUpdates() {
         $db = Database::getInstance();

@@ -14,22 +14,10 @@ class FeedDao {
     }
 
     public static function insert($feed){
-        $db = Database::getInstance();
-        $st = $db->prepare('INSERT INTO feed (name, url, sort_dir, update_freq, folder_id) '.
-            'VALUES (:name, :url, :sort, :update, :freq, :id)');
-        $st->bindValue(':name', $feed->name, SQLITE3_TEXT);
-        $st->bindValue(':url', $feed->url, SQLITE3_TEXT);
-        $st->bindValue(':sort', $feed->sort_dir, SQLITE3_TEXT);
-        $st->bindValue(':freq', $feed->update_freq, SQLITE3_INTEGER);
-
-        if ( $feed->folder_id === null ) {
-            $st->bindValue(':id', null, SQLITE3_NULL);
-        } else {
-            $st->bindValue(':id', $feed->folder_id, SQLITE3_INTEGER);
-        }
-
+        $st = QueryBuilder::insert(Feed::getTable(), Feed::getColumns(), $feed, array('id'));
         $st->execute();
-        $feed->id = $db->lastInsertRowID();
+        $feed->id = Database::lastInsertRowID();
+        return $feed;
     }
 
     public static function findAll() {
