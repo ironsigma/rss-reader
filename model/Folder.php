@@ -6,4 +6,4 @@
 class Folder extends Entity {
     protected static $meta_data;
 }
-Folder::init('folder', array('id', 'name', 'sort'));
+Folder::init('folder', array('id', 'name', 'newest_first'));

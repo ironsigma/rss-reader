@@ -6,4 +6,4 @@
 class Update extends Entity {
     protected static $meta_data;
 }
-Update::init('update_log', array('id', 'ts', 'count', 'new', 'feed_id'));
+Update::init('update_log', array('id', 'updated', 'total_count', 'new_count', 'feed_id'));

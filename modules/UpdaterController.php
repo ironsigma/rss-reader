@@ -13,7 +13,6 @@ class UpdaterController {
     }
 
     public function handleRequest($args) {
-
         self::$log->info('Starting RSS Update');
         $feedUpdates = UpdateDao::findLatestUpdates();
         $now = time();
@@ -24,8 +23,8 @@ class UpdaterController {
             // if there is a last update
             if ( array_key_exists($feed->id, $feedUpdates) ) {
                 // calculate next update and check to see if it's time
-                self::$log->trace('Last update '. date('c', $feedUpdates[$feed->id]->ts));
-                $next_update =  $feedUpdates[$feed->id]->ts + $feed->update_freq * 60;
+                self::$log->trace('Last update '. date('c', $feedUpdates[$feed->id]->updated));
+                $next_update =  $feedUpdates[$feed->id]->updated + $feed->update_freq * 60;
                 self::$log->trace('Next update scheduled for '. date('c', $next_update));
                 if ( $now <= $next_update ) {
                     self::$log->trace('No update needed');
@@ -47,6 +46,8 @@ class UpdaterController {
                 $post = new Post($post_data);
                 $count ++;
                 if ( !PostDao::postExists($post) ) {
+                    $post->read = false;
+                    $post->stared = false;
                     PostDao::insert($post);
                     $new ++;
                 }
@@ -54,9 +55,9 @@ class UpdaterController {
 
             self::$log->info(sprintf('Found %d posts, %d where new', $count, $new));
             UpdateDao::insert(new Update(array(
-                'ts' => time(),
-                'count' => $count,
-                'new' => $new,
+                'updated' => time(),
+                'total_count' => $count,
+                'new_count' => $new,
                 'feed_id' => $feed->id,
             )));
         }

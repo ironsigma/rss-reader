@@ -28,18 +28,18 @@ class FeedController {
             $template->article_count = PostDao::countStared();
 
             $criteria->true('stared');
-            $criteria->orderBy('ts', 'ASC');
+            $criteria->orderBy('published', 'ASC');
         } else {
             $feed = FeedDao::findById($args[':id']);
             $template->feed_name = $feed->name;
             $per_page = $feed->per_page;
             $template->article_count = PostDao::countAll(array(
                 'feed_id' => $args[':id'],
-                'read' => 0,
+                'read' => false,
             ));
             $criteria->equal('feed_id', $args[':id'], SQLITE3_INTEGER);
             $criteria->false('read');
-            $criteria->orderBy('ts', $feed->sort_dir);
+            $criteria->orderBy('published', $feed->newest_first ? 'DESC' : 'ASC');
         }
 
         if ( $template->article_count === 0 ) {

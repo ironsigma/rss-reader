@@ -6,4 +6,4 @@
 class Post extends Entity {
     protected static $meta_data;
 }
-Post::init('post', array('id', 'title', 'ts', 'text', 'link', 'read', 'stared', 'guid', 'feed_id'));
+Post::init('post', array('id', 'title', 'published', 'text', 'link', 'read', 'stared', 'guid', 'feed_id'));

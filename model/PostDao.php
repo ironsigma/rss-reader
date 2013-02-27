@@ -16,7 +16,7 @@ class PostDao {
     public static function countAll($args) {
         $db = Database::getInstance();
         $st = $db->prepare('SELECT count(*) FROM post WHERE read=:read AND feed_id=:feed_id');
-        $st->bindValue(':read', $args['read'], SQLITE3_INTEGER);
+        $st->bindValue(':read', $args['read'] ? 1 : 0, SQLITE3_INTEGER);
         $st->bindValue(':feed_id', $args['feed_id'], SQLITE3_INTEGER);
         $row = $st->execute()->fetchArray(SQLITE3_NUM);
         return $row[0];
@@ -44,8 +44,8 @@ class PostDao {
     }
     public static function deleteReadPostBefore($date) {
         $db = Database::getInstance();
-        $st = $db->prepare('DELETE FROM post WHERE ts <= :ts AND read = :read AND stared = :stared');
-        $st->bindValue(':ts', $date, SQLITE3_INTEGER);
+        $st = $db->prepare('DELETE FROM post WHERE published <= :published AND read = :read AND stared = :stared');
+        $st->bindValue(':published', $date, SQLITE3_INTEGER);
         $st->bindValue(':read', 1, SQLITE3_INTEGER);
         $st->bindValue(':stared', 0, SQLITE3_INTEGER);
         $st->execute();
@@ -64,7 +64,7 @@ class PostDao {
     public static function updateStar($star, $id) {
         $db = Database::getInstance();
         $st = $db->prepare('UPDATE post SET stared=:star WHERE id=:id');
-        $st->bindValue(':star', $star, SQLITE3_INTEGER);
+        $st->bindValue(':star', $star ? 1 : 0, SQLITE3_INTEGER);
         $st->bindValue(':id', $id, SQLITE3_INTEGER);
         $st->execute();
     }

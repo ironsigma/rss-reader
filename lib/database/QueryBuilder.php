@@ -79,7 +79,11 @@ class QueryBuilder {
         self::$log->trace($sql_and_values['sql']);
         $statement = $db->prepare($sql_and_values['sql']);
         foreach ( $sql_and_values['values'] as $label => $val ) {
-            self::$log->trace("$label = {$val['value']}");
+            self::$log->trace("$label = ". (
+                gettype($val['value']) == 'boolean' ?
+                    ( $val['value'] ? 'true' : 'false' ) :
+                    $val['value']
+            ));
             $statement->bindValue($label, $val['value'], $val['type']);
         }
         return $statement;

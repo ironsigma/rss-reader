@@ -12,8 +12,8 @@ class UpdateDao {
     }
     public static function findLatestUpdates() {
         $db = Database::getInstance();
-        $st = $db->prepare('SELECT u.id, u.ts, u.count, u.new, u.feed_id '.
-           'FROM update_log u WHERE ts=(SELECT MAX(ts) FROM update_log WHERE feed_id=u.feed_id)');
+        $st = $db->prepare('SELECT u.id, u.updated, u.total_count, u.new_count, u.feed_id '.
+           'FROM update_log u WHERE updated=(SELECT MAX(updated) FROM update_log WHERE feed_id=u.feed_id)');
         $results = $st->execute();
         $updates = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {

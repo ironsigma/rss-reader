@@ -38,7 +38,7 @@ class FeedDao {
 
     public static function findAllWithUnreadCount() {
         $db = Database::getInstance();
-        $sql = 'SELECT f.id, f.name, f.url, f.sort_dir, f.update_freq, f.per_page, f.folder_id, COUNT(*) AS unread '
+        $sql = 'SELECT f.id, f.name, f.url, f.newest_first, f.update_freq, f.per_page, f.folder_id, COUNT(*) AS unread '
             .'FROM FEED f LEFT JOIN post p ON p.feed_id = f.id '
             .'WHERE p.read=:read GROUP BY f.id ORDER BY f.name';
         self::$log->trace($sql);
