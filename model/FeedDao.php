@@ -37,13 +37,15 @@ class FeedDao {
     }
 
     public static function findAllWithUnreadCount() {
-        $db = Database::getInstance();
-        $sql = 'SELECT f.id, f.name, f.url, f.newest_first, f.update_freq, f.per_page, f.folder_id, COUNT(*) AS unread '
-            .'FROM FEED f LEFT JOIN post p ON p.feed_id = f.id '
-            .'WHERE p.read=:read GROUP BY f.id ORDER BY f.name';
-        self::$log->trace($sql);
-        $st = $db->prepare($sql);
-        $st->bindValue(':read', 0, SQLITE3_INTEGER);
+        $criteria = new Criteria();
+        $criteria->count('*', 'unread');
+        $criteria->leftJoin('post', 'feed_id', 'id');
+        $criteria->false('post.read');
+        $criteria->groupBy('id');
+        $criteria->orderBy('name');
+
+        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumns(), $criteria);
+
         $results = $st->execute();
         $feeds = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
