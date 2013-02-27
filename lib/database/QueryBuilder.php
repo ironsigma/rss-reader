@@ -96,16 +96,17 @@ class QueryBuilder {
             $cols[] = $col;
             $labels[] = ':'. $col;
             $value = $entity_values[$col];
-            switch ( gettype($value) ) {
-            case 'boolean': $type = SQLITE3_INTEGER; $value ? 1 : 0; break;
-            case 'integer': $type = SQLITE3_INTEGER; break;
-            case 'double':  $type = SQLITE3_FLOAT;   break;
-            case 'string':  $type = SQLITE3_TEXT; break;
-            case 'NULL':    $type = SQLITE3_NULL;    break;
+            $type = gettype($value);
+            switch ( $type ) {
+            case 'boolean': $sql_type = SQLITE3_INTEGER; $value ? 1 : 0; break;
+            case 'integer': $sql_type = SQLITE3_INTEGER; break;
+            case 'double':  $sql_type = SQLITE3_FLOAT;   break;
+            case 'string':  $sql_type = SQLITE3_TEXT; break;
+            case 'NULL':    $sql_type = SQLITE3_NULL;    break;
             default:
-                throw new Exception('Invalid data type');
+                throw new Exception("Invalid type in column $col, value: $value, type: $type");
             }
-            $values[':'.$col] = array('value' => $value, 'type' => $type);
+            $values[':'.$col] = array('value' => $value, 'type' => $sql_type);
         }
         $sql = "INSERT INTO $table (". implode(', ', $cols) .') VALUES ('. join(', ', $labels) . ')';
         return array('sql' => $sql, 'values' => $values);

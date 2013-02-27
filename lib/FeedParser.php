@@ -36,8 +36,8 @@ class FeedParser {
                     'title' => (string) $item->title,
                     'ts' => $ts,
                     'link' => (string) $item->link,
-                    'guid' => md5("{$item->title}$ts"),
-                    'text' => $item->description
+                    'guid' => md5(((string)$item->title).$ts),
+                    'text' => (string)$item->description
                 );
             }
 
