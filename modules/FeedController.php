@@ -8,7 +8,7 @@ class FeedController {
      * Display feed list
      */
     public function handleRequest($args) {
-        $template = new Template('feed_list.php');
+        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'feed_list.php');
         $template->feeds = FeedDao::findAllWithUnreadCount();
         $criteria = new Criteria();
         $criteria->true('stared');
@@ -20,7 +20,7 @@ class FeedController {
      * Display article list
      */
     public function articles($args) {
-        $template = new Template('article_list.php');
+        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'article_list.php');
         $template->feed_id = $args[':id'];
 
         $criteria = new Criteria();
@@ -50,7 +50,7 @@ class FeedController {
         }
 
         if ( $template->article_count === 0 ) {
-            header('Location: /');
+            header('Location: /'.(isset($args['mobi'])?'&mobi':''));
             return;
         }
 
@@ -59,6 +59,12 @@ class FeedController {
             $template->page = min($template->page_count, $args['page']);
             $criteria->page($per_page, $per_page * ($template->page-1));
             $template->articles = PostDao::findAll($criteria);
+
+            if ( isset($args['mobi']) ) {
+                foreach ( $template->articles as $article ) {
+                    $article->text = self::filterHtml($article->text);
+                }
+            }
 
             $ids = array();
             foreach ( $template->articles as $article ) {
@@ -79,6 +85,28 @@ class FeedController {
      */
     public function read($args) {
         PostDao::markRead(( $args['ids'] === 'all' ? null : $args['ids']), $args['feed']);
-        header("Location: /feed/{$args[':id']}/articles?page={$args['page']}");
+        header("Location: /feed/{$args[':id']}/articles?page={$args['page']}".(isset($args['mobi'])?'&mobi':''));
+        exit;
+    }
+
+    protected static function filterHtml($html){
+       return preg_replace(array(
+            '@<![\s\S]*?--[ \t\n\r]*>@',          // Strip multi-line comments including CDATA
+            '@<script[^>]*?>.*?</script>@siU',
+            '@<style[^>]*?>.*?</style>@siU',
+            '@<iframe[^>]*?>.*?</iframe>@siU',
+            '@<applet[^>]*?>.*?</applet>@siU',
+            '@<body[^>]*?>.*?</body>@siU',
+            '@<embed[^>]*?>.*?</embed>@siU',
+            '@<frame[^>]*?>.*?</frame>@siU',
+            '@<frameset[^>]*?>.*?</frameset>@siU',
+            '@<html[^>]*?>.*?</html>@siU',
+            '@<img[^>]*?>.*?</img>@siU',
+            '@<layer[^>]*?>.*?</layer>@siU',
+            '@<link[^>]*?>.*?</link>@siU',
+            '@<ilayer[^>]*?>.*?</ilayer>@siU',
+            '@<meta[^>]*?>.*?</meta>@siU',
+            '@<object[^>]*?>.*?</object>@siU',
+       ), '', $html);
     }
 }

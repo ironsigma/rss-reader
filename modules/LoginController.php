@@ -5,10 +5,11 @@
  */
 class LoginController {
     public function handleRequest($args) {
+        $mobi = isset($args['mobi']) ? '&mobi' : '';
         if ( isset($args['logout']) ) {
             UserSession::logout();
-            header("Location: /login?msg=4");
-            return;
+            header("Location: /login?msg=4".$mobi);
+            exit;
         }
 
         $template = new Template('login.php');
@@ -28,15 +29,16 @@ class LoginController {
         $template->display();
     }
     public function handlePostRequest($args) {
+        $mobi = isset($args['mobi']) ? '&mobi' : '';
         // register
         if ( isset($args['register']) ) {
             if ( $_POST['password'] !== $_POST['password2'] ) {
-                header("Location: /login?msg=1");
-                return;
+                header("Location: /login?msg=1".$mobi);
+                exit;
             }
             if ( strlen($_POST['username']) > 30 ) {
-                header("Location: /login?msg=2");
-                return;
+                header("Location: /login?msg=2".$mobi);
+                exit;
             }
             $salt = $this->createSalt();
             $hash = hash('sha256', $salt . $_POST['password']);
@@ -45,23 +47,24 @@ class LoginController {
                 'password' => $hash,
                 'salt' => $salt
             )));
-            header("Location: /login?msg=0");
-            return;
+            header("Location: /login?msg=0".$mobi);
+            exit;
         }
 
         // login
         $user = UserDao::findByUsername($_POST['username']);
         if( $user === null ) {
-            header("Location: /login?msg=3");
-            return;
+            header("Location: /login?msg=3".$mobi);
+            exit;
         }
         $hash = hash('sha256', $user->salt . $_POST['password']);
         if ( $user->password !== $hash ) {
-            header("Location: /login?msg=3");
-            return;
+            header("Location: /login?msg=3".$mobi);
+            exit;
         }
         UserSession::validate($user->id);
-        header("Location: /");
+        header("Location: /?ok".$mobi);
+        exit;
     }
     protected function createSalt() {
         return substr(md5(uniqid(rand(), true)), 0, 3);
