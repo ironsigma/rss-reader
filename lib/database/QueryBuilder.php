@@ -20,7 +20,7 @@ class QueryBuilder {
     /**
      * Get select statement.
      * @param string $table Table name
-     * @param string|array $columns Column names, can be an array, star '*', or comma separated names.
+     * @param array $columns Column names
      */
     public static function select($table, array $columns, Criteria $criteria) {
         $sql_and_values = self::generateSelectSqlAndValues($table, $columns, $criteria);
@@ -35,12 +35,21 @@ class QueryBuilder {
         return $statement;
     }
 
+    /**
+     * Add prefix to column.
+     * @param $column column name with optional table prefix or name and alias array.
+     */
     protected static function getPrefixedColumn($prefix, $joins, $column, $original=false) {
+        $alias = '';
+        if ( is_array($column) ) {
+            $alias = " AS \"{$column[1]}\"";
+            $column = $column[0];
+        }
         if ( strpos($column, '.') !== false ) {
             list($table, $column) = explode('.', $column);
-            $col = $joins[$table] .'."'. $column .'"';
+            $col = $joins[$table] .'."'. $column .'"'. $alias;
         } else {
-            $col = $prefix .'."'. $column .'"';
+            $col = $prefix .'."'. $column .'"'. $alias;
         }
         if ( $original ) {
             return array($col, $column);
@@ -59,7 +68,8 @@ class QueryBuilder {
 
         // append table prefixes to columns
         for( $i = 0, $c = count($columns); $i < $c; $i ++ ) {
-            $columns[$i] = "$prefix.\"{$columns[$i]}\"";
+            $columns[$i] = self::getPrefixedColumn($prefix, $join_prefixes, $columns[$i]);
+            self::$log->info('Adding col: '. $columns[$i]);
         }
 
         // add counts

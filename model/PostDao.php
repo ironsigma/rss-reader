@@ -13,18 +13,9 @@ class PostDao {
         }
         return $posts;
     }
-    public static function countAll($args) {
-        $db = Database::getInstance();
-        $st = $db->prepare('SELECT count(*) FROM post WHERE read=:read AND feed_id=:feed_id');
-        $st->bindValue(':read', $args['read'] ? 1 : 0, SQLITE3_INTEGER);
-        $st->bindValue(':feed_id', $args['feed_id'], SQLITE3_INTEGER);
-        $row = $st->execute()->fetchArray(SQLITE3_NUM);
-        return $row[0];
-    }
-    public static function countStared() {
-        $db = Database::getInstance();
-        $st = $db->prepare('SELECT count(*) FROM post WHERE stared=:stared');
-        $st->bindValue(':stared', 1, SQLITE3_INTEGER);
+    public static function countAll($criteria) {
+        $criteria->count('*', 'count');
+        $st = QueryBuilder::select(Post::getTable(), array(), $criteria);
         $row = $st->execute()->fetchArray(SQLITE3_NUM);
         return $row[0];
     }
@@ -35,9 +26,10 @@ class PostDao {
         return $post;
     }
     public static function postExists($post) {
-        $db = Database::getInstance();
-        $st = $db->prepare('SELECT count(guid) FROM post WHERE guid=:guid');
-        $st->bindValue(':guid', $post->guid, SQLITE3_TEXT);
+        $criteria = new Criteria();
+        $criteria->count('guid', 'guid_count');
+        $criteria->equal('guid', $post->guid, SQLITE3_TEXT);
+        $st = QueryBuilder::select(Post::getTable(), array(), $criteria);
         $results = $st->execute();
         $row = $results->fetchArray(SQLITE3_NUM);
         return $row[0] !== 0;

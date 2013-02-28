@@ -40,11 +40,15 @@ class FeedDao {
         $criteria = new Criteria();
         $criteria->count('*', 'unread');
         $criteria->leftJoin('post', 'feed_id', 'id');
+        $criteria->leftJoin('folder', 'id', 'folder_id');
         $criteria->false('post.read');
         $criteria->groupBy('id');
-        $criteria->orderBy('name');
+        $criteria->orderBy('folder.name');
 
-        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumns(), $criteria);
+        $st = QueryBuilder::select(Feed::getTable(), array_merge(
+                array(array('folder.name', 'folder')),
+                Feed::getColumns()
+            ), $criteria);
 
         $results = $st->execute();
         $feeds = array();

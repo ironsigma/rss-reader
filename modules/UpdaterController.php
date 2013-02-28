@@ -9,6 +9,7 @@ class UpdaterController {
     public function __construct() {
         if ( self::$log === null ) {
             self::$log = LogFacility::getLogger('UpdaterController.class');
+            LogFacility::setLoggerLevel('QueryBuilder.class', Logger::WARN);
         }
     }
 

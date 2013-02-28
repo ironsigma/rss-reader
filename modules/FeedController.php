@@ -10,7 +10,9 @@ class FeedController {
     public function handleRequest($args) {
         $template = new Template('feed_list.php');
         $template->feeds = FeedDao::findAllWithUnreadCount();
-        $template->stared_count = PostDao::countStared();
+        $criteria = new Criteria();
+        $criteria->true('stared');
+        $template->stared_count = PostDao::countAll($criteria);
         $template->display();
     }
 
@@ -25,7 +27,10 @@ class FeedController {
         if ( $args[':id'] === 'stared' ) {
             $template->feed_name = 'Stared articles';
             $per_page = 10;
-            $template->article_count = PostDao::countStared();
+
+            $stared_criteria = new Criteria();
+            $stared_criteria->true('stared');
+            $template->article_count = PostDao::countAll($stared_criteria);
 
             $criteria->true('stared');
             $criteria->orderBy('published', 'ASC');
@@ -33,10 +38,12 @@ class FeedController {
             $feed = FeedDao::findById($args[':id']);
             $template->feed_name = $feed->name;
             $per_page = $feed->per_page;
-            $template->article_count = PostDao::countAll(array(
-                'feed_id' => $args[':id'],
-                'read' => false,
-            ));
+
+            $count_criteria = new Criteria();
+            $count_criteria->false('read');
+            $count_criteria->equal('feed_id', $args[':id'], SQLITE3_INTEGER);
+            $template->article_count = PostDao::countAll($count_criteria);
+
             $criteria->equal('feed_id', $args[':id'], SQLITE3_INTEGER);
             $criteria->false('read');
             $criteria->orderBy('published', $feed->newest_first ? 'DESC' : 'ASC');
