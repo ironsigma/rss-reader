@@ -50,7 +50,7 @@ class FeedController {
         }
 
         if ( $template->article_count === 0 ) {
-            header('Location: /'.(isset($args['mobi'])?'&mobi':''));
+            header('Location: /'.(isset($args['mobi'])?'?mobi':''));
             return;
         }
 
