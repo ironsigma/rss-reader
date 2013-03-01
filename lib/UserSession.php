@@ -11,7 +11,7 @@ class UserSession {
     public static function validate($userid) {
         session_regenerate_id();
         $_SESSION['valid'] = true;
-        $_SESSION['userid'] = $userid;
+        $_SESSION['user_data'] = array('id' => $userid);
     }
 
     public static function isLoggedin() {
@@ -27,7 +27,8 @@ class UserSession {
         if ( !self::isLoggedin() ) {
             $mobi = isset($_GET['mobi']) ? '?mobi' : '';
             header("Location: /login$mobi");
-            exit;
+            return false;
         }
+        return $_SESSION['user_data'];
     }
 }

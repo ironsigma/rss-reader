@@ -1,7 +1,9 @@
 <?php include 'mobile_header.php' ?>
 
 <div data-role="page">
+
     <div data-role="header">
+        <a href="/login?mobi&logout">Logout</a>
         <h1>RSS Reader</h1>
     </div>
 
@@ -20,11 +22,6 @@
         </ul>
     </div>
 
-    <!--
-    <div data-role="footer">
-        <h4>Page Footer</h4>
-    </div>
-    -->
 </div>
 
 

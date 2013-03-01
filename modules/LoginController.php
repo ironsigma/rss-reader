@@ -9,10 +9,10 @@ class LoginController {
         if ( isset($args['logout']) ) {
             UserSession::logout();
             header("Location: /login?msg=4".$mobi);
-            exit;
+            return;
         }
 
-        $template = new Template('login.php');
+        $template = new Template((isset($args['mobi'])?'mobile_':'').'login.php');
         $template->reg = isset($args['register']);
 
         $template->message = null;
@@ -34,11 +34,11 @@ class LoginController {
         if ( isset($args['register']) ) {
             if ( $_POST['password'] !== $_POST['password2'] ) {
                 header("Location: /login?msg=1".$mobi);
-                exit;
+                return;
             }
             if ( strlen($_POST['username']) > 30 ) {
                 header("Location: /login?msg=2".$mobi);
-                exit;
+                return;
             }
             $salt = $this->createSalt();
             $hash = hash('sha256', $salt . $_POST['password']);
@@ -48,23 +48,23 @@ class LoginController {
                 'salt' => $salt
             )));
             header("Location: /login?msg=0".$mobi);
-            exit;
+            return;
         }
 
         // login
         $user = UserDao::findByUsername($_POST['username']);
         if( $user === null ) {
             header("Location: /login?msg=3".$mobi);
-            exit;
+            return;
         }
         $hash = hash('sha256', $user->salt . $_POST['password']);
         if ( $user->password !== $hash ) {
             header("Location: /login?msg=3".$mobi);
-            exit;
+            return;
         }
         UserSession::validate($user->id);
         header("Location: /?ok".$mobi);
-        exit;
+        return;
     }
     protected function createSalt() {
         return substr(md5(uniqid(rand(), true)), 0, 3);

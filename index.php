@@ -78,14 +78,18 @@ try {
 
     $url = get_url();
     $found_route = $router->findRoute($url, $_SERVER['REQUEST_METHOD']);
+    $user = true;
     if (
             $found_route->getMapClass() !== 'login' &&
             $found_route->getMapClass() !== 'updater'
        )
     {
-        UserSession::requireLogin();
+        $user = UserSession::requireLogin();
     }
-    $dispatcher->dispatch($found_route, null, $_SERVER['REQUEST_METHOD']);
+
+    if ( $user !== false ) {
+        $dispatcher->dispatch($found_route, null, $_SERVER['REQUEST_METHOD']);
+    }
 
 } catch ( RouteNotFoundException $e ) {
     page_error('404', 'Invalid url: '. $e->getMessage(), $url);
