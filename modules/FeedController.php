@@ -84,7 +84,7 @@ class FeedController {
      * Mark selected articles read.
      */
     public function read($args) {
-        PostDao::markRead(( $args['ids'] === 'all' ? null : $args['ids']), $args['feed']);
+        PostDao::markRead(( $args['ids'] === 'all' ? null : explode(',', $args['ids'])), $args['feed']);
         header("Location: /feed/{$args[':id']}/articles?page={$args['page']}".(isset($args['mobi'])?'&mobi':''));
         exit;
     }

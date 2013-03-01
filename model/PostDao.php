@@ -35,29 +35,31 @@ class PostDao {
         return $row[0] !== 0;
     }
     public static function deleteReadPostBefore($date) {
-        $db = Database::getInstance();
-        $st = $db->prepare('DELETE FROM post WHERE published <= :published AND read = :read AND stared = :stared');
-        $st->bindValue(':published', $date, SQLITE3_INTEGER);
-        $st->bindValue(':read', 1, SQLITE3_INTEGER);
-        $st->bindValue(':stared', 0, SQLITE3_INTEGER);
+        $criteria = new Criteria();
+        $criteria->lessThanEqual('published', $date);
+        $criteria->true('read');
+        $criteria->false('stared');
+
+        $st = QueryBuilder::delete(Post::getTable(), $criteria);
         $st->execute();
     }
     public static function markRead($ids, $feed_id) {
-        $db = Database::getInstance();
-        $sql = 'UPDATE post SET read=:read WHERE feed_id=:feed';
+        $criteria = new Criteria();
+        $criteria->equal('feed_id', $feed_id, SQLITE3_INTEGER);
         if ( $ids !== null ) {
-            $sql .= ' AND id IN('. $ids .')';
+            $criteria->in('id', $ids, SQLITE3_INTEGER);
         }
-        $st = $db->prepare($sql);
-        $st->bindValue(':read', 1, SQLITE3_INTEGER);
-        $st->bindValue(':feed', $feed_id, SQLITE3_INTEGER);
+
+        $entity = new Post(array('read' => true));
+        $st = QueryBuilder::update(Post::getTable(), array('read'), $entity, $criteria);
         $st->execute();
     }
     public static function updateStar($star, $id) {
-        $db = Database::getInstance();
-        $st = $db->prepare('UPDATE post SET stared=:star WHERE id=:id');
-        $st->bindValue(':star', $star ? 1 : 0, SQLITE3_INTEGER);
-        $st->bindValue(':id', $id, SQLITE3_INTEGER);
+        $criteria = new Criteria();
+        $criteria->equal('id', $id, SQLITE3_INTEGER);
+
+        $entity = new Post(array('stared' => $star));
+        $st = QueryBuilder::update(Post::getTable(), array('stared'), $entity, $criteria);
         $st->execute();
     }
 }
