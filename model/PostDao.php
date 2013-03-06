@@ -13,6 +13,22 @@ class PostDao {
         }
         return $posts;
     }
+    public static function postFolderCount() {
+        $criteria = new Criteria();
+        $criteria->false('read');
+        $criteria->join('feed', 'id', 'feed_id');
+        $criteria->join('folder', 'id', 'feed.folder_id');
+        $criteria->count('*', 'count');
+        $criteria->groupBy('folder.id');
+        $st = QueryBuilder::select(Post::getTable(), array('folder.id'), $criteria);
+        $results = $st->execute();
+
+        $counts = array();
+        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
+            $counts[$row['id']] = $row['count'];
+        }
+        return $counts;
+    }
     public static function countAll($criteria) {
         $criteria->count('*', 'count');
         $st = QueryBuilder::select(Post::getTable(), array(), $criteria);
@@ -45,7 +61,9 @@ class PostDao {
     }
     public static function markRead($ids, $feed_id) {
         $criteria = new Criteria();
-        $criteria->equal('feed_id', $feed_id, SQLITE3_INTEGER);
+        if ( $feed_id !== null ) {
+            $criteria->equal('feed_id', $feed_id, SQLITE3_INTEGER);
+        }
         if ( $ids !== null ) {
             $criteria->in('id', $ids, SQLITE3_INTEGER);
         }

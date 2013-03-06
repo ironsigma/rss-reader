@@ -1,0 +1,20 @@
+.feedtree li {
+    padding: 3px 0 2px 16px;
+}
+.feedtree span.folder,
+.feedtree span.feed {
+    padding: 1px 0 1px 28px; display: block;
+}
+.feedtree span.folder {
+    background: url('/static/images/rss_folder.png') 0 0 no-repeat;
+    background-size: 24px 24px;
+}
+/*
+.feedtree li.expandable span.folder {
+    background: url(images/folder-closed.gif) 0 0 no-repeat;
+}
+*/
+.feedtree span.feed {
+    background: url(/static/images/rss_feed.png) 0 0 no-repeat;
+    background-size: 24px 24px;
+}

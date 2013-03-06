@@ -39,8 +39,9 @@ class QueryBuilder {
         // append joins
         foreach ( $criteria->getJoins() as $join ) {
             $p = $prefix_list[$join['table']];
+            $this_col = self::getPrefixedColumn($prefix_list, $join['this_col']);
             $sql .= " {$join['type']} JOIN {$join['table']} $p ON "
-                ."$p.\"{$join['table_col']}\" = {$prefix_list['::']}.\"{$join['this_col']}\"";
+                ."$p.\"{$join['table_col']}\" = $this_col";
         }
 
         $where_clause = static::whereClause($criteria->getOperations(), $prefix_list);

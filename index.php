@@ -64,8 +64,8 @@ $action_route->addDynamicElement(':class', ':class')
     ->setMapMethod('handlePostRequest', 'POST');
 
 // feed/id/method route
-$action_id_route = new Route('/feed/:id/:method');
-$action_id_route->setMapClass('Feed')
+$action_id_route = new Route('/:class/:id/:method');
+$action_id_route->addDynamicElement(':class', ':class')
     ->addDynamicElement(':id', ':id')
     ->addDynamicElement(':method', ':method');
 

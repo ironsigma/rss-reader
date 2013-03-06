@@ -46,7 +46,7 @@ class FeedDao {
         $criteria->orderBy('folder.name');
 
         $st = QueryBuilder::select(Feed::getTable(), array_merge(
-                array(array('folder.name', 'folder')),
+                array(array('folder.name', 'folder'), array('folder.id', 'folder_id')),
                 Feed::getColumns()
             ), $criteria);
 
