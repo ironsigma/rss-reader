@@ -3,6 +3,7 @@
 <?php include 'header_block.php' ?>
 
 <p><a href="/login?logout">Logout</a></p>
+<p><a href="/stats">Feed Stats</a></p>
 <h1>RSS Reader</h1>
 <ul id="tree" class="feedtree">
     <li><span class="folder"><a href="/feed/stared/articles?page=1">Stared Items</a> (<?php echo $stared_count ?>)</span></li>

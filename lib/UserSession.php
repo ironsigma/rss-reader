@@ -5,6 +5,7 @@
  */
 class UserSession {
     public static function init() {
+        ini_set('session.cookie_lifetime',  1210000);
         session_start();
     }
 
