@@ -1,6 +1,13 @@
 <?php $page_js = array('jquery.js', 'jquery.flot.js') ?>
 <?php include 'header_block.php' ?>
 
+<p><a href="/">Feed List</a></p>
+
+<h1>Database</h1>
+<ul>
+    <li><strong>File Size:</strong> <?php echo $db_size ?></li>
+</ul>
+
 <h1>High Frequency Updates (15+ / day)</h1>
 <div id="high_feeds" style="width:1400px;height:600px"></div>
 

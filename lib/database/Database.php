@@ -39,5 +39,14 @@ class Database {
         return self::getInstance()->lastInsertRowID();
     }
 
+    public static function getSize() {
+        return self::formatFileSize(filesize(self::$dbName));
+    }
+
+    public static function formatFileSize($bytes, $decimals=2) {
+        $sz = 'BKMGTP';
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+    }
 }
 Database::init();

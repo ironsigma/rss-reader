@@ -76,6 +76,7 @@ class StatsController {
             );
         }
 
+        $template->db_size = Database::getSize();
         $template->labels = join(',', $labels);
         $template->data = $data;
         $template->display();
