@@ -14,6 +14,18 @@
 }
 
 
+/* --- Pager --- */
+#pager {
+    background: #333;
+    color: #aaa;
+    padding: 5px;
+    text-align: right;
+    a {
+        text-decoration: none;
+        color: #fff;
+    }
+}
+
 /* --- Navigation --- */
 #navigation {
     float: left;
@@ -27,16 +39,29 @@
         li {
             list-style-type: none;
             display: inline;
-            a {
+            @link-border: 1px solid#fff;
+            .common_nav() {
                 display: block;
                 float: left;
                 padding: 5px 10px;
+                border-right: @link-border;
+            }
+            span {
+                .common_nav;
+                color: #ccc;
+            }
+            a {
+                .common_nav;
                 color: #fff;
                 text-decoration: none;
-                border-right: 1px solid#fff;
                 &:hover {
                     background: #383;
                 }
+            }
+            .right {
+                float: right;
+                border-right: none;
+                border-left: @link-border;
             }
         }
     }
@@ -81,8 +106,9 @@
     h2 {
         .headers;
         a {
-            color: #003399;
             font-size: 22px;
+            color: #003399;
+            font-weight: bold; 
             text-decoration: none;
         }
     }
@@ -93,9 +119,17 @@
         color: #777;
     }
 
+    a {
+        color: #003399;
+        text-decoration: none;
+        font-weight: normal;
+        font-size: 18px;
+    }
+
     .text {
         color: #333;
         font-family: 'Grandesign Neue Serif';
+        font-size: 18px;
     }
 
     .star {

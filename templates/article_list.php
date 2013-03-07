@@ -10,13 +10,19 @@
     <div id="navigation">
         <ul>
             <li><a href="/">Feeds</a></li>
+            <?php if ($article_count > 0 && $feed_id !== 'stared') : ?>
+                <li><a class="right" href="/feed/<?php echo $feed_id ?>/read?<?php echo $container ?>=<?php echo $feed_id ?>&amp;page=<?php echo $page ?>&amp;ids=<?php echo $article_ids ?>">Page Read</a></li>
+                <?php if ( $container === 'feed' ) : ?>
+                <li><a class="right" href="/feed/<?php echo $feed_id ?>/read?<?php echo $container ?>=<?php echo $feed_id ?>&amp;page=1&amp;ids=all">All Read</a></li>
+                <?php endif ?>
+            <?php endif ?>
+            <li><span class="right">Page <?php echo $page ?> of <?php echo $page_count ?></span></li>
         </ul>
     </div><!-- navigation -->
     <div id="content">
         <?php if ( $article_count === 0 ) : ?>
         <p>No unread items.</p>
         <?php else : ?>
-        <?php include 'article_pager.php' ?>
         <?php foreach($articles as $a) : ?>
         <div class='article'>
             <div id="star_<?php echo $a->stared?'1':'0' ?>_<?php echo $a->id ?>" class='star'><img id="star_img_<?php echo $a->id ?>" src="/static/images/star_<?php echo $a->stared?'full':'empty' ?>.png"/></div>
