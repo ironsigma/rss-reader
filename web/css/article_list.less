@@ -1,0 +1,111 @@
+@post-width: 850px;
+
+/* --- Container --- */
+#container {
+    margin: 0 auto;
+    width: @post-width;
+    background: #fff;
+}
+
+/* --- Header --- */
+#header {
+    background: #ccc;
+    padding: 20px;
+}
+
+
+/* --- Navigation --- */
+#navigation {
+    float: left;
+    width: @post-width;
+    background: #333;
+
+    /* Nav links */
+    ul {
+        margin: 0;
+        padding: 0;
+        li {
+            list-style-type: none;
+            display: inline;
+            a {
+                display: block;
+                float: left;
+                padding: 5px 10px;
+                color: #fff;
+                text-decoration: none;
+                border-right: 1px solid#fff;
+                &:hover {
+                    background: #383;
+                }
+            }
+        }
+    }
+}
+
+/* --- Content --- */
+#content {
+    clear: left;
+    padding: 10px 0;
+
+    /* Header */
+    h2 {
+        color: #000;
+        font-size: 160%;
+        margin: 0 0 .5em;
+    }
+}
+
+
+/* --- Footer -- */
+#footer {
+    background: #ccc;
+    text-align: right;
+    padding: 20px;
+    color: gray;
+    margin-bottom: 20px;
+}
+
+/* -- Articles --- */
+.article {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f7f7f7;
+
+    .headers() {
+        font-family: Arial;
+        margin: 0;
+        margin-bottom: 5px;
+    }
+
+    h2 {
+        .headers;
+        a {
+            color: #003399;
+            font-size: 22px;
+            text-decoration: none;
+        }
+    }
+
+    h3 {
+        .headers;
+        font-size: 14px;
+        color: #777;
+    }
+
+    .text {
+        color: #333;
+        font-family: 'Grandesign Neue Serif';
+    }
+
+    .star {
+        float: right;
+        img {
+            width: 32px;
+            height: 32px;
+        }
+    }
+}
+
+/* vim:ft=css:
+*/
