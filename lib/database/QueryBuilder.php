@@ -12,7 +12,20 @@ class QueryBuilder {
         self::$prefix_count = 0;
     }
 
-    public static function select($table, array $columns, Criteria $criteria) {
+    /**
+     * Generate a SELECT statement.
+     * @param string $table Table name to select from
+     * @param array $column columns to select, null = '*', empty = no columns selected
+     * @param Criteria $criteria criteria to apply.
+     */
+    public static function select($table, array $columns=null, Criteria $criteria=null) {
+        return self::getStatement(self::selectSqlAndValues($table, $columns, $criteria));
+    }
+
+    public static function selectSqlAndValues($table, array $columns=null, Criteria $criteria=null) {
+        if ( $criteria == null ) {
+            $criteria = new Criteria();
+        }
         // Create table prefixes
         self::$prefix_count = 0;
         $prefix_list = array('::' => self::generatePrefix($table));
@@ -21,6 +34,9 @@ class QueryBuilder {
         }
 
         // append table prefixes to columns
+        if ( $columns === null ) {
+            $columns = array('*');
+        }
         for( $i = 0, $c = count($columns); $i < $c; $i ++ ) {
             $columns[$i] = self::getPrefixedColumn($prefix_list, $columns[$i]);
         }
@@ -46,7 +62,9 @@ class QueryBuilder {
 
         $where_clause = static::whereClause($criteria->getOperations(), $prefix_list);
 
-        $sql .= ' '. $where_clause['sql'];
+        if ( $where_clause['sql'] ) {
+            $sql .= ' '. $where_clause['sql'];
+        }
 
         $group = $criteria->getGroupBy();
         if ( $group ) {
@@ -60,7 +78,7 @@ class QueryBuilder {
         if ( $page ) {
             $sql .= ' LIMIT '. $page['limit'] .' OFFSET '. $page['offset'];
         }
-        return self::getStatement(array('sql' => $sql, 'values' => $where_clause['values']));
+        return array('sql' => $sql, 'values' => $where_clause['values']);
     }
 
     public static function insert($table, array $columns, $entity, array $exclude=array()) {

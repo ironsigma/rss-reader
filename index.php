@@ -1,6 +1,7 @@
 <?php
 // constants
 define('APP_PATH', __DIR__);
+include('lib/AutoLoader.php');
 
 // helpers
 function get_url() {
@@ -18,20 +19,6 @@ function page_error($code, $message, $url) {
         'error' => $message,
         'url' => $url,
     )));
-}
-
-// include path
-set_include_path(get_include_path()
-    . PATH_SEPARATOR . APP_PATH . '/modules/'
-    . PATH_SEPARATOR . APP_PATH . '/model/'
-    . PATH_SEPARATOR . APP_PATH . '/lib/'
-    . PATH_SEPARATOR . APP_PATH . '/lib/logger/'
-    . PATH_SEPARATOR . APP_PATH . '/lib/database/'
-    . PATH_SEPARATOR . APP_PATH . '/lib/php-router/'
-);
-
-function __autoload($class_name) {
-    include "$class_name.php";
 }
 
 // Session
