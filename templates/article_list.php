@@ -1,5 +1,5 @@
 <?php $page_title = ' - '. $feed_name .' ('. $article_count .')' ?>
-<?php $page_css = array('article_list.less') ?>
+<?php $page_css = array('reader.less', 'article_list.less') ?>
 <?php $page_js = array('jquery.js', 'less.js') ?>
 <?php include 'header_block.php' ?>
 
