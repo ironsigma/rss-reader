@@ -40,7 +40,7 @@ class FolderController {
         $template->page = min($template->page_count, $args['page']);
         $criteria->page($per_page, $per_page * ($template->page-1));
 
-        $template->articles = PostDao::findAll($criteria);
+        $template->articles = PostDao::findAll($criteria, array(array('feed.name', 'feed')));
         $log->info("Articles: ". count($template->articles));
 
         if ( isset($args['mobi']) ) {

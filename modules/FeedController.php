@@ -37,6 +37,7 @@ class FeedController {
             $template->article_count = PostDao::countAll($stared_criteria);
 
             $criteria->true('stared');
+            $criteria->join('feed', 'id', 'feed_id');
             $criteria->orderBy('published', 'ASC');
         } else {
             $feed = FeedDao::findById($args[':id']);
@@ -62,7 +63,8 @@ class FeedController {
             $template->page_count = ceil($template->article_count / $per_page);
             $template->page = min($template->page_count, $args['page']);
             $criteria->page($per_page, $per_page * ($template->page-1));
-            $template->articles = PostDao::findAll($criteria);
+            $template->articles = PostDao::findAll($criteria,
+                ($args[':id']==='stared'?array(array('feed.name', 'feed')):null));
 
             if ( isset($args['mobi']) ) {
                 foreach ( $template->articles as $article ) {

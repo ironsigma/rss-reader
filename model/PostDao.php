@@ -4,8 +4,13 @@
  * @package com\izylab\reader
  */
 class PostDao {
-    public static function findAll($criteria) {
-        $st = QueryBuilder::select(Post::getTable(), Post::getColumns(), $criteria);
+    public static function findAll($criteria, $columns=null) {
+        if ( $columns ) {
+            $columns = array_merge($columns, Post::getColumns());
+        } else {
+            $columns = Post::getColumns();
+        }
+        $st = QueryBuilder::select(Post::getTable(), $columns, $criteria);
         $results = $st->execute();
         $posts = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
