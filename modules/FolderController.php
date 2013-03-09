@@ -10,7 +10,7 @@ class FolderController {
 
         $folder = FolderDao::findById($args[':id']);
 
-        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'article_list.php');
+        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'article_list');
         $template->container = 'folder';
         $template->feed_id = $args[':id'];
         $template->feed_name = $folder->name;

@@ -16,7 +16,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $
 unset($app_inc_paths);
 
 function autoLoadClass($class_name) {
-    include "$class_name.php";
+    include "$class_name.class.php";
 }
 
 spl_autoload_register('autoLoadClass');

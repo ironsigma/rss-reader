@@ -1,7 +1,7 @@
 <?php $page_title = ' - '. $feed_name .' ('. $article_count .')' ?>
 <?php $page_css = array('reader.less', 'article_list.less') ?>
 <?php $page_js = array('jquery.js', 'less.js') ?>
-<?php include 'header_block.php' ?>
+<?php include 'header.layout.php' ?>
 
 <div id="container">
     <div id="header">
@@ -34,7 +34,7 @@
             <div class='text'><?php echo $a->text ?></div>
         </div>
         <?php endforeach ?>
-        <?php include 'article_pager.php' ?>
+        <?php include 'article_pager.include.php' ?>
         <?php endif ?>
     </div><!-- content -->
     <div id="footer">
@@ -67,4 +67,4 @@ $(document).ready(function(){
 });
 </script>
 
-<?php include 'footer_block.php' ?>
+<?php include 'footer.layout.php' ?>

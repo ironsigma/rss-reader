@@ -1,6 +1,6 @@
 <?php $page_css = array('jquery.treeview.css', 'reader.less', 'feeds.css') ?>
 <?php $page_js = array('jquery.js', 'less.js', 'jquery.treeview.js') ?>
-<?php include 'header_block.php' ?>
+<?php include 'header.layout.php' ?>
 
 <div id="container">
     <div id="header">
@@ -40,4 +40,4 @@ $(document).ready(function(){
     });
 });
 </script>
-<?php include 'footer_block.php' ?>
+<?php include 'footer.layout.php' ?>

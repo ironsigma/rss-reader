@@ -5,7 +5,7 @@
  */
 class StatsController {
     public function handleRequest($args) {
-        $template = new Template('stats.php');
+        $template = new Template('stats');
 
         $db = Database::getInstance();
         $stm = $db->prepare(

@@ -1,5 +1,5 @@
 <?php $page_js = array('jquery.js', 'jquery.flot.js') ?>
-<?php include 'header_block.php' ?>
+<?php include 'header.layout.php' ?>
 
 <p><a href="/">Feed List</a></p>
 
@@ -51,4 +51,4 @@ $(document).ready(function(){
 });
 </script>
 
-<?php include 'footer_block.php' ?>
+<?php include 'footer.layout.php' ?>

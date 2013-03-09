@@ -8,7 +8,7 @@ class FeedController {
      * Display feed list
      */
     public function handleRequest($args) {
-        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'feed_list.php');
+        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'feed_list');
         $template->feeds = FeedDao::findAllWithUnreadCount();
 
         $criteria = new Criteria();
@@ -23,7 +23,7 @@ class FeedController {
      * Display article list
      */
     public function articles($args) {
-        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'article_list.php');
+        $template = new Template((isset($args['mobi']) ? 'mobile_' : '').'article_list');
         $template->container = 'feed';
         $template->feed_id = $args[':id'];
 

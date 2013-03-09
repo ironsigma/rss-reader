@@ -12,7 +12,7 @@ class LoginController {
             return;
         }
 
-        $template = new Template((isset($args['mobi'])?'mobile_':'').'login.php');
+        $template = new Template((isset($args['mobi'])?'mobile_':'').'login');
         $template->reg = isset($args['register']);
 
         $template->message = null;

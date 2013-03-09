@@ -3,6 +3,8 @@
 define('APP_PATH', __DIR__);
 include('lib/AutoLoader.php');
 
+Template::setTemplateDir(APP_PATH.'/templates');
+
 // helpers
 function get_url() {
     $uri = urldecode($_SERVER['REQUEST_URI']);

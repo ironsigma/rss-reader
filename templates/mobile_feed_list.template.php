@@ -1,4 +1,4 @@
-<?php include 'mobile_header.php' ?>
+<?php include 'mobile_header.layout.php' ?>
 
 <div data-role="page">
 
@@ -25,4 +25,4 @@
 </div>
 
 
-<?php include 'mobile_footer.php' ?>
+<?php include 'mobile_footer.layout.php' ?>
