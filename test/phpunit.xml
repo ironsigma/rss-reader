@@ -1,2 +1,7 @@
-<phpunit bootstrap="bootstrap.php">
+<phpunit bootstrap="bootstrap.php" verbose="true" colors="true">
+    <testsuites>
+        <testsuite>
+            <directory suffix="Test.class.php">.</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>
