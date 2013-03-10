@@ -4,6 +4,7 @@ define('APP_PATH', __DIR__);
 include('lib/AutoLoader.php');
 
 Template::setTemplateDir(APP_PATH.'/templates');
+Template::setTheme(isset($_GET['mobi'])?'mobile':'');
 
 // helpers
 function get_url() {

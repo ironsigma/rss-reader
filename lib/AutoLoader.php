@@ -6,6 +6,9 @@ $app_inc_paths = array(
     APP_PATH . '/lib/logger',
     APP_PATH . '/lib/database',
     APP_PATH . '/lib/php-router',
+    APP_PATH . '/lib/feed-parser',
+    APP_PATH . '/lib/template',
+    APP_PATH . '/lib/session',
 );
 
 if ( defined('APP_ADDL_INC_PATHS') ) {
@@ -19,4 +22,4 @@ function autoLoadClass($class_name) {
     include "$class_name.class.php";
 }
 
-spl_autoload_register('autoLoadClass');
+spl_autoload_register('autoLoadClass', false);

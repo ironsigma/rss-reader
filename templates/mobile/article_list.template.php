@@ -1,4 +1,4 @@
-<?php include 'mobile_header.layout.php' ?>
+<?php include 'header.layout.php' ?>
 
 <div data-role="page">
     <div data-role="panel" id="pager" data-display="overlay">
@@ -57,4 +57,4 @@
     </div>
 </div>
 
-<?php include 'mobile_footer.layout.php' ?>
+<?php include 'footer.layout.php' ?>
