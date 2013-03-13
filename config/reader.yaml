@@ -1,0 +1,9 @@
+app:
+    path: /var/www/reader
+
+templates:
+    path: /templates
+
+database:
+    driver: sqlite3
+    file: /var/www/reader/db/reader.sqlite3

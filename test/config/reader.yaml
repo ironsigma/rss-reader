@@ -1,0 +1,5 @@
+database:
+    driver:
+        _: sqlite3
+        version: 3
+    file: /var/www/reader/db/reader.sqlite3

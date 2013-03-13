@@ -36,25 +36,31 @@ class UpdaterController {
             }
 
             self::$log->info("Updating {$feed->name}");
+            $count = 0;
+            $new = 0;
             $parser = new FeedParser($feed->url);
             $posts = $parser->getPosts();
 
-            $count = 0;
-            $new = 0;
-            self::$log->debug('Loading posts...');
-            foreach ( $posts as $post_data ) {
-                $post_data['feed_id'] = $feed->id;
-                $post = new Post($post_data);
-                $count ++;
-                if ( !PostDao::postExists($post) ) {
-                    $post->read = false;
-                    $post->stared = false;
-                    PostDao::insert($post);
-                    $new ++;
+            if ( $posts === null ) {
+                self::$log->error("Parsing feed '{$feed->name}' Failed.");
+
+            } else {
+                self::$log->debug('Loading posts...');
+                foreach ( $posts as $post_data ) {
+                    $post_data['feed_id'] = $feed->id;
+                    $post = new Post($post_data);
+                    $count ++;
+                    if ( !PostDao::postExists($post) ) {
+                        $post->read = false;
+                        $post->stared = false;
+                        PostDao::insert($post);
+                        $new ++;
+                    }
                 }
+
+                self::$log->info(sprintf('Found %d posts, %d where new', $count, $new));
             }
 
-            self::$log->info(sprintf('Found %d posts, %d where new', $count, $new));
             UpdateDao::insert(new Update(array(
                 'updated' => time(),
                 'total_count' => $count,

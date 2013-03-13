@@ -19,10 +19,14 @@ class FeedParser {
 
         self::$log->trace('loading XML feed');
         $x = simplexml_load_string($xml_source);
+        if ( $x === false ) {
+            self::$log->error('Error parsing feed');
+            return null;
+        }
         self::$log->trace('Feed loaded');
 
         $posts = array();
-        if ( $x === false || count($x) == 0) {
+        if ( count($x) == 0) {
             self::$log->warn('There doesn\'t seem to be any records in the feed');
             return $posts;
         }

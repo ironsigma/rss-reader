@@ -3,6 +3,7 @@
 define('APP_PATH', __DIR__);
 include('lib/AutoLoader.php');
 
+Config::read(APP_PATH.'/config/reader.yaml');
 Template::setTemplateDir(APP_PATH.'/templates');
 Template::setTheme(isset($_GET['mobi'])?'mobile':'');
 
@@ -33,6 +34,9 @@ LogFacility::addAppender(new FileLogAppender('/var/log/lighttpd/reader-app.log')
 LogFacility::setLoggerLevel('Database.class', Logger::WARN);
 LogFacility::setLoggerLevel('UpdaterController.class', Logger::WARN);
 LogFacility::setLoggerLevel('FeedParser.class', Logger::WARN);
+
+$log = LogFacility::getLogger('index.html');
+$log->info('Config: '. print_r(Config::all(), true));
 
 // database
 Database::setDatabase(APP_PATH .'/db/reader.sqlite3');

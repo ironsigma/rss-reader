@@ -1,7 +1,13 @@
-<phpunit bootstrap="bootstrap.php" verbose="true" colors="true">
+<phpunit
+    bootstrap="bootstrap.php"
+    verbose="true"
+    colors="true"
+    stopOnError="true"
+    stopOnFailure="true"
+>
     <testsuites>
         <testsuite>
-            <directory suffix="Test.class.php">.</directory>
+            <directory>.</directory>
         </testsuite>
     </testsuites>
 </phpunit>
