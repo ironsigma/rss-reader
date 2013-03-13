@@ -1,18 +1,17 @@
 <?php
 class Connection {
-    protected $config = array();
     protected $grammar;
     protected $pdo;
     protected $log;
 
-    public function __construct($pdo) {
+    public function __construct($pdo, $grammar) {
         $this->pdo = $pdo;
-        $this->config['driver'] = 'sqlite3';
+        $this->grammar = $grammar;
         $this->log = LogFacility::getLogger('Connection.class');
     }
 
     public function createQuery($table) {
-        return new Query($this, $this->grammar(), $table);
+        return new Query($this, $this->grammar, $table);
     }
 
     protected function execute($sql, array $bindings) {
@@ -40,21 +39,4 @@ class Connection {
         return $result;
     }
 
-    public function driver() {
-        return $this->config['driver'];
-    }
-
-    protected function grammar() {
-        if ( ! is_null($this->grammar) ) {
-            return $this->grammar;
-        }
-
-        switch ( $this->driver() ) {
-        case 'sqlite3':
-            return new SQLite3Grammar();
-
-        default:
-            return null;
-        }
-    }
 }

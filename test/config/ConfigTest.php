@@ -45,5 +45,12 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(1, count($all['foo']['myfoo']));
         $this->assertEquals('bar', $all['foo']['myfoo']);
 
+        Config::clear();
+        Config::set('foo2.bar2', 'val');
+        $all = Config::all();
+
+        $this->assertEquals(1, count($all));
+        $this->assertEquals(1, count($all['foo2']['bar2']));
+        $this->assertEquals('val', $all['foo2']['bar2']);
     }
 }

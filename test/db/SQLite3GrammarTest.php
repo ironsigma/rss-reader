@@ -1,5 +1,11 @@
 <?php
 class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
+
+    protected function setUp() {
+        Config::clear();
+        Config::set('database.driver', 'sqlite3');
+    }
+
     public function testSelect() {
         $sql = DB::from('post')->sql();
         $this->assertEquals('SELECT _p1.* FROM post _p1', $sql);
@@ -221,12 +227,10 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
             .'LIMIT 5 OFFSET 50', $sql);
     }
 
-    public function testDBSelect() {
-        $result = DB::from(Post::getTable())
-            ->equal('id', 8000, PDO::PARAM_INT)
-            ->true('read')
-            ->fetch('Post');
-
-        //print('result:'.print_r($result, true));
-    }
+    //...public function testDBSelect() {
+    //...    $result = DB::from(Post::getTable())
+    //...        ->equal('id', 8000, PDO::PARAM_INT)
+    //...        ->true('read')
+    //...        ->fetch('Post');
+    //...}
 }

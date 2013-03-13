@@ -52,4 +52,14 @@ class Logger {
         }
         return 'UNKNOWN';
     }
+    public static function getLevelConstant($level) {
+        switch ( $level) {
+        case 'ERROR': return self::ERROR;
+        case 'WARN':  return self::WARN;
+        case 'INFO':  return self::INFO;
+        case 'DEBUG': return self::DEBUG;
+        case 'TRACE': return self::TRACE;
+        }
+        return null;
+    }
 }

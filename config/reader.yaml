@@ -1,8 +1,16 @@
-app:
-    path: /var/www/reader
+controllers:
+    path: /var/www/reader/modules
 
 templates:
-    path: /templates
+    path: /var/www/reader/templates
+    themes: { mobile: 'mobile', desktop: '' }
+
+logging:
+    file: /var/log/lighttpd/reader-app.log
+    loggers:
+        - { level: WARN, label: Database.class }
+        - { level: WARN, label: UpdaterController.class }
+        - { level: WARN, label: FeedParser.class }
 
 database:
     driver: sqlite3

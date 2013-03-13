@@ -4,8 +4,11 @@ define('APP_PATH', __DIR__);
 include('lib/AutoLoader.php');
 
 Config::read(APP_PATH.'/config/reader.yaml');
-Template::setTemplateDir(APP_PATH.'/templates');
-Template::setTheme(isset($_GET['mobi'])?'mobile':'');
+Template::setTemplateDir(Config::get('templates.path'));
+
+Template::setTheme(isset($_GET['mobi'])?
+    Config::get('templates.themes.mobile'):
+    Config::get('templates.themes.desktop'));
 
 // helpers
 function get_url() {
@@ -30,21 +33,21 @@ UserSession::init();
 
 // logging
 LogFacility::setRootLoggerLevel(Logger::TRACE);
-LogFacility::addAppender(new FileLogAppender('/var/log/lighttpd/reader-app.log'));
-LogFacility::setLoggerLevel('Database.class', Logger::WARN);
-LogFacility::setLoggerLevel('UpdaterController.class', Logger::WARN);
-LogFacility::setLoggerLevel('FeedParser.class', Logger::WARN);
+LogFacility::addAppender(new FileLogAppender(Config::get('logging.file')));
+foreach ( Config::get('logging.loggers', array()) as $logger ) {
+    LogFacility::setLoggerLevel($logger['label'], $logger['level']);
+}
 
 $log = LogFacility::getLogger('index.html');
 $log->info('Config: '. print_r(Config::all(), true));
 
 // database
-Database::setDatabase(APP_PATH .'/db/reader.sqlite3');
+Database::setDatabase(Config::get('database.file'));
 
 // routing
 $dispatcher = new Dispatcher();
 $dispatcher->setSuffix('Controller');
-$dispatcher->setClassPath(APP_PATH.'/modules');
+$dispatcher->setClassPath(Config::get('controllers.path'));
 
 // default
 $default_route = new Route('/');

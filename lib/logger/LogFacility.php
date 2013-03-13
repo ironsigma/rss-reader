@@ -45,6 +45,9 @@ class LogFacility {
     }
 
     public static function setLoggerLevel($label, $level) {
+        if ( is_string($level) ) {
+            $level = Logger::getLevelConstant($level);
+        }
         self::$loggerLevelList[$label] = $level;
         if ( array_key_exists($label, self::$loggerList) ) {
             self::$loggerList[$label]->setLevel($level);
