@@ -38,11 +38,11 @@ foreach ( Config::get('logging.loggers', array()) as $logger ) {
     LogFacility::setLoggerLevel($logger['label'], $logger['level']);
 }
 
-$log = LogFacility::getLogger('index.html');
-$log->info('Config: '. print_r(Config::all(), true));
+//...$log = LogFacility::getLogger('index.html');
+//...$log->info('Config: '. print_r(Config::all(), true));
 
 // database
-Database::setDatabase(Config::get('database.file'));
+Database::setDatabase(Config::get('database.sqlite3.file'));
 
 // routing
 $dispatcher = new Dispatcher();

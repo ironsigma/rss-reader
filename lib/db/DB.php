@@ -7,11 +7,22 @@ class DB {
             return static::$connection;
         }
 
-        switch ( Config::get('database.driver') ) {
+        switch ( 'mysql' ) { //... Config::get('database.driver') ) {
         case 'sqlite3':
-            $pdo = new PDO('sqlite:'.Config::get('database.file'));
+            $pdo = new PDO('sqlite:'.Config::get('database.sqlite3.file'));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $grammar = new SQLite3Grammar();
+            break;
+
+        case 'mysql':
+            $pdo = new PDO('mysql:host='. Config::get('database.mysql.host')
+                .';port='. Config::get('database.mysql.port')
+                .';dbname='. Config::get('database.mysql.database'),
+                    Config::get('database.mysql.username'),
+                    Config::get('database.mysql.password'));
+
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $grammar = new MySqlGrammar();
             break;
 
         default:

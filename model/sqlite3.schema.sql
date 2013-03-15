@@ -10,7 +10,13 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS folder (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL,
-    newest_first VARCHAR(3) NOT NULL CHECK(newest_first IN(0, 1))
+    per_page    INTEGER NOT NULL,
+    newest_first VARCHAR(3) NOT NULL CHECK(newest_first IN(0, 1)),
+    user_id     INTEGER,
+
+    FOREIGN KEY (user_id)
+        REFERENCES user (id)
+        ON DELETE CASCADE
 );
 
 -- feeds
@@ -19,13 +25,18 @@ CREATE TABLE IF NOT EXISTS feed (
     name        VARCHAR(255) NOT NULL,
     url         VARCHAR(255) NOT NULL,
     newest_first    VARCHAR(3) NOT NULL CHECK(newest_first IN(0, 1)),
-    update_freq INTEGER NOT NULL, -- minutes
-    per_page    INTEGER NOT NULL, -- per page
+    update_freq INTEGER NOT NULL,
+    per_page    INTEGER NOT NULL,
     folder_id   INTEGER,
+    user_id     INTEGER,
 
     FOREIGN KEY (folder_id)
         REFERENCES folder (id)
-        ON DELETE SET NULL
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (user_id)
+        REFERENCES user (id)
+        ON DELETE CASCADE
 );
 
 -- feed updates

@@ -14,4 +14,11 @@ logging:
 
 database:
     driver: sqlite3
-    file: /var/www/reader/db/reader.sqlite3
+    sqlite3:
+        file: /var/www/reader/db/reader.sqlite3
+    mysql:
+        username: rss_user
+        password: rss_pass
+        database: rss_reader
+        host: localhost
+        port: 3306
