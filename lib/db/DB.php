@@ -33,7 +33,7 @@ class DB {
         return new Connection($pdo, $grammar);
     }
 
-    public static function from($table) {
+    public static function table($table) {
         return static::connection()->createQuery($table);
     }
 }

@@ -11,7 +11,7 @@ class UserDao {
         return $user;
     }
     public static function findByUsername($username) {
-        $users = DB::from(User::getTable())
+        $users = DB::table(User::getTable())
             ->equal('username', $username, PDO::PARAM_STR)
             ->fetch('User');
 
