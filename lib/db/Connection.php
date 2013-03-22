@@ -25,6 +25,11 @@ class Connection {
         return array($statement, $result);
     }
 
+    public function insert($sql, $bindings) {
+        $this->execute($sql, $bindings);
+        return $this->pdo->lastInsertId();
+    }
+
     public function fetch($fetch_type, $sql, $bindings=array(), $class=null) {
         list($statement, $result) = $this->execute($sql, $bindings);
         if ( stripos($sql, 'select') === 0 ) {
@@ -38,5 +43,4 @@ class Connection {
         }
         return $result;
     }
-
 }

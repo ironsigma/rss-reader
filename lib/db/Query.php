@@ -31,6 +31,36 @@ class Query {
             $sql, $this->bindings, $class);
     }
 
+    // Insert
+    public function insert($entity) {
+        $this->bindings = array();
+        $sql = $this->grammar->generateInsertSql($this, $entity);
+        $values = $entity->getValues();
+        foreach ( $entity->getColumns() as $col ) {
+            if ( $col === 'id' ) {
+                continue;
+            }
+            $value = $values[$col];
+            if ( is_null($value) ) {
+                $type = PDO::PARAM_NULL;
+            } elseif ( is_string($value) ) {
+                $type = PDO::PARAM_STR;
+            } elseif ( is_bool($value) ) {
+                $type = PDO::PARAM_INT;
+                $value = $value ? 1 : 0;
+            } elseif ( is_int($value) || is_long($value) ) {
+                $type = PDO::PARAM_INT;
+            } elseif ( is_float($value) || is_double($value) ) {
+                $type = PDO::PARAM_STR;
+                $value = strval($value);
+            } else {
+                throw new Exception('Invalid insert type');
+            }
+            $this->bindings[] = array('val'=>$value, 'type'=>$type);
+        }
+        return $this->connection->insert($sql, $this->bindings);
+    }
+
     // Columns
     public function select(array $columns) {
         $this->columns = $columns;
@@ -176,6 +206,9 @@ class Query {
         switch ( $args['type'] ) {
         case 'select':
             return $this->grammar->generateSelectSql($this);
+            break;
+        case 'insert':
+            return $this->grammar->generateInsertSql($this, $args['entity']);
             break;
         }
     }

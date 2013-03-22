@@ -3,6 +3,12 @@ class MySqlGrammar {
     protected $prefix_index;
     protected $prefix_list;
 
+    public function generateInsertSql($query, $entity) {
+        $sql = $this->generateEntityInsert($query, $entity);
+        $sql .= $this->generateWhere($query->getConditions());
+        return $sql;
+    }
+
     public function generateSelectSql($query) {
         $this->prefix_list = array();
         $this->prefix_index = 0;
@@ -58,6 +64,21 @@ class MySqlGrammar {
             $columns[] = $this->prefixColumn('*');
         }
         return 'SELECT '. join(', ', $columns);
+    }
+
+    protected function generateEntityInsert($query, $entity) {
+        $cols = array();
+        $values = array();
+        foreach ( $entity->getColumns() as $col ) {
+            if ( $col === 'id' ) {
+                continue;
+            }
+            $cols[] = "`$col`";
+            $values[] = '?';
+        }
+        return 'INSERT INTO '. $query->getTable()
+            .' ('. join(',', $cols) .') VALUES ('
+            . join(',', $values) .')';
     }
 
     protected function generateFrom($query) {
