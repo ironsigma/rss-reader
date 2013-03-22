@@ -5,6 +5,11 @@ class MySqlGrammar {
 
     public function generateInsertSql($query, $entity) {
         $sql = $this->generateEntityInsert($query, $entity);
+        return $sql;
+    }
+
+    public function generateUpdateSql($query, $entity) {
+        $sql = $this->generateEntityUpdate($query, $entity);
         $sql .= $this->generateWhere($query->getConditions());
         return $sql;
     }
@@ -79,6 +84,15 @@ class MySqlGrammar {
         return 'INSERT INTO '. $query->getTable()
             .' ('. join(',', $cols) .') VALUES ('
             . join(',', $values) .')';
+    }
+
+    protected function generateEntityUpdate($query, $entity) {
+        $cols = array();
+        foreach ( $entity->getColumns() as $col ) {
+            $cols[] = "`$col`=?";
+        }
+        return 'UPDATE '. $query->getTable()
+            .' SET '. join(',', $cols);
     }
 
     protected function generateFrom($query) {
@@ -157,20 +171,25 @@ class MySqlGrammar {
 
     protected function prefixColumn($column) {
         $alias = '';
+        $prefix = '';
         if ( is_array($column) ) {
             $alias = " AS `{$column[1]}`";
             $column = $column[0];
         }
         if ( strpos($column, '.') !== false ) {
             list($table, $column) = explode('.', $column);
-            $prefix = $this->prefix_list[$table];
+            if ( isset($this->prefix_list[$table]) ) {
+                $prefix = $this->prefix_list[$table].'.';
+            }
         } else {
-            $prefix = $this->prefix_list['_FROM_'];
+            if ( isset($this->prefix_list['_FROM_']) ) {
+                $prefix = $this->prefix_list['_FROM_'].'.';
+            }
         }
         if ( $column != '*' ) {
             $column = "`$column`";
         }
-        return "$prefix.$column$alias";
+        return "$prefix$column$alias";
     }
 
     protected function generatePrefix($name) {

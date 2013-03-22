@@ -30,6 +30,11 @@ class Connection {
         return $this->pdo->lastInsertId();
     }
 
+    public function update($sql, $bindings) {
+        $this->execute($sql, $bindings);
+        return true;
+    }
+
     public function fetch($fetch_type, $sql, $bindings=array(), $class=null) {
         list($statement, $result) = $this->execute($sql, $bindings);
         if ( stripos($sql, 'select') === 0 ) {

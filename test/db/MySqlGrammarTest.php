@@ -248,4 +248,22 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
             ->sql(array('type'=>'insert', 'entity'=>$post));
 
     }
+
+    public function testUpdate() {
+        $post = new Post(array(
+            'id' => 10074,
+            'title' => 'Updated iPhone',
+            'guid' => 'aaa888aaa',
+            'published' => '2013-03-15 16:01:03',
+            'text' => 'New Post',
+            'link' => 'http://apple.com/',
+            'read' => true,
+            'stared' => false,
+            'feed_id' => 23,
+        ));
+
+        $sql = DB::table(Post::getTable())
+            ->equal('id', $post->id, PDO::PARAM_INT)
+            ->sql(array('type'=>'update', 'entity'=>$post));
+    }
 }

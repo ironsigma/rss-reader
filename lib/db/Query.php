@@ -33,32 +33,16 @@ class Query {
 
     // Insert
     public function insert($entity) {
-        $this->bindings = array();
+        $this->bindings = array_merge($this->entityBindings($entity, true), $this->bindings);
         $sql = $this->grammar->generateInsertSql($this, $entity);
-        $values = $entity->getValues();
-        foreach ( $entity->getColumns() as $col ) {
-            if ( $col === 'id' ) {
-                continue;
-            }
-            $value = $values[$col];
-            if ( is_null($value) ) {
-                $type = PDO::PARAM_NULL;
-            } elseif ( is_string($value) ) {
-                $type = PDO::PARAM_STR;
-            } elseif ( is_bool($value) ) {
-                $type = PDO::PARAM_INT;
-                $value = $value ? 1 : 0;
-            } elseif ( is_int($value) || is_long($value) ) {
-                $type = PDO::PARAM_INT;
-            } elseif ( is_float($value) || is_double($value) ) {
-                $type = PDO::PARAM_STR;
-                $value = strval($value);
-            } else {
-                throw new Exception('Invalid insert type');
-            }
-            $this->bindings[] = array('val'=>$value, 'type'=>$type);
-        }
         return $this->connection->insert($sql, $this->bindings);
+    }
+
+    // Update
+    public function update($entity) {
+        $this->bindings = array_merge($this->entityBindings($entity), $this->bindings);
+        $sql = $this->grammar->generateUpdateSql($this, $entity);
+        return $this->connection->update($sql, $this->bindings);
     }
 
     // Columns
@@ -201,6 +185,34 @@ class Query {
         return $this->page;
     }
 
+    protected function entityBindings($entity, $exclude_id=false) {
+        $bindings = array();
+        $values = $entity->getValues();
+        foreach ( $entity->getColumns() as $col ) {
+            if ( $exclude_id && $col === 'id' ) {
+                continue;
+            }
+            $value = $values[$col];
+            if ( is_null($value) ) {
+                $type = PDO::PARAM_NULL;
+            } elseif ( is_string($value) ) {
+                $type = PDO::PARAM_STR;
+            } elseif ( is_bool($value) ) {
+                $type = PDO::PARAM_INT;
+                $value = $value ? 1 : 0;
+            } elseif ( is_int($value) || is_long($value) ) {
+                $type = PDO::PARAM_INT;
+            } elseif ( is_float($value) || is_double($value) ) {
+                $type = PDO::PARAM_STR;
+                $value = strval($value);
+            } else {
+                throw new Exception('Invalid insert type');
+            }
+            $bindings[] = array('val'=>$value, 'type'=>$type);
+        }
+        return $bindings;
+    }
+
     // For Unit Testing
     public function sql(array $args) {
         switch ( $args['type'] ) {
@@ -209,6 +221,9 @@ class Query {
             break;
         case 'insert':
             return $this->grammar->generateInsertSql($this, $args['entity']);
+            break;
+        case 'update':
+            return $this->grammar->generateUpdateSql($this, $args['entity']);
             break;
         }
     }
