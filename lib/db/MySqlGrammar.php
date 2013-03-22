@@ -3,7 +3,7 @@ class MySqlGrammar {
     protected $prefix_index;
     protected $prefix_list;
 
-    public function generateSql($query) {
+    public function generateSelectSql($query) {
         $this->prefix_list = array();
         $this->prefix_index = 0;
         $this->generateTablePrefixes($query);

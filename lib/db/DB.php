@@ -7,7 +7,8 @@ class DB {
             return static::$connection;
         }
 
-        switch ( 'mysql' ) { //... Config::get('database.driver') ) {
+        $driver = Config::get('database.driver2');
+        switch ( $driver ) {
         case 'sqlite3':
             $pdo = new PDO('sqlite:'.Config::get('database.sqlite3.file'));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -26,7 +27,7 @@ class DB {
             break;
 
         default:
-            throw new Exception('Unknown driver');
+            throw new Exception("Unknown driver \"$driver\"");
         }
 
         return new Connection($pdo, $grammar);

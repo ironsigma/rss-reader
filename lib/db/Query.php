@@ -23,9 +23,9 @@ class Query {
         $this->bindings = array();
     }
 
-    // Execute Query
+    // Select
     public function fetch($class=null) {
-        $sql = $this->grammar->generateSql($this);
+        $sql = $this->grammar->generateSelectSql($this);
         return $this->connection->fetch(
             $class===null?PDO::FETCH_BOTH:PDO::FETCH_CLASS,
             $sql, $this->bindings, $class);
@@ -151,6 +151,7 @@ class Query {
     public function getColumns() {
         return $this->columns;
     }
+
     public function getJoins() {
         return $this->joins;
     }
@@ -171,8 +172,12 @@ class Query {
     }
 
     // For Unit Testing
-    public function sql() {
-        return $this->grammar->generateSql($this);
+    public function sql(array $args) {
+        switch ( $args['type'] ) {
+        case 'select':
+            return $this->grammar->generateSelectSql($this);
+            break;
+        }
     }
     public function getBindings() {
         return $this->bindings;

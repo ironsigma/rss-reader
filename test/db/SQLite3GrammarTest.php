@@ -3,51 +3,51 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         Config::clear();
-        Config::set('database.driver', 'sqlite3');
+        Config::set('database.driver2', 'sqlite3');
     }
 
     public function testSelect() {
-        $sql = DB::from('post')->sql();
+        $sql = DB::from('post')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1', $sql);
 
-        $sql = DB::from('post')->select(array('name'))->sql();
+        $sql = DB::from('post')->select(array('name'))->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1."name" FROM post _p1', $sql);
 
-        $sql = DB::from('post')->select(array(array('name', 'title')))->sql();
+        $sql = DB::from('post')->select(array(array('name', 'title')))->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1."name" AS "title" FROM post _p1', $sql);
 
-        $sql = DB::from('post')->select(array('published', array('name', 'title')))->sql();
+        $sql = DB::from('post')->select(array('published', array('name', 'title')))->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1."published", _p1."name" AS "title" FROM post _p1', $sql);
     }
 
     public function testCount() {
-        $sql = DB::from('post')->count('*', 'posts')->sql();
+        $sql = DB::from('post')->count('*', 'posts')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT COUNT(*) AS "posts" FROM post _p1', $sql);
     }
 
     public function testJoin() {
         $sql = DB::from('post')
             ->join('feed', 'id', 'feed_id')
-            ->sql();
+            ->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 '
             .'INNER JOIN feed _f2 ON _f2."id"=_p1."feed_id"', $sql);
 
         $sql = DB::from('post')
             ->leftJoin('feed', 'id', 'feed_id')
-            ->sql();
+            ->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 '
             .'LEFT JOIN feed _f2 ON _f2."id"=_p1."feed_id"', $sql);
 
         $sql = DB::from('post')
             ->crossJoin('feed', 'id', 'feed_id')
-            ->sql();
+            ->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 '
             .'CROSS JOIN feed _f2 ON _f2."id"=_p1."feed_id"', $sql);
 
         $sql = DB::from('post')
             ->join('feed', 'id', 'feed_id')
             ->join('author', 'id', 'author_id')
-            ->sql();
+            ->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 '
             .'INNER JOIN feed _f2 ON _f2."id"=_p1."feed_id" '
             .'INNER JOIN author _a3 ON _a3."id"=_p1."author_id"', $sql);
@@ -55,7 +55,7 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
         $sql = DB::from('post')
             ->join('feed', 'id', 'feed_id')
             ->join('folder', 'id', 'feed.folder_id')
-            ->sql();
+            ->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 '
             .'INNER JOIN feed _f2 ON _f2."id"=_p1."feed_id" '
             .'INNER JOIN folder _f3 ON _f3."id"=_f2."folder_id"', $sql);
@@ -64,57 +64,57 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
     public function testWhere() {
         $query = DB::from('post')->equal('author', 'John', PDO::PARAM_STR);
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."author"=?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."author"=?', $query->sql(array('type'=>'select')));
         $this->assertEquals('John', $bindings[0]['val']);
 
         $query = DB::from('post')->notEqual('author', 'John', PDO::PARAM_STR);
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."author"!=?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."author"!=?', $query->sql(array('type'=>'select')));
         $this->assertEquals('John', $bindings[0]['val']);
 
         $query = DB::from('post')->greaterThan('likes', 4);
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes">?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes">?', $query->sql(array('type'=>'select')));
         $this->assertEquals(4, $bindings[0]['val']);
 
         $query = DB::from('post')->greaterThanEqual('likes', 4);
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes">=?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes">=?', $query->sql(array('type'=>'select')));
         $this->assertEquals(4, $bindings[0]['val']);
 
         $query = DB::from('post')->lessThan('likes', 4);
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes"<?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes"<?', $query->sql(array('type'=>'select')));
         $this->assertEquals(4, $bindings[0]['val']);
 
         $query = DB::from('post')->lessThanEqual('likes', 4);
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes"<=?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."likes"<=?', $query->sql(array('type'=>'select')));
         $this->assertEquals(4, $bindings[0]['val']);
 
         $query = DB::from('post')->isNull('stared');
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared" IS NULL', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared" IS NULL', $query->sql(array('type'=>'select')));
         $this->assertEquals(0, count($bindings));
 
         $query = DB::from('post')->isNotNull('stared');
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared" NOT NULL', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared" NOT NULL', $query->sql(array('type'=>'select')));
         $this->assertEquals(0, count($bindings));
 
         $query = DB::from('post')->true('stared');
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared"=?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared"=?', $query->sql(array('type'=>'select')));
         $this->assertEquals(true, $bindings[0]['val']);
 
         $query = DB::from('post')->false('stared');
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared"=?', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."stared"=?', $query->sql(array('type'=>'select')));
         $this->assertEquals(false, $bindings[0]['val']);
 
         $query = DB::from('post')->in('id', array(1, 3, 4));
         $bindings = $query->getBindings();
-        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."id" IN(?,?,?)', $query->sql());
+        $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."id" IN(?,?,?)', $query->sql(array('type'=>'select')));
         $this->assertEquals(1, $bindings[0]['val']);
         $this->assertEquals(3, $bindings[1]['val']);
         $this->assertEquals(4, $bindings[2]['val']);
@@ -177,25 +177,25 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testGroupOrderPage() {
-        $sql = DB::from('post')->groupBy('feed_id')->sql();
+        $sql = DB::from('post')->groupBy('feed_id')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 GROUP BY _p1."feed_id"', $sql);
 
-        $sql = DB::from('post')->equal('author', 'john', PDO::PARAM_STR)->groupBy('feed_id')->sql();
+        $sql = DB::from('post')->equal('author', 'john', PDO::PARAM_STR)->groupBy('feed_id')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."author"=? GROUP BY _p1."feed_id"', $sql);
 
-        $sql = DB::from('post')->orderBy('published')->sql();
+        $sql = DB::from('post')->orderBy('published')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 ORDER BY _p1."published" ASC', $sql);
 
-        $sql = DB::from('post')->orderBy('published', 'DESC')->sql();
+        $sql = DB::from('post')->orderBy('published', 'DESC')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 ORDER BY _p1."published" DESC', $sql);
 
-        $sql = DB::from('post')->equal('author', 'john', PDO::PARAM_STR)->orderBy('published')->sql();
+        $sql = DB::from('post')->equal('author', 'john', PDO::PARAM_STR)->orderBy('published')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."author"=? ORDER BY _p1."published" ASC', $sql);
 
-        $sql = DB::from('post')->page(10, 20)->sql();
+        $sql = DB::from('post')->page(10, 20)->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 LIMIT 10 OFFSET 20', $sql);
 
-        $sql = DB::from('post')->equal('author', 'john', PDO::PARAM_STR)->page(5, 50)->sql();
+        $sql = DB::from('post')->equal('author', 'john', PDO::PARAM_STR)->page(5, 50)->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1."author"=? LIMIT 5 OFFSET 50', $sql);
 
         $sql = DB::from('post')
@@ -203,7 +203,7 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
             ->orderBy('published', 'DESC')
             ->groupBy('feed_id')
             ->page(5, 50)
-            ->sql();
+            ->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 '
             .'WHERE _p1."author"=? '
             .'GROUP BY _p1."feed_id" '
@@ -217,7 +217,7 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
             ->orderBy('folder.name', 'DESC')
             ->groupBy('feed.id')
             ->page(5, 50)
-            ->sql();
+            ->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 '
             .'INNER JOIN feed _f2 ON _f2."id"=_p1."feed_id" '
             .'INNER JOIN folder _f3 ON _f3."id"=_f2."folder_id" '
@@ -226,11 +226,4 @@ class SQLite3GrammarTest extends PHPUnit_Framework_TestCase {
             .'ORDER BY _f3."name" DESC '
             .'LIMIT 5 OFFSET 50', $sql);
     }
-
-    //...public function testDBSelect() {
-    //...    $result = DB::from(Post::getTable())
-    //...        ->equal('id', 8000, PDO::PARAM_INT)
-    //...        ->true('read')
-    //...        ->fetch('Post');
-    //...}
 }
