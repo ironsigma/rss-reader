@@ -4,6 +4,7 @@ define('APP_PATH', __DIR__);
 include('lib/AutoLoader.php');
 
 Config::read(APP_PATH.'/config/reader.yaml');
+UserSession::init();
 Template::setTemplateDir(Config::get('templates.path'));
 
 Template::setTheme(isset($_GET['mobi'])?
@@ -27,9 +28,6 @@ function page_error($code, $message, $url) {
         'url' => $url,
     )));
 }
-
-// Session
-UserSession::init();
 
 // logging
 LogFacility::setRootLoggerLevel(Logger::TRACE);

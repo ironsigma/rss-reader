@@ -11,6 +11,8 @@ logging:
         - { level: WARN, label: Database.class }
         - { level: WARN, label: UpdaterController.class }
         - { level: WARN, label: FeedParser.class }
+session:
+    path: /var/www/reader/cache
 
 database:
     driver: sqlite3
