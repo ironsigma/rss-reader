@@ -8,15 +8,13 @@ class Post extends Entity {
 }
 Post::init('post',
 array(
-    'id',
-    'title',
-    'published',
-    'text',
-    'link',
-    'read',
-    'stared',
-    'guid',
-    'feed_id'
-), array(
-    'feed'
-));
+    array('name'=>'id', 'type'=>Entity::TYPE_INT),
+    array('name'=>'title', 'type'=>Entity::TYPE_STR),
+    array('name'=>'published', 'type'=>Entity::TYPE_DATETIME),
+    array('name'=>'text', 'type'=>Entity::TYPE_STR),
+    array('name'=>'link', 'type'=>Entity::TYPE_STR),
+    array('name'=>'read', 'type'=>Entity::TYPE_BOOL),
+    array('name'=>'stared', 'type'=>Entity::TYPE_BOOL),
+    array('name'=>'guid', 'type'=>Entity::TYPE_STR),
+    array('name'=>'feed_id', 'type'=>Entity::TYPE_INT),
+), array('feed'));

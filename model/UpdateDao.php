@@ -5,7 +5,7 @@
  */
 class UpdateDao {
     public static function insert(Update $update) {
-        $st = QueryBuilder::insert(Update::getTable(), Update::getColumns(), $update, array('id'));
+        $st = QueryBuilder::insert(Update::getTable(), Update::getColumnNames(), $update, array('id'));
         $st->execute();
         $update->id = Database::lastInsertRowID();
         return $update;

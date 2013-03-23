@@ -13,21 +13,21 @@ class FeedDao {
     public static function findById($id) {
         $criteria = new Criteria();
         $criteria->equal('id', $id, SQLITE3_INTEGER);
-        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumns(), $criteria);
+        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumnNames(), $criteria);
         $results = $st->execute();
         $row = $results->fetchArray(SQLITE3_ASSOC);
         return new Feed($row);
     }
 
     public static function insert($feed){
-        $st = QueryBuilder::insert(Feed::getTable(), Feed::getColumns(), $feed, array('id'));
+        $st = QueryBuilder::insert(Feed::getTable(), Feed::getColumnNames(), $feed, array('id'));
         $st->execute();
         $feed->id = Database::lastInsertRowID();
         return $feed;
     }
 
     public static function findAll() {
-        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumns(), new Criteria());
+        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumnNames(), new Criteria());
         $results = $st->execute();
         $feeds = array();
         while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
@@ -47,7 +47,7 @@ class FeedDao {
 
         $st = QueryBuilder::select(Feed::getTable(), array_merge(
                 array(array('folder.name', 'folder'), array('folder.id', 'folder_id')),
-                Feed::getColumns()
+                Feed::getColumnNames()
             ), $criteria);
 
         $results = $st->execute();

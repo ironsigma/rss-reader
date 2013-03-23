@@ -13,7 +13,7 @@ class FolderDao {
     public static function findById($id) {
         $criteria = new Criteria();
         $criteria->equal('id', $id, SQLITE3_INTEGER);
-        $st = QueryBuilder::select(Folder::getTable(), Folder::getColumns(), $criteria);
+        $st = QueryBuilder::select(Folder::getTable(), Folder::getColumnNames(), $criteria);
         $results = $st->execute();
         $row = $results->fetchArray(SQLITE3_ASSOC);
         return new Folder($row);

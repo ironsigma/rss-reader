@@ -6,4 +6,12 @@
 class Feed extends Entity {
     protected static $meta_data;
 }
-Feed::init('feed', array('id', 'name', 'url', 'newest_first', 'update_freq', 'per_page', 'folder_id'), array('folder', 'unread', 'folder_id'));
+Feed::init('feed', array(
+    array('name'=>'id', 'type'=>Entity::TYPE_INT),
+    array('name'=>'name', 'type'=>Entity::TYPE_STR),
+    array('name'=>'url', 'type'=>Entity::TYPE_STR),
+    array('name'=>'newest_first', 'type'=>Entity::TYPE_BOOL),
+    array('name'=>'update_freq', 'type'=>Entity::TYPE_INT),
+    array('name'=>'per_page', 'type'=>Entity::TYPE_INT),
+    array('name'=>'folder_id', 'type'=>Entity::TYPE_INT),
+), array('folder', 'unread', 'folder_id'));

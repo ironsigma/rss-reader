@@ -74,7 +74,7 @@ class MySqlGrammar {
     protected function generateEntityInsert($query, $entity) {
         $cols = array();
         $values = array();
-        foreach ( $entity->getColumns() as $col ) {
+        foreach ( $entity->getColumnNames() as $col ) {
             if ( $col === 'id' ) {
                 continue;
             }
@@ -88,7 +88,7 @@ class MySqlGrammar {
 
     protected function generateEntityUpdate($query, $entity) {
         $cols = array();
-        foreach ( $entity->getColumns() as $col ) {
+        foreach ( $entity->getColumnNames() as $col ) {
             $cols[] = "`$col`=?";
         }
         return 'UPDATE '. $query->getTable()

@@ -1,5 +1,5 @@
 -- Users
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username VARCHAR(30) UNIQUE,
     password VARCHAR(64) NOT NULL,
@@ -7,20 +7,19 @@ CREATE TABLE IF NOT EXISTS user (
 );
 
 -- Folders
-CREATE TABLE IF NOT EXISTS folder (
+CREATE TABLE folder (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL,
     per_page    INTEGER NOT NULL,
     newest_first VARCHAR(3) NOT NULL CHECK(newest_first IN(0, 1)),
     user_id     INTEGER,
 
-    FOREIGN KEY (user_id)
-        REFERENCES user (id)
+    FOREIGN KEY (user_id) REFERENCES user (id)
         ON DELETE CASCADE
 );
 
 -- feeds
-CREATE TABLE IF NOT EXISTS feed (
+CREATE TABLE feed (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     name        VARCHAR(255) NOT NULL,
     url         VARCHAR(255) NOT NULL,
@@ -30,30 +29,15 @@ CREATE TABLE IF NOT EXISTS feed (
     folder_id   INTEGER,
     user_id     INTEGER,
 
-    FOREIGN KEY (folder_id)
-        REFERENCES folder (id)
+    FOREIGN KEY (folder_id) REFERENCES folder (id)
         ON DELETE SET NULL,
 
-    FOREIGN KEY (user_id)
-        REFERENCES user (id)
+    FOREIGN KEY (user_id) REFERENCES user (id)
         ON DELETE CASCADE
 );
 
--- feed updates
-CREATE TABLE IF NOT EXISTS update_log (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    updated     INTEGER NOT NULL,
-    total_count INTEGER NOT NULL,
-    new_count   INTEGER NOT NULL,
-    feed_id     INTEGER NOT NULL,
-
-    FOREIGN KEY (feed_id)
-        REFERENCES feed (id)
-        ON DELETE SET NULL
-);
-
 -- posts
-CREATE TABLE IF NOT EXISTS post (
+CREATE TABLE post (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
     title     VARCHAR(255) NOT NULL,
     published INTEGER NOT NULL,
@@ -64,11 +48,22 @@ CREATE TABLE IF NOT EXISTS post (
     stared    INTEGER NOT NULL CHECK(stared IN(0, 1)),
     feed_id   INTEGER NOT NULL,
 
-    FOREIGN KEY (feed_id)
-        REFERENCES feed (id)
+    FOREIGN KEY (feed_id) REFERENCES feed (id)
         ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS post_stared_idx ON post (stared);
-CREATE INDEX IF NOT EXISTS post_guid_idx ON post (guid);
-CREATE INDEX IF NOT EXISTS post_date_idx ON post (published DESC);
+-- feed updates
+CREATE TABLE update_log (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    updated     INTEGER NOT NULL,
+    total_count INTEGER NOT NULL,
+    new_count   INTEGER NOT NULL,
+    feed_id     INTEGER NOT NULL,
+
+    FOREIGN KEY (feed_id) REFERENCES feed (id)
+        ON DELETE SET NULL
+);
+
+CREATE INDEX post_stared_idx ON post (stared);
+CREATE INDEX post_guid_idx ON post (guid);
+CREATE INDEX post_date_idx ON post (published DESC);

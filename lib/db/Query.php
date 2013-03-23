@@ -188,7 +188,7 @@ class Query {
     protected function entityBindings($entity, $exclude_id=false) {
         $bindings = array();
         $values = $entity->getValues();
-        foreach ( $entity->getColumns() as $col ) {
+        foreach ( $entity->getColumnNames() as $col ) {
             if ( $exclude_id && $col === 'id' ) {
                 continue;
             }

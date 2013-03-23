@@ -6,9 +6,9 @@
 class PostDao {
     public static function findAll($criteria, $columns=null) {
         if ( $columns ) {
-            $columns = array_merge($columns, Post::getColumns());
+            $columns = array_merge($columns, Post::getColumnNames());
         } else {
-            $columns = Post::getColumns();
+            $columns = Post::getColumnNames();
         }
         $st = QueryBuilder::select(Post::getTable(), $columns, $criteria);
         $results = $st->execute();
@@ -41,7 +41,7 @@ class PostDao {
         return $row[0];
     }
     public static function insert(Post $post) {
-        $st = QueryBuilder::insert(Post::getTable(), Post::getColumns(), $post, array('id'));
+        $st = QueryBuilder::insert(Post::getTable(), Post::getColumnNames(), $post, array('id'));
         $st->execute();
         $post->id = Database::lastInsertRowID();
         return $post;

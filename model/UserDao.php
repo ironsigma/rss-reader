@@ -5,7 +5,7 @@
  */
 class UserDao {
     public static function insert(User $user) {
-        $st = QueryBuilder::insert(User::getTable(), User::getColumns(), $user, array('id'));
+        $st = QueryBuilder::insert(User::getTable(), User::getColumnNames(), $user, array('id'));
         $st->execute();
         $user->id = Database::lastInsertRowID();
         return $user;

@@ -235,6 +235,9 @@ class QueryBuilder {
         $db = Database::getInstance();
         self::$log->trace($sql_and_values['sql']);
         $statement = $db->prepare($sql_and_values['sql']);
+        if ( !$statement ) {
+            throw new Exception('Unable to prepare statement: '. $sql_and_values['sql']);
+        }
         foreach ( $sql_and_values['values'] as $label => $val ) {
             self::$log->trace("$label = ". (
                 gettype($val['value']) == 'boolean' ?
