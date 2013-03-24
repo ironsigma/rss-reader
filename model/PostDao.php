@@ -41,6 +41,9 @@ class PostDao {
         return $row[0];
     }
     public static function insert(Post $post) {
+        $id = DB::table(Post::getTable())
+            ->insert($post);
+
         $st = QueryBuilder::insert(Post::getTable(), Post::getColumnNames(), $post, array('id'));
         $st->execute();
         $post->id = Database::lastInsertRowID();
@@ -78,10 +81,13 @@ class PostDao {
         $st->execute();
     }
     public static function updateStar($star, $id) {
+        $entity = new Post(array('stared' => $star));
+        DB::table(Post::getTable())
+            ->equal('id', $id, PDO::PARAM_INT)
+            ->update($entity, array('stared'));
+
         $criteria = new Criteria();
         $criteria->equal('id', $id, SQLITE3_INTEGER);
-
-        $entity = new Post(array('stared' => $star));
         $st = QueryBuilder::update(Post::getTable(), array('stared'), $entity, $criteria);
         $st->execute();
     }

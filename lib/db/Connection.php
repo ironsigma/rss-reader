@@ -14,12 +14,14 @@ class Connection {
         return new Query($this, $this->grammar, $table);
     }
 
-    protected function execute($sql, array $bindings) {
+    public function execute($sql, array $bindings=null) {
         $this->log->info($sql);
         $statement = $this->pdo->prepare($sql);
-        for ( $i = 0; $i < count($bindings); $i ++ ) {
-            $this->log->info( 'Param '. ($i+1) .': '. $bindings[$i]['val']);
-            $statement->bindParam($i+1, $bindings[$i]['val'], $bindings[$i]['type']);
+        if ( $bindings ) {
+            for ( $i = 0; $i < count($bindings); $i ++ ) {
+                $this->log->info( 'Param '. ($i+1) .': '. $bindings[$i]['val']);
+                $statement->bindParam($i+1, $bindings[$i]['val'], $bindings[$i]['type']);
+            }
         }
         $result = $statement->execute();
         return array($statement, $result);

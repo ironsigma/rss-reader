@@ -247,6 +247,12 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
         $sql = DB::table(Post::getTable())
             ->sql(array('type'=>'insert', 'entity'=>$post));
 
+        $this->assertEquals('INSERT INTO post (`title`,`published`,`text`,`link`,`read`,`stared`,`guid`,`feed_id`) VALUES (?,?,?,?,?,?,?,?)', $sql);
+
+        $sql = DB::table(Post::getTable())
+            ->sql(array('type'=>'insert', 'entity'=>$post, 'columns'=>array('title','link','read')));
+
+        $this->assertEquals('INSERT INTO post (`title`,`link`,`read`) VALUES (?,?,?)', $sql);
     }
 
     public function testUpdate() {

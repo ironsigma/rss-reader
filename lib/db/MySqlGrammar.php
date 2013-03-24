@@ -3,13 +3,13 @@ class MySqlGrammar {
     protected $prefix_index;
     protected $prefix_list;
 
-    public function generateInsertSql($query, $entity) {
-        $sql = $this->generateEntityInsert($query, $entity);
+    public function generateInsertSql($query, $entity, $columns) {
+        $sql = $this->generateEntityInsert($query, $entity, $columns);
         return $sql;
     }
 
-    public function generateUpdateSql($query, $entity) {
-        $sql = $this->generateEntityUpdate($query, $entity);
+    public function generateUpdateSql($query, $entity, $columns) {
+        $sql = $this->generateEntityUpdate($query, $entity, $columns);
         $sql .= $this->generateWhere($query->getConditions());
         return $sql;
     }
@@ -71,10 +71,11 @@ class MySqlGrammar {
         return 'SELECT '. join(', ', $columns);
     }
 
-    protected function generateEntityInsert($query, $entity) {
+    protected function generateEntityInsert($query, $entity, $columns=null) {
         $cols = array();
         $values = array();
-        foreach ( $entity->getColumnNames() as $col ) {
+        $columns = $columns ? $columns : $entity->getColumnNames();
+        foreach ( $columns as $col ) {
             if ( $col === 'id' ) {
                 continue;
             }
@@ -86,9 +87,10 @@ class MySqlGrammar {
             . join(',', $values) .')';
     }
 
-    protected function generateEntityUpdate($query, $entity) {
+    protected function generateEntityUpdate($query, $entity, $columns=null) {
         $cols = array();
-        foreach ( $entity->getColumnNames() as $col ) {
+        $columns = $columns ? $columns : $entity->getColumnNames();
+        foreach ( $columns as $col ) {
             $cols[] = "`$col`=?";
         }
         return 'UPDATE '. $query->getTable()

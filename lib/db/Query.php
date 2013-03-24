@@ -32,16 +32,16 @@ class Query {
     }
 
     // Insert
-    public function insert($entity) {
-        $this->bindings = array_merge($this->entityBindings($entity, true), $this->bindings);
-        $sql = $this->grammar->generateInsertSql($this, $entity);
+    public function insert($entity, $columns=null) {
+        $this->bindings = array_merge($this->entityBindings($entity, $columns, true), $this->bindings);
+        $sql = $this->grammar->generateInsertSql($this, $entity, $columns);
         return $this->connection->insert($sql, $this->bindings);
     }
 
     // Update
-    public function update($entity) {
-        $this->bindings = array_merge($this->entityBindings($entity), $this->bindings);
-        $sql = $this->grammar->generateUpdateSql($this, $entity);
+    public function update($entity, $columns=null) {
+        $this->bindings = array_merge($this->entityBindings($entity, $columns), $this->bindings);
+        $sql = $this->grammar->generateUpdateSql($this, $entity, $columns);
         return $this->connection->update($sql, $this->bindings);
     }
 
@@ -185,26 +185,40 @@ class Query {
         return $this->page;
     }
 
-    protected function entityBindings($entity, $exclude_id=false) {
+    protected function entityBindings($entity, $columns, $exclude_id=false) {
         $bindings = array();
         $values = $entity->getValues();
-        foreach ( $entity->getColumnNames() as $col ) {
-            if ( $exclude_id && $col === 'id' ) {
+        foreach ( $entity->getColumns() as $col ) {
+            if ( $columns && !in_array($col['name'], $columns) ) {
                 continue;
             }
-            $value = $values[$col];
+            if ( $exclude_id && $col['name'] === 'id' ) {
+                continue;
+            }
+            $value = $values[$col['name']];
             if ( is_null($value) ) {
                 $type = PDO::PARAM_NULL;
-            } elseif ( is_string($value) ) {
+            } elseif ( $col['type'] == Entity::TYPE_STR ) {
                 $type = PDO::PARAM_STR;
-            } elseif ( is_bool($value) ) {
+            } elseif ( $col['type'] == Entity::TYPE_BOOL ) {
                 $type = PDO::PARAM_INT;
                 $value = $value ? 1 : 0;
-            } elseif ( is_int($value) || is_long($value) ) {
+            } elseif ( $col['type'] == Entity::TYPE_INT ) {
                 $type = PDO::PARAM_INT;
-            } elseif ( is_float($value) || is_double($value) ) {
+            } elseif ( $col['type'] == Entity::TYPE_REAL ) {
                 $type = PDO::PARAM_STR;
                 $value = strval($value);
+            } elseif ( $col['type'] == Entity::TYPE_DATE ) {
+                $type = PDO::PARAM_STR;
+                $value = date('Y-m-d', $value);
+            } elseif ( $col['type'] == Entity::TYPE_TIME ) {
+                $type = PDO::PARAM_STR;
+                $value = date('H:i:s', $value);
+            } elseif ( $col['type'] == Entity::TYPE_DATETIME ) {
+                $type = PDO::PARAM_STR;
+                $value = date('Y-m-d H:i:s', $value);
+            } elseif ( $col['type'] == Entity::TYPE_BLOB ) {
+                $type = PDO::PARAM_LOB;
             } else {
                 throw new Exception('Invalid insert type');
             }
@@ -215,15 +229,16 @@ class Query {
 
     // For Unit Testing
     public function sql(array $args) {
+        $columns = isset($args['columns']) ? $args['columns'] : null;
         switch ( $args['type'] ) {
         case 'select':
             return $this->grammar->generateSelectSql($this);
             break;
         case 'insert':
-            return $this->grammar->generateInsertSql($this, $args['entity']);
+            return $this->grammar->generateInsertSql($this, $args['entity'], $columns);
             break;
         case 'update':
-            return $this->grammar->generateUpdateSql($this, $args['entity']);
+            return $this->grammar->generateUpdateSql($this, $args['entity'], $columns);
             break;
         }
     }

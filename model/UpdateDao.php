@@ -5,20 +5,19 @@
  */
 class UpdateDao {
     public static function insert(Update $update) {
-        $st = QueryBuilder::insert(Update::getTable(), Update::getColumnNames(), $update, array('id'));
-        $st->execute();
-        $update->id = Database::lastInsertRowID();
+        $update->id = DB::table(Update::getTable())->insert($update);
         return $update;
     }
     public static function findLatestUpdates() {
-        $db = Database::getInstance();
-        $st = $db->prepare('SELECT u.id, u.updated, u.total_count, u.new_count, u.feed_id '.
-           'FROM update_log u WHERE updated=(SELECT MAX(updated) FROM update_log WHERE feed_id=u.feed_id)');
-        $results = $st->execute();
-        $updates = array();
-        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $updates[$row['feed_id']] = new Update($row);
+        $sql = 'SELECT u.id, unix_timestamp(u.updated) AS updated, u.total_count, u.new_count, u.feed_id '.
+           'FROM update_log u WHERE updated=(SELECT MAX(updated) FROM update_log WHERE feed_id=u.feed_id)';
+
+        list($statement,) = DB::connection()->execute($sql);
+        $updates = $statement->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Update');
+        $lookup = array();
+        foreach ( $updates as $update ) {
+            $lookup[$update->feed_id] = $update;
         }
-        return $updates;
+        return $lookup;
     }
 }
