@@ -26,7 +26,14 @@ class Query {
     // Select
     public function fetch($class=null) {
         $sql = $this->grammar->generateSelectSql($this);
-        return $this->connection->fetch(
+        return $this->connection->fetchAll(
+            $class===null?PDO::FETCH_BOTH:PDO::FETCH_CLASS,
+            $sql, $this->bindings, $class);
+    }
+
+    public function first($class=null) {
+        $sql = $this->grammar->generateSelectSql($this);
+        return $this->connection->fetchFirst(
             $class===null?PDO::FETCH_BOTH:PDO::FETCH_CLASS,
             $sql, $this->bindings, $class);
     }

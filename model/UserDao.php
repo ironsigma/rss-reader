@@ -5,9 +5,7 @@
  */
 class UserDao {
     public static function insert(User $user) {
-        $st = QueryBuilder::insert(User::getTable(), User::getColumnNames(), $user, array('id'));
-        $st->execute();
-        $user->id = Database::lastInsertRowID();
+        $user->id = DB::table(User::getTable())->insert($user);
         return $user;
     }
     public static function findByUsername($username) {
