@@ -21,12 +21,12 @@ class Connection {
     }
 
     protected function statement($sql, array $bindings=null) {
-        $this->log->info($sql);
+        $this->log->debug($sql);
         $statement = $this->pdo->prepare($sql);
         if ( $bindings ) {
             for ( $i = 0; $i < count($bindings); $i ++ ) {
                 $bind = $this->grammar->bind($bindings[$i]);
-                $this->log->info( 'Param '. ($i+1) .': '. $bind['val']);
+                $this->log->trace( 'Param '. ($i+1) .': '. $bind['val']);
                 $statement->bindParam($i+1, $bind['val'], $bind['type']);
             }
         }

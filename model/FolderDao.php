@@ -5,9 +5,8 @@
  */
 class FolderDao {
     public static function findById($id) {
-        return DB::table(Folder::getTable())
+        return Database::table(Folder::getTable())
             ->equal('id', $id, Entity::TYPE_INT)
             ->first('Folder');
     }
-
 }

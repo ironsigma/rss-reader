@@ -12,7 +12,7 @@ class StatsController {
             'WHERE updated > DATE_SUB(CURDATE(), INTERVAL 14 DAY) '.
             'GROUP BY feed_id, `date`';
 
-        list($statement,) = DB::connection()->execute($sql);
+        list($statement,) = Database::connection()->execute($sql);
 
         // get data
         $raw_data = array();

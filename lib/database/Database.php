@@ -1,5 +1,5 @@
 <?php
-class DB {
+class Database {
     protected static $connection;
 
     public static function connection() {

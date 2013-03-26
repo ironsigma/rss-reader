@@ -1,4 +1,4 @@
-<?php $page_css = array('jquery.treeview.css', 'reader.less', 'feeds.css') ?>
+<?php $page_css = array('jquery.treeview.css', 'reader.less', 'feeds.less') ?>
 <?php $page_js = array('jquery.js', 'less.js', 'jquery.treeview.js') ?>
 <?php include 'header.layout.php' ?>
 

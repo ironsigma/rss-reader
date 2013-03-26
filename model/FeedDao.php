@@ -5,18 +5,18 @@
  */
 class FeedDao {
     public static function findById($id) {
-        return DB::table(Feed::getTable())
+        return Database::table(Feed::getTable())
             ->equal('id', $id, Entity::TYPE_INT)
             ->first('Feed');
     }
 
     public static function findAll() {
-        return DB::table(Feed::getTable())
+        return Database::table(Feed::getTable())
             ->fetch('Feed');
     }
 
     public static function findAllWithUnreadCount() {
-        return DB::table(Feed::getTable())
+        return Database::table(Feed::getTable())
             ->count('*', 'unread')
             ->leftJoin('post', 'feed_id', 'id')
             ->leftJoin('folder', 'id', 'folder_id')

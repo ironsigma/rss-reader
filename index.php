@@ -36,9 +36,6 @@ foreach ( Config::get('logging.loggers', array()) as $logger ) {
     LogFacility::setLoggerLevel($logger['label'], $logger['level']);
 }
 
-//...$log = LogFacility::getLogger('index.html');
-//...$log->info('Config: '. print_r(Config::all(), true));
-
 // routing
 $dispatcher = new Dispatcher();
 $dispatcher->setSuffix('Controller');
