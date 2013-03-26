@@ -7,7 +7,7 @@ class LoginController {
     public function handleRequest($args) {
         $mobi = isset($args['mobi']) ? '&mobi' : '';
         if ( isset($args['logout']) ) {
-            UserSession::logout();
+            Session::logout();
             header("Location: /login?msg=4".$mobi);
             return;
         }
@@ -62,7 +62,7 @@ class LoginController {
             header("Location: /login?msg=3".$mobi);
             return;
         }
-        UserSession::validate($user->id);
+        Session::validate($user->id);
         header("Location: /?ok".$mobi);
         return;
     }

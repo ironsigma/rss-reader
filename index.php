@@ -4,7 +4,7 @@ define('APP_PATH', __DIR__);
 include('lib/AutoLoader.php');
 
 Config::read(APP_PATH.'/config/reader.yaml');
-UserSession::init();
+Session::init();
 Template::setTemplateDir(Config::get('templates.path'));
 
 Template::setTheme(isset($_GET['mobi'])?
@@ -73,7 +73,7 @@ try {
             $found_route->getMapClass() !== 'updater'
        )
     {
-        $user = UserSession::requireLogin();
+        $user = Session::requireLogin();
     }
 
     if ( $user !== false ) {

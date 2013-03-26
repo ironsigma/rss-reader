@@ -1,9 +1,9 @@
 <?php
 /**
- * User Session
+ * Session
  * @package com\izylab\reader
  */
-class UserSession {
+class Session {
     public static function init() {
         ini_set('session.save_path', Config::get('session.path'));
         ini_set('session.cookie_lifetime', 1210000);
@@ -33,5 +33,9 @@ class UserSession {
             return false;
         }
         return $_SESSION['user_data'];
+    }
+
+    public static function getUserId() {
+        return $_SESSION['user_data']['id'];
     }
 }
