@@ -6,7 +6,6 @@ $app_inc_paths = array(
     APP_PATH . '/lib/logger',
     APP_PATH . '/lib/config',
     APP_PATH . '/lib/database',
-    APP_PATH . '/lib/db',
     APP_PATH . '/lib/php-router',
     APP_PATH . '/lib/feed-parser',
     APP_PATH . '/lib/template',

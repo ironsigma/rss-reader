@@ -8,17 +8,13 @@ templates:
 logging:
     file: /var/log/lighttpd/reader-app.log
     loggers:
-        - { level: WARN, label: Database.class }
         - { level: WARN, label: UpdaterController.class }
         - { level: WARN, label: FeedParser.class }
 session:
     path: /var/www/reader/cache
 
 database:
-    driver: sqlite3
-    sqlite3:
-        file: /var/www/reader/db/reader.sqlite3
-    driver2: mysql
+    driver: mysql
     mysql:
         username: rss_user
         password: rss_pass

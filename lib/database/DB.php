@@ -7,14 +7,8 @@ class DB {
             return static::$connection;
         }
 
-        $driver = Config::get('database.driver2');
+        $driver = Config::get('database.driver');
         switch ( $driver ) {
-        case 'sqlite3':
-            $pdo = new PDO('sqlite:'.Config::get('database.sqlite3.file'));
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $grammar = new SQLite3Grammar();
-            break;
-
         case 'mysql':
             $pdo = new PDO('mysql:host='. Config::get('database.mysql.host')
                 .';port='. Config::get('database.mysql.port')

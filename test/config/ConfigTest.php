@@ -12,10 +12,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertNull(Config::get('databaseX.driver'));
         $this->assertNull(Config::get('database.driverX'));
         $this->assertNull(Config::get('database.driver.INVALID_KEY'));
-        $this->assertEquals('sqlite3', Config::get('database.driver'));
+        $this->assertEquals('mysql', Config::get('database.driver'));
 
         $db = Config::get('database');
-        $this->assertEquals('sqlite3', $db['driver']['_']);
+        $this->assertEquals('mysql', $db['driver']['_']);
     }
 
     public function testSet() {

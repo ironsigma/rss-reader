@@ -3,7 +3,7 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         Config::clear();
-        Config::set('database.driver2', 'mysql');
+        Config::set('database.driver', 'mysql');
         Config::set('database.mysql.username', 'rss_user');
         Config::set('database.mysql.password', 'rss_pass');
         Config::set('database.mysql.database', 'rss_reader');

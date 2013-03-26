@@ -7,25 +7,17 @@ class StatsController {
     public function handleRequest($args) {
         $template = new Template('stats');
 
-        $db = Database::getInstance();
-        $stm = $db->prepare(
-            "SELECT ".
-                "feed_id AS \"id\", ".
-                "name, ".
-                "DATE(updated, 'unixepoch') AS \"date\", ".
-                "SUM(total_count) AS \"total\", ".
-                "SUM(new_count) AS \"new\" ".
-            "FROM update_log u ".
-            "JOIN feed f ON u.feed_id=f.id ".
-            "WHERE updated > strftime('%s', date('now', '-14 day')) ".
-            "GROUP BY feed_id, \"date\""
-        );
+        $sql = 'SELECT feed_id AS id, name, DATE(updated) AS `date`, SUM(total_count) AS `total`, SUM(new_count) AS `new` '.
+            'FROM update_log u JOIN feed f ON u.feed_id=f.id '.
+            'WHERE updated > DATE_SUB(CURDATE(), INTERVAL 14 DAY) '.
+            'GROUP BY feed_id, `date`';
+
+        list($statement,) = DB::connection()->execute($sql);
 
         // get data
-        $res = $stm->execute();
         $raw_data = array();
         $feed_meta = array();
-        while ( $row = $res->fetchArray(SQLITE3_ASSOC) ) {
+        while ( $row = $statement->fetch(PDO::FETCH_ASSOC) ) {
             $raw_data[$row['id']][$row['date']] = $row['new'];
             $feed_meta[$row['id']] = array('name' => $row['name']);
         }
@@ -76,7 +68,6 @@ class StatsController {
             );
         }
 
-        $template->db_size = Database::getSize();
         $template->labels = join(',', $labels);
         $template->data = $data;
         $template->display();
