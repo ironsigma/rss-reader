@@ -10,7 +10,7 @@ class UserDao {
     }
     public static function findByUsername($username) {
         $users = DB::table(User::getTable())
-            ->equal('username', $username, PDO::PARAM_STR)
+            ->equal('username', $username, Entity::TYPE_STR)
             ->fetch('User');
 
         if ( !count($users) ) {

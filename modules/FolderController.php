@@ -14,14 +14,9 @@ class FolderController {
         $template->container = 'folder';
         $template->feed_id = $args[':id'];
         $template->feed_name = $folder->name;
-        $per_page = 10; // TODO: folder count
+        $per_page = $folder->per_page;
 
-        $count_criteria = new Criteria();
-        $count_criteria->false('read');
-        $count_criteria->join('feed', 'id', 'feed_id');
-        $count_criteria->join('folder', 'id', 'feed.folder_id');
-        $count_criteria->equal('folder.id', $args[':id'], SQLITE3_INTEGER);
-        $template->article_count = PostDao::countAll($count_criteria);
+        $template->article_count = PostDao::countUnreadInFolder($args[':id']);
         $log->info("Count: {$template->article_count}");
 
         if ( $template->article_count === 0 ) {
@@ -29,18 +24,13 @@ class FolderController {
             return;
         }
 
-        $criteria = new Criteria();
-        $criteria->false('read');
-        $criteria->join('feed', 'id', 'feed_id');
-        $criteria->join('folder', 'id', 'feed.folder_id');
-        $criteria->equal('folder.id', $args[':id'], SQLITE3_INTEGER);
-        $criteria->orderBy('published', $folder->newest_first ? 'DESC' : 'ASC');
-
         $template->page_count = ceil($template->article_count / $per_page);
         $template->page = min($template->page_count, $args['page']);
-        $criteria->page($per_page, $per_page * ($template->page-1));
 
-        $template->articles = PostDao::findAll($criteria, array(array('feed.name', 'feed')));
+        $template->articles = PostDao::findUnreadArticlesInFolder(
+            $args[':id'], $folder->newest_first ? 'DESC' : 'ASC',
+            $per_page, max(0, $per_page * ($template->page-1)));
+
         $log->info("Articles: ". count($template->articles));
 
         if ( isset($args['mobi']) ) {

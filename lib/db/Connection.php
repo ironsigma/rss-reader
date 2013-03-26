@@ -19,13 +19,15 @@ class Connection {
         $result = $statement->execute();
         return array($statement, $result);
     }
+
     protected function statement($sql, array $bindings=null) {
         $this->log->info($sql);
         $statement = $this->pdo->prepare($sql);
         if ( $bindings ) {
             for ( $i = 0; $i < count($bindings); $i ++ ) {
-                $this->log->info( 'Param '. ($i+1) .': '. $bindings[$i]['val']);
-                $statement->bindParam($i+1, $bindings[$i]['val'], $bindings[$i]['type']);
+                $bind = $this->grammar->bind($bindings[$i]);
+                $this->log->info( 'Param '. ($i+1) .': '. $bind['val']);
+                $statement->bindParam($i+1, $bind['val'], $bind['type']);
             }
         }
         return $statement;

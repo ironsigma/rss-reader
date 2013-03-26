@@ -3,6 +3,56 @@ class MySqlGrammar {
     protected $prefix_index;
     protected $prefix_list;
 
+    public function bind($bind) {
+        $value = $bind['val'];
+        switch ( $bind['type'] ) {
+        case Entity::TYPE_NULL:
+            $type = PDO::PARAM_NULL;
+            break;
+
+        case Entity::TYPE_STR:
+            $type = PDO::PARAM_STR;
+            break;
+
+        case Entity::TYPE_BOOL:
+            $type = PDO::PARAM_INT;
+            $value = $value ? 1 : 0;
+            break;
+
+        case Entity::TYPE_INT:
+            $type = PDO::PARAM_INT;
+            break;
+
+        case Entity::TYPE_REAL:
+            $type = PDO::PARAM_STR;
+            $value = strval($value);
+            break;
+
+        case Entity::TYPE_DATE:
+            $type = PDO::PARAM_STR;
+            $value = date('Y-m-d', $value);
+            break;
+
+        case Entity::TYPE_TIME:
+            $type = PDO::PARAM_STR;
+            $value = date('H:i:s', $value);
+            break;
+
+        case Entity::TYPE_DATETIME:
+            $type = PDO::PARAM_STR;
+            $value = date('Y-m-d H:i:s', $value);
+            break;
+
+        case Entity::TYPE_BLOB:
+            $type = PDO::PARAM_LOB;
+            break;
+
+        default:
+            throw new Exception('Invalid insert type');
+        }
+        return array('val' => $value, 'type' => $type);
+    }
+
     public function generateInsertSql($query, $entity, $columns) {
         $sql = $this->generateEntityInsert($query, $entity, $columns);
         return $sql;

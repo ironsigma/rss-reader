@@ -4,91 +4,105 @@
  * @package com\izylab\reader
  */
 class PostDao {
-    public static function findAll($criteria, $columns=null) {
-        if ( $columns ) {
-            $columns = array_merge($columns, Post::getColumnNames());
-        } else {
-            $columns = Post::getColumnNames();
-        }
-        $st = QueryBuilder::select(Post::getTable(), $columns, $criteria);
-        $results = $st->execute();
-        $posts = array();
-        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $posts[] = new Post($row);
-        }
-        return $posts;
+    public static function findUnreadArticlesInFolder($folder_id, $order, $limit, $offset) {
+        return DB::table(Post::getTable())
+            ->false('read')
+            ->join('feed', 'id', 'feed_id')
+            ->join('folder', 'id', 'feed.folder_id')
+            ->equal('folder.id', $folder_id, Entity::TYPE_INT)
+            ->orderBy('published', $order)
+            ->page($limit, $offset)
+            ->select(array_merge(Post::getColumnNames(), array(array('feed.name', 'feed'))))
+            ->fetch('Post');
+    }
+    public static function findStaredArticles($limit, $offset) {
+        return DB::table(Post::getTable())
+            ->join('feed', 'id', 'feed_id')
+            ->true('stared')
+            ->orderBy('published', 'ASC')
+            ->page($limit, $offset)
+            ->select(array_merge(Post::getColumnNames(), array(array('feed.name', 'feed'))))
+            ->fetch('Post');
+    }
+    public static function findUnreadArticlesInFeed($feed_id, $order, $limit, $offset) {
+        return DB::table(Post::getTable())
+            ->equal('feed_id', $feed_id, Entity::TYPE_INT)
+            ->false('read')
+            ->orderBy('published', $order)
+            ->page($limit, $offset)
+            ->fetch('Post');
     }
     public static function postFolderCount() {
-        $criteria = new Criteria();
-        $criteria->false('read');
-        $criteria->join('feed', 'id', 'feed_id');
-        $criteria->join('folder', 'id', 'feed.folder_id');
-        $criteria->count('*', 'count');
-        $criteria->groupBy('folder.id');
-        $st = QueryBuilder::select(Post::getTable(), array('folder.id'), $criteria);
-        $results = $st->execute();
+        $results = DB::table(Post::getTable())
+                ->count('*', 'count')
+                ->false('read')
+                ->join('feed', 'id', 'feed_id')
+                ->join('folder', 'id', 'feed.folder_id')
+                ->groupBy('folder.id')
+                ->select(array('folder.id'))
+                ->fetch();
 
         $counts = array();
-        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $counts[$row['id']] = $row['count'];
+        foreach ( $results as $row ) {
+            $counts[$row['id']] = intval($row['count']);
         }
         return $counts;
     }
-    public static function countAll($criteria) {
-        $criteria->count('*', 'count');
-        $st = QueryBuilder::select(Post::getTable(), array(), $criteria);
-        $row = $st->execute()->fetchArray(SQLITE3_NUM);
-        return $row[0];
+    public static function staredCount() {
+        $result = DB::table(Post::getTable())
+                ->count('*', 'count')
+                ->true('stared')
+                ->first();
+        return intval($result['count']);
+    }
+    public static function countUnreadInFeed($feed_id) {
+        $result = DB::table(Post::getTable())
+                ->count('*', 'count')
+                ->false('read')
+                ->equal('feed_id', $feed_id, Entity::TYPE_INT)
+                ->first();
+        return intval($result['count']);
+    }
+    public static function countUnreadInFolder($folder_id) {
+        $result = DB::table(Post::getTable())
+                ->count('*', 'count')
+                ->false('read')
+                ->join('feed', 'id', 'feed_id')
+                ->join('folder', 'id', 'feed.folder_id')
+                ->equal('folder.id', $folder_id, Entity::TYPE_INT)
+                ->first();
+        return intval($result['count']);
     }
     public static function insert(Post $post) {
-        $id = DB::table(Post::getTable())
+        $post->id = DB::table(Post::getTable())
             ->insert($post);
-
-        $st = QueryBuilder::insert(Post::getTable(), Post::getColumnNames(), $post, array('id'));
-        $st->execute();
-        $post->id = Database::lastInsertRowID();
         return $post;
     }
     public static function postExists($post) {
-        $criteria = new Criteria();
-        $criteria->count('guid', 'guid_count');
-        $criteria->equal('guid', $post->guid, SQLITE3_TEXT);
-        $st = QueryBuilder::select(Post::getTable(), array(), $criteria);
-        $results = $st->execute();
-        $row = $results->fetchArray(SQLITE3_NUM);
-        return $row[0] !== 0;
-    }
-    public static function deleteReadPostBefore($date) {
-        $criteria = new Criteria();
-        $criteria->lessThanEqual('published', $date);
-        $criteria->true('read');
-        $criteria->false('stared');
+        $result = DB::table(Post::getTable())
+            ->count('*', 'count')
+            ->equal('guid', $post->guid, Entity::TYPE_INT)
+            ->first();
 
-        $st = QueryBuilder::delete(Post::getTable(), $criteria);
-        $st->execute();
+        return intval($result['count']) !== 0;
     }
     public static function markRead($ids, $feed_id) {
-        $criteria = new Criteria();
+        $query = DB::table(Post::getTable());
+
         if ( $feed_id !== null ) {
-            $criteria->equal('feed_id', $feed_id, SQLITE3_INTEGER);
+            $query->equal('feed_id', $feed_id, Entity::TYPE_INT);
         }
         if ( $ids !== null ) {
-            $criteria->in('id', $ids, SQLITE3_INTEGER);
+            $query->in('id', $ids, Entity::TYPE_INT);
         }
 
         $entity = new Post(array('read' => true));
-        $st = QueryBuilder::update(Post::getTable(), array('read'), $entity, $criteria);
-        $st->execute();
+        $query->update($entity, array('read'));
     }
     public static function updateStar($star, $id) {
         $entity = new Post(array('stared' => $star));
         DB::table(Post::getTable())
-            ->equal('id', $id, PDO::PARAM_INT)
+            ->equal('id', $id, Entity::TYPE_INT)
             ->update($entity, array('stared'));
-
-        $criteria = new Criteria();
-        $criteria->equal('id', $id, SQLITE3_INTEGER);
-        $st = QueryBuilder::update(Post::getTable(), array('stared'), $entity, $criteria);
-        $st->execute();
     }
 }

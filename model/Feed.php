@@ -14,4 +14,5 @@ Feed::init('feed', array(
     array('name'=>'update_freq', 'type'=>Entity::TYPE_INT),
     array('name'=>'per_page', 'type'=>Entity::TYPE_INT),
     array('name'=>'folder_id', 'type'=>Entity::TYPE_INT),
+    array('name'=>'user_id', 'type'=>Entity::TYPE_INT),
 ), array('folder', 'unread', 'folder_id'));

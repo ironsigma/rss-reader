@@ -9,7 +9,7 @@ class UpdateDao {
         return $update;
     }
     public static function findLatestUpdates() {
-        $sql = 'SELECT u.id, unix_timestamp(u.updated) AS updated, u.total_count, u.new_count, u.feed_id '.
+        $sql = 'SELECT u.id, u.updated, u.total_count, u.new_count, u.feed_id '.
            'FROM update_log u WHERE updated=(SELECT MAX(updated) FROM update_log WHERE feed_id=u.feed_id)';
 
         list($statement,) = DB::connection()->execute($sql);

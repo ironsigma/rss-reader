@@ -38,6 +38,7 @@ class UpdaterController {
             self::$log->info("Updating {$feed->name}");
             $count = 0;
             $new = 0;
+
             $parser = new FeedParser($feed->url);
             $posts = $parser->getPosts();
 
@@ -68,11 +69,6 @@ class UpdaterController {
                 'feed_id' => $feed->id,
             )));
         }
-
-        // Cleanup posts
-        //...$post_cutoff = $now - 864000; // 10 days * 86400
-        //...self::$log->debug('Deleting read, unstared posts older than '. date('c', $post_cutoff));
-        //...PostDao::deleteReadPostBefore($post_cutoff);
 
         self::$log->info('RSS Update Completed');
     }

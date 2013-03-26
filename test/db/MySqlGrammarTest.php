@@ -67,12 +67,12 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testWhere() {
-        $query = DB::table('post')->equal('author', 'John', PDO::PARAM_STR);
+        $query = DB::table('post')->equal('author', 'John', Entity::TYPE_STR);
         $bindings = $query->getBindings();
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1.`author`=?', $query->sql(array('type'=>'select')));
         $this->assertEquals('John', $bindings[0]['val']);
 
-        $query = DB::table('post')->notEqual('author', 'John', PDO::PARAM_STR);
+        $query = DB::table('post')->notEqual('author', 'John', Entity::TYPE_STR);
         $bindings = $query->getBindings();
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1.`author`!=?', $query->sql(array('type'=>'select')));
         $this->assertEquals('John', $bindings[0]['val']);
@@ -127,8 +127,8 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
 
     public function testBindings() {
         $query = DB::table('post')
-            ->equal('author', 'John', PDO::PARAM_STR)
-            ->notEqual('author', 'Janet', PDO::PARAM_STR)
+            ->equal('author', 'John', Entity::TYPE_STR)
+            ->notEqual('author', 'Janet', Entity::TYPE_STR)
             ->greaterThan('likes', 4)
             ->greaterThanEqual('likes', 8)
             ->lessThan('likes', 3)
@@ -157,8 +157,8 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
             ->isNull('stared')
             ->lessThanEqual('likes', 1)
             ->lessThan('likes', 3)
-            ->notEqual('author', 'Janet', PDO::PARAM_STR)
-            ->equal('author', 'John', PDO::PARAM_STR)
+            ->notEqual('author', 'Janet', Entity::TYPE_STR)
+            ->equal('author', 'John', Entity::TYPE_STR)
             ->in('id', array(3023, 2454, 1344))
             ->true('shared')
             ->greaterThanEqual('likes', 8)
@@ -185,7 +185,7 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
         $sql = DB::table('post')->groupBy('feed_id')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 GROUP BY _p1.`feed_id`', $sql);
 
-        $sql = DB::table('post')->equal('author', 'john', PDO::PARAM_STR)->groupBy('feed_id')->sql(array('type'=>'select'));
+        $sql = DB::table('post')->equal('author', 'john', Entity::TYPE_STR)->groupBy('feed_id')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1.`author`=? GROUP BY _p1.`feed_id`', $sql);
 
         $sql = DB::table('post')->orderBy('published')->sql(array('type'=>'select'));
@@ -194,17 +194,17 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
         $sql = DB::table('post')->orderBy('published', 'DESC')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 ORDER BY _p1.`published` DESC', $sql);
 
-        $sql = DB::table('post')->equal('author', 'john', PDO::PARAM_STR)->orderBy('published')->sql(array('type'=>'select'));
+        $sql = DB::table('post')->equal('author', 'john', Entity::TYPE_STR)->orderBy('published')->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1.`author`=? ORDER BY _p1.`published` ASC', $sql);
 
         $sql = DB::table('post')->page(10, 20)->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 LIMIT 10 OFFSET 20', $sql);
 
-        $sql = DB::table('post')->equal('author', 'john', PDO::PARAM_STR)->page(5, 50)->sql(array('type'=>'select'));
+        $sql = DB::table('post')->equal('author', 'john', Entity::TYPE_STR)->page(5, 50)->sql(array('type'=>'select'));
         $this->assertEquals('SELECT _p1.* FROM post _p1 WHERE _p1.`author`=? LIMIT 5 OFFSET 50', $sql);
 
         $sql = DB::table('post')
-            ->equal('author', 'john', PDO::PARAM_STR)
+            ->equal('author', 'john', Entity::TYPE_STR)
             ->orderBy('published', 'DESC')
             ->groupBy('feed_id')
             ->page(5, 50)
@@ -216,7 +216,7 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
             .'LIMIT 5 OFFSET 50', $sql);
 
         $sql = DB::table('post')
-            ->equal('author', 'john', PDO::PARAM_STR)
+            ->equal('author', 'john', Entity::TYPE_STR)
             ->join('feed', 'id', 'feed_id')
             ->join('folder', 'id', 'feed.folder_id')
             ->orderBy('folder.name', 'DESC')
@@ -269,7 +269,7 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
         ));
 
         $sql = DB::table(Post::getTable())
-            ->equal('id', $post->id, PDO::PARAM_INT)
+            ->equal('id', $post->id, Entity::TYPE_INT)
             ->sql(array('type'=>'update', 'entity'=>$post));
     }
 }

@@ -88,31 +88,31 @@ class Query {
         $this->bindings[] = compact('val', 'type');
         return $this;
     }
-    public function greaterThan($col, $val, $type=PDO::PARAM_INT) {
+    public function greaterThan($col, $val, $type=Entity::TYPE_INT) {
         $op = '>';
         $this->conditions[] = compact('op', 'col', 'val', 'type');
         $this->bindings[] = compact('val', 'type');
         return $this;
     }
-    public function lessThan($col, $val, $type=PDO::PARAM_INT) {
+    public function lessThan($col, $val, $type=Entity::TYPE_INT) {
         $op = '<';
         $this->conditions[] = compact('op', 'col', 'val', 'type');
         $this->bindings[] = compact('val', 'type');
         return $this;
     }
-    public function greaterThanEqual($col, $val, $type=PDO::PARAM_INT) {
+    public function greaterThanEqual($col, $val, $type=Entity::TYPE_INT) {
         $op = '>=';
         $this->conditions[] = compact('op', 'col', 'val', 'type');
         $this->bindings[] = compact('val', 'type');
         return $this;
     }
-    public function lessThanEqual($col, $val, $type=PDO::PARAM_INT) {
+    public function lessThanEqual($col, $val, $type=Entity::TYPE_INT) {
         $op = '<=';
         $this->conditions[] = compact('op', 'col', 'val', 'type');
         $this->bindings[] = compact('val', 'type');
         return $this;
     }
-    public function in($col, array $val, $type=PDO::PARAM_INT) {
+    public function in($col, array $val, $type=Entity::TYPE_INT) {
         $op = 'in';
         $this->conditions[] = compact('op', 'col', 'val', 'type');
         foreach ( $val as $v ) {
@@ -133,7 +133,7 @@ class Query {
     public function true($col) {
         $op = 'true';
         $val = true;
-        $type = PDO::PARAM_BOOL;
+        $type = Entity::TYPE_BOOL;
         $this->conditions[] = compact('op', 'col', 'val', 'type');
         $this->bindings[] = compact('val', 'type');
         return $this;
@@ -141,7 +141,7 @@ class Query {
     public function false($col) {
         $op = 'false';
         $val = false;
-        $type = PDO::PARAM_BOOL;
+        $type = Entity::TYPE_BOOL;
         $this->conditions[] = compact('op', 'col', 'val', 'type');
         $this->bindings[] = compact('val', 'type');
         return $this;
@@ -204,30 +204,9 @@ class Query {
             }
             $value = $values[$col['name']];
             if ( is_null($value) ) {
-                $type = PDO::PARAM_NULL;
-            } elseif ( $col['type'] == Entity::TYPE_STR ) {
-                $type = PDO::PARAM_STR;
-            } elseif ( $col['type'] == Entity::TYPE_BOOL ) {
-                $type = PDO::PARAM_INT;
-                $value = $value ? 1 : 0;
-            } elseif ( $col['type'] == Entity::TYPE_INT ) {
-                $type = PDO::PARAM_INT;
-            } elseif ( $col['type'] == Entity::TYPE_REAL ) {
-                $type = PDO::PARAM_STR;
-                $value = strval($value);
-            } elseif ( $col['type'] == Entity::TYPE_DATE ) {
-                $type = PDO::PARAM_STR;
-                $value = date('Y-m-d', $value);
-            } elseif ( $col['type'] == Entity::TYPE_TIME ) {
-                $type = PDO::PARAM_STR;
-                $value = date('H:i:s', $value);
-            } elseif ( $col['type'] == Entity::TYPE_DATETIME ) {
-                $type = PDO::PARAM_STR;
-                $value = date('Y-m-d H:i:s', $value);
-            } elseif ( $col['type'] == Entity::TYPE_BLOB ) {
-                $type = PDO::PARAM_LOB;
+                $type = Entity::TYPE_NULL;
             } else {
-                throw new Exception('Invalid insert type');
+                $type = $col['type'];
             }
             $bindings[] = array('val'=>$value, 'type'=>$type);
         }

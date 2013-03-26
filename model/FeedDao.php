@@ -4,58 +4,30 @@
  * @package com\izylab\reader
  */
 class FeedDao {
-    private static $log;
-
-    public static function init() {
-        self::$log = LogFacility::getLogger('FeedDao.class');
-    }
-
     public static function findById($id) {
-        $criteria = new Criteria();
-        $criteria->equal('id', $id, SQLITE3_INTEGER);
-        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumnNames(), $criteria);
-        $results = $st->execute();
-        $row = $results->fetchArray(SQLITE3_ASSOC);
-        return new Feed($row);
-    }
-
-    public static function insert($feed){
-        $st = QueryBuilder::insert(Feed::getTable(), Feed::getColumnNames(), $feed, array('id'));
-        $st->execute();
-        $feed->id = Database::lastInsertRowID();
-        return $feed;
+        return DB::table(Feed::getTable())
+            ->equal('id', $id, Entity::TYPE_INT)
+            ->first('Feed');
     }
 
     public static function findAll() {
-        $st = QueryBuilder::select(Feed::getTable(), Feed::getColumnNames(), new Criteria());
-        $results = $st->execute();
-        $feeds = array();
-        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $feeds[] = new Feed($row);
-        }
-        return $feeds;
+        return DB::table(Feed::getTable())
+            ->fetch('Feed');
     }
 
     public static function findAllWithUnreadCount() {
-        $criteria = new Criteria();
-        $criteria->count('*', 'unread');
-        $criteria->leftJoin('post', 'feed_id', 'id');
-        $criteria->leftJoin('folder', 'id', 'folder_id');
-        $criteria->false('post.read');
-        $criteria->groupBy('id');
-        $criteria->orderBy('folder.name');
-
-        $st = QueryBuilder::select(Feed::getTable(), array_merge(
-                array(array('folder.name', 'folder'), array('folder.id', 'folder_id')),
+        return DB::table(Feed::getTable())
+            ->count('*', 'unread')
+            ->leftJoin('post', 'feed_id', 'id')
+            ->leftJoin('folder', 'id', 'folder_id')
+            ->false('post.read')
+            ->groupBy('id')
+            ->orderBy('folder.name')
+            ->select(array_merge(
+                array(array('folder.name', 'folder'),
+                array('folder.id', 'folder_id')),
                 Feed::getColumnNames()
-            ), $criteria);
-
-        $results = $st->execute();
-        $feeds = array();
-        while ( $row = $results->fetchArray(SQLITE3_ASSOC) ) {
-            $feeds[] = new Feed($row);
-        }
-        return $feeds;
+            ))
+            ->fetch('Feed');
     }
 }
-FeedDao::init();
