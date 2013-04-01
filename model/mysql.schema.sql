@@ -44,11 +44,23 @@ CREATE TABLE post (
     text      TEXT NOT NULL,
     link      VARCHAR(2083) NOT NULL,
     guid      VARCHAR(32) NOT NULL,
-    `read`    BOOLEAN NOT NULL,
-    stared    BOOLEAN NOT NULL,
     feed_id   BIGINT NOT NULL,
 
     FOREIGN KEY (feed_id) REFERENCES feed (id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE post_state (
+    id        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `read`    BOOLEAN NOT NULL,
+    stared    BOOLEAN NOT NULL,
+    post_id   BIGINT NOT NULL,
+    user_id   BIGINT NOT NULL,
+
+    FOREIGN KEY (post_id) REFERENCES post (id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (user_id) REFERENCES user (id)
         ON DELETE CASCADE
 );
 

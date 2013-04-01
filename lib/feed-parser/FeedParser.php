@@ -36,12 +36,14 @@ class FeedParser {
             self::$log->trace('Parsing as RSS feed');
             foreach( $x->channel->item as $item ) {
                 $ts = strtotime($item->pubDate);
+                $guid = (string)$item->guid;
+                $guid = !$guid ? ((string)$item->title).$ts : $guid;
                 $posts[] = array(
                     'title' => (string) $item->title,
                     'published' => $ts,
                     'link' => (string) $item->link,
-                    'guid' => md5(((string)$item->title).$ts),
-                    'text' => (string)$item->description
+                    'guid' => md5($guid),
+                    'text' => (string)$item->description,
                 );
             }
 
@@ -50,11 +52,13 @@ class FeedParser {
             self::$log->trace('Parsing as Atom feed');
             foreach( $x->entry as $entry ) {
                 $ts = strtotime((string)$entry->published);
+                $guid = (string)$entry->id;
+                $guid = !$guid ? ((string)$entry->title).$ts : $guid;
                 $posts[] = array (
                     'title' => (string) $entry->title,
                     'published' => $ts,
                     'link' => (string) $entry->link->attributes()->href,
-                    'guid' => md5(((string)$entry->title).$ts),
+                    'guid' => md5($guid),
                     'text' => (string)$entry->content
                 );
             }

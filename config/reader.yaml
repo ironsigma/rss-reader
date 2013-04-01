@@ -10,7 +10,7 @@ logging:
     loggers:
         - { level: WARN, label: UpdaterController.class }
         - { level: WARN, label: FeedParser.class }
-        - { level: WARN, label: Connection.class }
+        - { level: TRACE, label: Connection.class }
 
 session:
     path: /var/www/reader/cache

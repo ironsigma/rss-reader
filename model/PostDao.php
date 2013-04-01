@@ -18,7 +18,9 @@ class PostDao {
     public static function findStaredArticles($limit, $offset) {
         return Database::table(Post::getTable())
             ->join('feed', 'id', 'feed_id')
-            ->true('stared')
+            ->join('post_state', 'post_id', 'id')
+            ->true('post_state.stared')
+            ->equal('post_state.user_id', Session::getUserId(), Entity::TYPE_INT)
             ->orderBy('published', 'ASC')
             ->page($limit, $offset)
             ->select(array_merge(Post::getColumnNames(), array(array('feed.name', 'feed'))))
@@ -49,9 +51,10 @@ class PostDao {
         return $counts;
     }
     public static function staredCount() {
-        $result = Database::table(Post::getTable())
+        $result = Database::table(State::getTable())
                 ->count('*', 'count')
                 ->true('stared')
+                ->equal('user_id', Session::getUserId(), Entity::TYPE_INT)
                 ->first();
         return intval($result['count']);
     }
@@ -81,7 +84,7 @@ class PostDao {
     public static function postExists($post) {
         $result = Database::table(Post::getTable())
             ->count('*', 'count')
-            ->equal('guid', $post->guid, Entity::TYPE_INT)
+            ->equal('guid', $post->guid, Entity::TYPE_STR)
             ->first();
 
         return intval($result['count']) !== 0;
@@ -100,6 +103,27 @@ class PostDao {
         $query->update($entity, array('read'));
     }
     public static function updateStar($star, $id) {
+        $state = Database::table(State::getTable())
+            ->equal('user_id', Session::getUserId(), Entity::TYPE_INT)
+            ->equal('post_id', $id, Entity::TYPE_INT)
+            ->first('State');
+
+        if ( !$state ) {
+            $state = new State(array(
+                'read' => false,
+                'stared' => $star,
+                'post_id' => $id,
+                'user_id' => Session::getUserId(),
+            ));
+            Database::table(State::getTable())
+                ->insert($state);
+        } else {
+            $state->stared = $star;
+            Database::table(State::getTable())
+                ->equal('id', $state->id, Entity::TYPE_INT)
+                ->update($state, array('stared'));
+        }
+
         $entity = new Post(array('stared' => $star));
         Database::table(Post::getTable())
             ->equal('id', $id, Entity::TYPE_INT)

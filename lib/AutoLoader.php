@@ -1,16 +1,11 @@
 <?php
-$app_inc_paths = array(
-    APP_PATH . '/modules',
-    APP_PATH . '/model',
-    APP_PATH . '/lib',
-    APP_PATH . '/lib/logger',
-    APP_PATH . '/lib/config',
-    APP_PATH . '/lib/database',
-    APP_PATH . '/lib/php-router',
-    APP_PATH . '/lib/feed-parser',
-    APP_PATH . '/lib/template',
-    APP_PATH . '/lib/session',
-    '/usr/share/php/Symfony/Component/Yaml',
+$app_inc_paths = array_merge(
+    array(
+        APP_PATH . '/modules',
+        APP_PATH . '/model',
+    ),
+    glob(APP_PATH . '/lib/*', GLOB_ONLYDIR),
+    array('/usr/share/php/Symfony/Component/Yaml')
 );
 
 if ( defined('APP_ADDL_INC_PATHS') ) {
