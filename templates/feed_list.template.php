@@ -14,7 +14,7 @@
     </div><!-- navigation -->
     <div id="content">
         <ul id="tree" class="feedtree">
-            <li><span class="folder"><a href="/feed/stared/articles?page=1">Stared Items</a> (<?php echo $stared_count ?>)</span></li>
+            <li><span class="folder star-folder"><a href="/feed/stared/articles?page=1">Stared Items</a> (<?php echo $stared_count ?>)</span></li>
         <?php $folder = '' ?>
         <?php foreach ( $feeds as $feed ) : ?>
             <?php if ( $feed->folder != $folder ) : ?>
