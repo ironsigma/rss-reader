@@ -20,7 +20,7 @@ function get_url() {
 
 function page_error($code, $message, $url) {
     header('Content-Type: application/json');
-    header('Content-Version: $version');
+    header('Content-Version: 1.0');
     print(json_encode(array(
         'status' => 'error',
         'code' => $code,
@@ -38,60 +38,57 @@ foreach ( Config::get('logging.loggers', array()) as $logger ) {
 
 // routing
 $dispatcher = new Dispatcher();
-$dispatcher->setSuffix('Controller');
 $dispatcher->setClassPath(Config::get('controllers.path'));
+$dispatcher->setSuffix('Controller');
 
 // default
-$default_route = new Route('/');
-$default_route->setMapClass('Feed')
-    ->setMapMethod('handleRequest');
+$dispatcher->add(new Route('/', array(
+    'controller' => 'Feed',
+    'methods' => array(
+        array('name' => 'handleRequest', 'type' => 'get'),
+    ),
+)));
 
 // class route
-$action_route = new Route('/:class');
-$action_route->addDynamicElement(':class', ':class')
-    ->setMapMethod('handleRequest')
-    ->setMapMethod('handlePostRequest', 'POST');
+$dispatcher->add(new Route('/:class', array(
+    'controller' => ':class',
+    'methods' => array(
+        array('name' => 'handleRequest', 'type' => 'get'),
+        array('name' => 'handlePostRequest', 'type' => 'post'),
+    ),
+)));
 
 // feed/id/method route
-$action_id_route = new Route('/:class/:id/:method');
-$action_id_route->addDynamicElement(':class', ':class')
-    ->addDynamicElement(':id', ':id')
-    ->addDynamicElement(':method', ':method');
-
-$router = new Router();
-$router->addRoute('default', $default_route);
-$router->addRoute('action', $action_route);
-$router->addRoute('action-id', $action_id_route);
+$dispatcher->add(new Route('/:class/:id/:method', array(
+    'controller' => ':class',
+    'methods' => array(
+        array('name' => ':method', 'type' => 'get'),
+    ),
+)));
 
 try {
 
     $url = get_url();
-    $found_route = $router->findRoute($url, $_SERVER['REQUEST_METHOD']);
+    $method = $_SERVER['REQUEST_METHOD'];
+    $found_route = $dispatcher->findRoute($url);
+    $controller = $found_route->getController($method);
     $user = true;
     if (
-            $found_route->getMapClass() !== 'login' &&
-            $found_route->getMapClass() !== 'updater'
+            $controller['class'] !== 'Login' &&
+            $controller['class'] !== 'Updater'
        )
     {
         $user = Session::requireLogin();
     }
 
     if ( $user !== false ) {
-        $dispatcher->dispatch($found_route, null, $_SERVER['REQUEST_METHOD']);
+        $dispatcher->dispatch($found_route, $method);
     }
 
-} catch ( RouteNotFoundException $e ) {
+} catch ( NoRouteFoundException $e ) {
     page_error('404', 'Invalid url: '. $e->getMessage(), $url);
-} catch ( BadClassNameException $e ) {
-    page_error('400', 'Invalid resource name: '. $e->getMessage(), $url);
-} catch ( ClassFileNotFoundException $e ) {
-    page_error('500', 'Resource does not exist: '. $e->getMessage(), $url);
-} catch ( ClassNameNotFoundException $e ) {
-    page_error('500', 'Resource not found: '. $e->getMessage(), $url);
-} catch ( ClassMethodNotFoundException $e ) {
+} catch ( NoHandlerFoundException $e ) {
+    page_error('400', 'Invalid resource: '. $e->getMessage(), $url);
+} catch ( UnableToInvokeMethodException $e ) {
     page_error('500', 'Invalid operation: '. $e->getMessage(), $url);
-} catch ( ClassNotSpecifiedException $e ) {
-    page_error('500', 'No resource specified: '. $e->getMessage(), $url);
-} catch ( MethodNotSpecifiedException $e ) {
-    page_error('500', 'No operation specified: '. $e->getMessage(), $url);
 }
