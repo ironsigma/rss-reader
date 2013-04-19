@@ -12,7 +12,7 @@ class Dispatcher {
         $this->classPath = $classPath;
     }
 
-    public function add(Route $route) {
+    public function addRoute(Route $route) {
         $this->routes[] = $route;
     }
 

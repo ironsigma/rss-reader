@@ -42,29 +42,20 @@ $dispatcher->setClassPath(Config::get('controllers.path'));
 $dispatcher->setSuffix('Controller');
 
 // default
-$dispatcher->add(new Route('/', array(
-    'controller' => 'Feed',
-    'methods' => array(
-        array('name' => 'handleRequest', 'type' => 'get'),
-    ),
-)));
+$dispatcher->addRoute(Route::mapUrl('/')
+    ->addController('Feed')
+    ->addAction('handleRequest', Route::GET));
 
 // class route
-$dispatcher->add(new Route('/:class', array(
-    'controller' => ':class',
-    'methods' => array(
-        array('name' => 'handleRequest', 'type' => 'get'),
-        array('name' => 'handlePostRequest', 'type' => 'post'),
-    ),
-)));
+$dispatcher->addRoute(Route::mapUrl('/:class')
+    ->addController(':class')
+    ->addAction('handleRequest', Route::GET)
+    ->addAction('handlePostRequest', Route::POST));
 
 // feed/id/method route
-$dispatcher->add(new Route('/:class/:id/:method', array(
-    'controller' => ':class',
-    'methods' => array(
-        array('name' => ':method', 'type' => 'get'),
-    ),
-)));
+$dispatcher->addRoute(Route::mapUrl('/:class/:id/:method')
+    ->addController(':class')
+    ->addAction(':method', Route::GET));
 
 try {
 

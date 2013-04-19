@@ -1,15 +1,41 @@
 <?php
 class Route {
+    const GET = 1;
+    const POST = 2;
+    const PUT = 3;
+    const DELETE = 4;
+
     private $url;
     private $uri;
-    private $mapping;
+    private $mapping = array();
     private $validations;
     private $params;
 
-    public function __construct($url, array $mapping, array $validations=null) {
+    public static function mapUrl($url) {
+        return new Route($url);
+    }
+
+    public function __construct($url) {
         $this->url = $url;
-        $this->mapping = $mapping;
-        $this->validations = $validations;
+    }
+
+    public function validateToken($token, $regex) {
+        $this->validations[$token] = $regex;
+        return $this;
+    }
+
+    public function addController($class) {
+        $this->mapping[] = array('class' => $class, 'methods' => array());
+        return $this;
+    }
+
+    public function addAction($method, $type=null) {
+        $count = count($this->mapping) - 1;
+        if ( $count == -1 ) {
+            throw new Exception('No controller in specified');
+        }
+        $this->mapping[count($this->mapping)-1]['methods'][] = array('name' => $method, 'type' => $type);
+        return $this;
     }
 
     public function getParams() {
@@ -50,44 +76,60 @@ class Route {
         }
 
         // replace params in controller name
-        if ( preg_match('@\{?:[\w]+\}?@', $this->mapping['controller']) ) {
-            $controller = preg_replace_callback('@\{?:[\w]+\}?@',
-                array($this, 'rep_params'), $this->mapping['controller']);
-            $this->mapping['controller'] = strtoupper($controller[0]) . substr($controller, 1);
-        }
+        foreach ( $this->mapping as $map_idx => $map ) {
+            if ( preg_match('@\{?:[\w]+\}?@', $map['class']) ) {
+                $class = preg_replace_callback('@\{?:[\w]+\}?@',
+                    array($this, 'rep_params'), $map['class']);
+                $this->mapping[$map_idx]['class'] = strtoupper($class[0]) . substr($class, 1);
+            }
 
-        // replace params in method names
-        foreach ( $this->mapping['methods'] as $index => $method ) {
-            if ( preg_match('@\{?:[\w]+\}?@', $method['name']) ) {
-                $name = preg_replace_callback('@\{?:[\w]+\}?@',
-                    array($this, 'rep_params'), $method['name']);
-                if ( $method['name'][0] == '{' ) {
-                    $name = strtolower($name[0]) . substr($name, 1);
+            // replace params in method names
+            foreach ( $map['methods'] as $action_idx => $method ) {
+                if ( preg_match('@\{?:[\w]+\}?@', $method['name']) ) {
+                    $name = preg_replace_callback('@\{?:[\w]+\}?@',
+                        array($this, 'rep_params'), $method['name']);
+                    if ( $method['name'][0] == '{' ) {
+                        $name = strtolower($name[0]) . substr($name, 1);
+                    }
+                    $this->mapping[$map_idx]['methods'][$action_idx]['name'] = $name;
                 }
-                $this->mapping['methods'][$index]['name'] = $name;
             }
         }
 
         return true;
     }
 
+    private function typeToConst($method_type) {
+        switch ( strtolower($method_type) ) {
+        case 'get': return Route::GET;
+        case 'put': return Route::PUT;
+        case 'delete': return Route::DELETE;
+        case 'post': return Route::POST;
+        }
+        return null;
+    }
+
     public function getController($method_type) {
-        $type = strtolower($method_type);
+        $type = $this->typeToConst($method_type);
         $match = null;
-        foreach ( $this->mapping['methods'] as $method ) {
-            if ( array_key_exists('type', $method) ) {
-                if ( $type == $method['type'] ) {
+        $class = null;
+        foreach ( $this->mapping as $controller ) {
+            $class = $controller['class'];
+            foreach ( $controller['methods'] as $method ) {
+                if ( $method['type'] ) {
+                    if ( $type == $method['type'] ) {
+                        $match = $method['name'];
+                        break 2;
+                    }
+                } else {
                     $match = $method['name'];
-                    break;
                 }
-            } else {
-                $match = $method['name'];
             }
         }
         if ( !$match ) {
             throw new NoHandlerFoundException($this->uri, $method_type, $this->url);
         }
-        return array('class' => $this->mapping['controller'], 'method' => $match, 'type' => $method_type);
+        return array('class' => $class, 'method' => $match, 'type' => $method_type);
     }
 
     public function rep_params($matches) {
