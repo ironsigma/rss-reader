@@ -271,5 +271,21 @@ class MySqlGrammarTest extends PHPUnit_Framework_TestCase {
         $sql = Database::table(Post::getTable())
             ->equal('id', $post->id, Entity::TYPE_INT)
             ->sql(array('type'=>'update', 'entity'=>$post));
+
+        // UPDATE post p
+        //   INNER JOIN feed f ON p.feed_id=f.id
+        // SET p.read=1
+        // WHERE p.read=0
+        //   AND f.folder_id=2;
+
+        $post = new Post(array(
+            'read' => false,
+        ));
+
+        $sql = Database::table(Post::getTable())
+            ->join('feed', 'id', 'feed_id')
+            ->equal('read', false, Entity::TYPE_BOOL)
+            ->equal('feed.folder_id', 2, Entity::TYPE_INT)
+            ->sql(array('type'=>'update', 'entity'=>$post, 'columns'=>array('read')));
     }
 }

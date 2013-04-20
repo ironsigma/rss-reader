@@ -12,9 +12,7 @@
             <li><a href="/">Feeds</a></li>
             <?php if ($article_count > 0 && $feed_id !== 'stared') : ?>
                 <li><a class="right" href="/feed/<?php echo $feed_id ?>/read?<?php echo $container ?>=<?php echo $feed_id ?>&amp;page=<?php echo $page ?>&amp;ids=<?php echo $article_ids ?>">Page Read</a></li>
-                <?php if ( $container === 'feed' ) : ?>
                 <li><a class="right" href="/feed/<?php echo $feed_id ?>/read?<?php echo $container ?>=<?php echo $feed_id ?>&amp;page=1&amp;ids=all">All Read</a></li>
-                <?php endif ?>
             <?php endif ?>
             <li><span class="right">Page <?php echo $page ?> of <?php echo $page_count ?></span></li>
         </ul>

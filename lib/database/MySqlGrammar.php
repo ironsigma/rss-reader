@@ -59,7 +59,15 @@ class MySqlGrammar {
     }
 
     public function generateUpdateSql($query, $entity, $columns) {
-        $sql = $this->generateEntityUpdate($query, $entity, $columns);
+        $this->prefix_list = array();
+        $this->prefix_index = 0;
+        $this->generateTablePrefixes($query);
+
+        $sql = 'UPDATE '. $query->getTable()
+            ." {$this->prefix_list['_FROM_']}";
+
+        $sql .= $this->generateJoins($query);
+        $sql .= $this->generateEntityUpdate($query, $entity, $columns);
         $sql .= $this->generateWhere($query->getConditions());
         return $sql;
     }
@@ -143,8 +151,7 @@ class MySqlGrammar {
         foreach ( $columns as $col ) {
             $cols[] = "`$col`=?";
         }
-        return 'UPDATE '. $query->getTable()
-            .' SET '. join(',', $cols);
+        return ' SET '. join(',', $cols);
     }
 
     protected function generateFrom($query) {

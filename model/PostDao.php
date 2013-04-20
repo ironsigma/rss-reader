@@ -102,6 +102,14 @@ class PostDao {
         $entity = new Post(array('read' => true));
         $query->update($entity, array('read'));
     }
+    public static function markFolderRead($folder_id) {
+        $entity = new Post(array('read' => true));
+        $query = Database::table(Post::getTable())
+            ->join('feed', 'id', 'feed_id')
+            ->equal('read', false, Entity::TYPE_BOOL)
+            ->equal('feed.folder_id', $folder_id, Entity::TYPE_INT)
+            ->update($entity, array('read'));
+    }
     public static function updateStar($star, $id) {
         $state = Database::table(State::getTable())
             ->equal('user_id', Session::getUserId(), Entity::TYPE_INT)
