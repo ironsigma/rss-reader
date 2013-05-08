@@ -10,6 +10,8 @@ class UpdaterController {
         if ( self::$log === null ) {
             self::$log = LogFacility::getLogger('UpdaterController.class');
             LogFacility::setLoggerLevel('Connection.class', Logger::WARN);
+            //LogFacility::setLoggerLevel('Connection.class', Logger::TRACE);
+            //LogFacility::setLoggerLevel('FeedParser.class', Logger::TRACE);
         }
     }
 
