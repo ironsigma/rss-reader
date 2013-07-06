@@ -35,7 +35,7 @@ class FeedParser {
 
         // RSS
         if ( count($x->channel) !== 0 ) {
-            if ( ($x->channel->item) != 0 ) {
+            if ( count($x->channel->item) !== 0 ) {
                 self::$log->trace('Parsing as RSS feed');
                 foreach( $x->channel->item as $item ) {
                     $ts = strtotime($item->pubDate);

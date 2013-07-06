@@ -1,6 +1,4 @@
 <?php
-use Symfony\Component\Yaml\Yaml;
-
 class Config {
     protected static $valueList;
 
@@ -54,6 +52,6 @@ class Config {
     }
 
     public static function read($file) {
-        self::$valueList = Yaml::parse($file);
+        self::$valueList = Spyc::YAMLLoad($file);
     }
 }

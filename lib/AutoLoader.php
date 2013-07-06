@@ -4,8 +4,7 @@ $app_inc_paths = array_merge(
         APP_PATH . '/modules',
         APP_PATH . '/model',
     ),
-    glob(APP_PATH . '/lib/*', GLOB_ONLYDIR),
-    array('/usr/share/php/Symfony/Component/Yaml')
+    glob(APP_PATH . '/lib/*', GLOB_ONLYDIR)
 );
 
 if ( defined('APP_ADDL_INC_PATHS') ) {
