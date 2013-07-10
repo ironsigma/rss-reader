@@ -9,14 +9,15 @@ class UpdaterController {
     public function __construct() {
         if ( self::$log === null ) {
             self::$log = LogFacility::getLogger('UpdaterController.class');
+            LogFacility::setLoggerLevel('FeedParser.class', Logger::WARN);
             LogFacility::setLoggerLevel('Connection.class', Logger::WARN);
-            //LogFacility::setLoggerLevel('Connection.class', Logger::TRACE);
-            //LogFacility::setLoggerLevel('FeedParser.class', Logger::TRACE);
         }
     }
 
     public function handleRequest($args) {
         self::$log->info('Starting RSS Update');
+
+        PostDao::deleteOldPosts();
         $feedUpdates = UpdateDao::findLatestUpdates();
         $now = time();
         self::$log->debug("Current time: ". date('c', $now));
@@ -49,7 +50,11 @@ class UpdaterController {
 
             } else {
                 self::$log->debug('Loading posts...');
+                $cutoff_date = strtotime('-30 day');
                 foreach ( $posts as $post_data ) {
+                    if ( $post_data['published'] < $cutoff_date ) {
+                        continue;
+                    }
                     $post_data['feed_id'] = $feed->id;
                     $post = new Post($post_data);
                     $count ++;
@@ -71,6 +76,8 @@ class UpdaterController {
                 'feed_id' => $feed->id,
             )));
         }
+
+        UpdateDao::deleteOldUpdates();
 
         self::$log->info('RSS Update Completed');
     }

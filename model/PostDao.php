@@ -137,4 +137,8 @@ class PostDao {
             ->equal('id', $id, Entity::TYPE_INT)
             ->update($entity, array('stared'));
     }
+    public static function deleteOldPosts() {
+        $sql = 'DELETE FROM post WHERE published < NOW() - INTERVAL 30 DAY';
+        Database::connection()->execute($sql);
+    }
 }

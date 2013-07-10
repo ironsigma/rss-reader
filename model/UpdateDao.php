@@ -20,4 +20,8 @@ class UpdateDao {
         }
         return $lookup;
     }
+    public static function deleteOldUpdates() {
+        $sql = 'DELETE FROM update_log WHERE updated < NOW() - INTERVAL 2 WEEK';
+        Database::connection()->execute($sql);
+    }
 }
