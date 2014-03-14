@@ -21,6 +21,7 @@ class FeedDao {
             ->leftJoin('post', 'feed_id', 'id')
             ->leftJoin('folder', 'id', 'folder_id')
             ->false('post.read')
+            ->true('active')
             ->groupBy('id')
             ->orderBy('folder.name')
             ->select(array_merge(

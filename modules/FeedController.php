@@ -14,6 +14,14 @@ class FeedController {
         $template->stared_count = PostDao::staredCount();
 
         $template->folder_counts = PostDao::postFolderCount();
+
+        $total_count = 0;
+        foreach ( $template->folder_counts as $count ) {
+            $total_count += $count;
+        }
+
+        $template->page_title = "RSS Reader - $total_count posts";
+
         $template->display();
     }
 

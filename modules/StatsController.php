@@ -10,6 +10,7 @@ class StatsController {
         $sql = 'SELECT feed_id AS id, name, DATE(updated) AS `date`, SUM(total_count) AS `total`, SUM(new_count) AS `new` '.
             'FROM update_log u JOIN feed f ON u.feed_id=f.id '.
             'WHERE updated > DATE_SUB(CURDATE(), INTERVAL 14 DAY) '.
+            'AND f.active=1 '.
             'GROUP BY feed_id, `date`';
 
         list($statement,) = Database::connection()->execute($sql);

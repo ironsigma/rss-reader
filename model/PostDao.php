@@ -10,6 +10,7 @@ class PostDao {
             ->join('feed', 'id', 'feed_id')
             ->join('folder', 'id', 'feed.folder_id')
             ->equal('folder.id', $folder_id, Entity::TYPE_INT)
+            ->true('feed.active')
             ->orderBy('published', $order)
             ->page($limit, $offset)
             ->select(array_merge(Post::getColumnNames(), array(array('feed.name', 'feed'))))
@@ -19,6 +20,7 @@ class PostDao {
         return Database::table(Post::getTable())
             ->join('feed', 'id', 'feed_id')
             ->join('post_state', 'post_id', 'id')
+            ->true('feed.active')
             ->true('post_state.stared')
             ->equal('post_state.user_id', Session::getUserId(), Entity::TYPE_INT)
             ->orderBy('published', 'ASC')
@@ -40,6 +42,7 @@ class PostDao {
                 ->false('read')
                 ->join('feed', 'id', 'feed_id')
                 ->join('folder', 'id', 'feed.folder_id')
+                ->true('feed.active')
                 ->groupBy('folder.id')
                 ->select(array('folder.id'))
                 ->fetch();
@@ -52,8 +55,11 @@ class PostDao {
     }
     public static function staredCount() {
         $result = Database::table(State::getTable())
+                ->join('post', 'id', 'post_id')
+                ->join('feed', 'id', 'post.feed_id')
                 ->count('*', 'count')
                 ->true('stared')
+                ->true('feed.active')
                 ->equal('user_id', Session::getUserId(), Entity::TYPE_INT)
                 ->first();
         return intval($result['count']);
@@ -72,6 +78,7 @@ class PostDao {
                 ->false('read')
                 ->join('feed', 'id', 'feed_id')
                 ->join('folder', 'id', 'feed.folder_id')
+                ->true('feed.active')
                 ->equal('folder.id', $folder_id, Entity::TYPE_INT)
                 ->first();
         return intval($result['count']);
@@ -108,6 +115,7 @@ class PostDao {
             ->join('feed', 'id', 'feed_id')
             ->equal('read', false, Entity::TYPE_BOOL)
             ->equal('feed.folder_id', $folder_id, Entity::TYPE_INT)
+            ->true('feed.active')
             ->update($entity, array('read'));
     }
     public static function updateStar($star, $id) {

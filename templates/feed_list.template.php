@@ -2,6 +2,15 @@
 <?php $page_js = array('jquery.js', 'less.js', 'jquery.treeview.js') ?>
 <?php include 'header.layout.php' ?>
 
+<?php
+function selfURL() {
+    $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : ""; 
+    $protocol = substr(strtolower($_SERVER["SERVER_PROTOCOL"]), 0, strpos($_SERVER["SERVER_PROTOCOL"], '/')).$s;
+    $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+    return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
+}
+?>
+
 <div id="container">
     <div id="header">
         <h1>RSS Reader</h1>
@@ -40,6 +49,9 @@ $(document).ready(function(){
         animated: 'fast',
         collapsed: true
     });
+    setInterval(function(){
+        window.location.reload("<?php echo selfURL() ?>");
+    }, 30 * 60000); // every 30 mins
 });
 </script>
 <?php include 'footer.layout.php' ?>

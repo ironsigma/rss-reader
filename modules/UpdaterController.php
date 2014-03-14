@@ -23,6 +23,10 @@ class UpdaterController {
         self::$log->debug("Current time: ". date('c', $now));
         $feeds = FeedDao::findAll();
         foreach ( $feeds as $feed ) {
+            if ( !$feed->active ) {
+                self::$log->debug("Feed {$feed->name} inactive, skipping");
+                continue;
+            }
             self::$log->debug("Checking {$feed->name}");
             // if there is a last update
             if ( array_key_exists($feed->id, $feedUpdates) ) {
@@ -55,6 +59,16 @@ class UpdaterController {
                     if ( $post_data['published'] < $cutoff_date ) {
                         continue;
                     }
+                    if  (
+                            $feed->name == '365 Pool' && (
+                                strpos($post_data['link'], 'dougvalente') !== false ||
+                                strpos($post_data['link'], '67522976@N00') !== false
+                            )
+                        )
+                    {
+                        continue;
+                    }
+
                     $post_data['feed_id'] = $feed->id;
                     $post = new Post($post_data);
                     $count ++;

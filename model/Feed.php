@@ -10,6 +10,7 @@ Feed::init('feed', array(
     array('name'=>'id', 'type'=>Entity::TYPE_INT),
     array('name'=>'name', 'type'=>Entity::TYPE_STR),
     array('name'=>'url', 'type'=>Entity::TYPE_STR),
+    array('name'=>'active', 'type'=>Entity::TYPE_BOOL),
     array('name'=>'newest_first', 'type'=>Entity::TYPE_BOOL),
     array('name'=>'update_freq', 'type'=>Entity::TYPE_INT),
     array('name'=>'per_page', 'type'=>Entity::TYPE_INT),

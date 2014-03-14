@@ -23,6 +23,7 @@ CREATE TABLE feed (
     id          BIGINT PRIMARY KEY AUTO_INCREMENT,
     name        VARCHAR(255) NOT NULL,
     url         VARCHAR(2083) NOT NULL,
+    active      BOOLEAN NOT NULL,
     newest_first    BOOLEAN NOT NULL,
     update_freq INTEGER NOT NULL,
     per_page    SMALLINT UNSIGNED NOT NULL,
