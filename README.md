@@ -5,7 +5,26 @@ Simple, Lightweight RSS Reader.
 This is an attepmt to make an RSS reader without all the overhead and bloat of a full fledge framework.
 Most of the components used have been chosen for their simplicity and other have been manually created.
 
-## Project structure
+## Working
+
+- Feed parsing
+- Feed auto update
+- Feed display
+- Folder structure
+- Marking posts read, stared
+- Auto remove old read posts
+- Primitive feed stats
+
+## To Do
+
+- Feed management UI
+- Multi-user support
+- Change number of post viewed
+- User account and settings
+
+## Project Structure
+
+### Root Folders
 
 - *Config*      Runtime configuration files
 - *lib*         Generalized and third-party libraries
@@ -16,7 +35,7 @@ Most of the components used have been chosen for their simplicity and other have
 - *web*         Pubilc files: images, css, js, etc...
 - *index.php*   Bootstrap and Front controller
 
-## Libraries
+### Libraries
 - *config*          Read/Manage global configuration
 - *database*        Database management
 - *elian*           ASCII to Elian class (obfuscation)
