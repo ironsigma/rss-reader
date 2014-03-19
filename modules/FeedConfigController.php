@@ -16,14 +16,29 @@ class FeedConfigController extends JsonController {
     }
 
     public function handlePostRequest() {
-        $log = LogFacility::getLogger('FeedConfigController.class');
-        $request = $this->getJsonRequest();
-        $log->info('POST: '. print_r($request, true));
+        if ($request['op'] == 'new-feed') {
+            $feed = new Feed(array(
+                'name' => $request['name'],
+                'url' => $request['url'],
+                'active' => false,
+                'newest_first' => false,
+                'update_freq' => 60,
+                'per_page' => 10,
+                'user_id' => 2,
+            ));
+            FeedDao::insert($feed);
+            $this->setJsonResponse(array('status' => 'success'));
+            return;
+        }
 
         $feed = FeedDao::findById($request['id']);
         if ($request['op'] == 'active') {
             $feed->active = $request['value'];
             FeedDao::update($feed, array('active'));
+            $this->setJsonResponse(array('status' => 'success'));
+
+        } elseif ($request['op'] == 'del-feed') {
+            FeedDao::delete($feed);
             $this->setJsonResponse(array('status' => 'success'));
 
         } elseif ($request['op'] == 'sort') {
@@ -50,7 +65,6 @@ class FeedConfigController extends JsonController {
             FeedDao::update($feed, array('folder_id'));
             $this->setJsonResponse(array('status' => 'success'));
         }
-
     }
 
 }

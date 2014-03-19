@@ -1,5 +1,5 @@
 <?php $page_css = array('reader.less', 'feed_config.less') ?>
-<?php $page_js = array('less.js', 'jquery.js') ?>
+<?php $page_js = array('less.js', 'jquery.js', 'url-validate.js') ?>
 <?php include 'header.layout.php' ?>
 
 <div id="container">
@@ -14,20 +14,34 @@
     <div id="content">
         <table id='feed-table'>
             <tr>
-                <th colspan="2">RSS Feed</th>
+                <th><img id="add-rss" src="/static/images/add-rss.png" width="24" /></th>
+                <th>RSS Feed</th>
                 <th>Folder</th>
                 <th>Sorting</th>
                 <th>Update</th>
                 <th>Display</th>
             </tr>
+            <tr id="tr-new-rss" class="even">
+                <td>&nbsp;</td>
+                <td id="td-new-name">
+                    <label for="name">Name:</label> <input id="new-rss-name" name="name" type="text"/>
+                </td>
+                <td id="td-new-url" colspan="4">
+                    <label for="url">URL:</label> <input id="new-rss-url" name="url" type="text"/>
+                    <input id="new-rss-button" type="button" value="Add Feed"/>
+                </td>
+            </tr>
             <?php $row = 0; foreach ( $feeds as $feed ) : $row ++ ?>
             <tr class="<?php echo $row % 2 == 0 ? 'even' : 'odd' ?>">
-                <td id="td-active">
+                <td>
                     <input id="chk-active-<?php echo $feed->id ?>" class="chk-active" type="checkbox"<?php echo $feed->active ? ' checked="checked"' : '' ?> />
                 </td>
-                <td id="td-name-url"><span class="name"><?php echo $feed->name ?></span><br/>
-                <a href="<?php echo $feed->url ?>" class="url"><?php echo $feed->url ?></a></td>
-                <td id="td-folder">
+                <td class="td-name-url">
+                    <span id="name-<?php echo $feed->id ?>" class="name"><?php echo $feed->name ?></span><br/>
+                    <img id="delete-<?php echo $feed->id ?>" class="delete" src="/static/images/delete.png" />
+                    <a href="<?php echo $feed->url ?>" class="url"><?php echo $feed->url ?></a>
+                </td>
+                <td>
                     <select id="sel-folder-<?php echo $feed->id ?>" class="sel-folder">
                         <option value="none">None</option>
                         <?php foreach ( $folders as $folder ) : ?>
@@ -35,13 +49,13 @@
                         <?php endforeach ?>
                     </select>
                 </td>
-                <td id="td-sorting">
+                <td>
                     <select id="sel-sorting-<?php echo $feed->id ?>" class="sel-sorting">
                         <option value="false" <?php echo !$feed->newest_first ? ' selected="selected"' : '' ?>>Ascending</option>
                         <option value="true" <?php echo $feed->newest_first ? ' selected="selected"' : '' ?>>Descending</option>
                     </select>
                 </td>
-                <td id="td-update">
+                <td>
                     <select id="sel-update-<?php echo $feed->id ?>" class="sel-update">
                         <option value="10"<?php echo $feed->update_freq==10 ? ' selected="selected"' : '' ?>>10 mins</option>
                         <option value="30"<?php echo $feed->update_freq==30 ? ' selected="selected"' : '' ?>>30 mins</option>
@@ -54,7 +68,7 @@
                         <option value="1440"<?php echo $feed->update_freq==1440 ? ' selected="selected"' : '' ?>>1 day</option>
                     </select>
                 </td>
-                <td id="td-paging">
+                <td>
                     <select id="sel-page-<?php echo $feed->id ?>" class="sel-page">
                         <option value="10"<?php echo $feed->per_page==10 ? ' selected="selected"' : '' ?>>10</option>
                         <option value="20"<?php echo $feed->per_page==20 ? ' selected="selected"' : '' ?>>20</option>
@@ -74,154 +88,235 @@
 </div><!-- container -->
 
 <script type="text/javascript">
-$(".chk-active").click(function() {
-    var id = this.id.substr(11);
-    var checkbox = $(this);
-    var newValue = checkbox.prop('checked');
+$(function() {
+    $(".delete").click(function() {
+        var button = $(this);
+        button.hide();
+        button.after('<img id="busy-del" class="delete" src="/static/images/busy.gif" />');
 
-    checkbox.hide();
-    checkbox.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+        var id = this.id.substr(7);
+        var name = $('#name-'+id).text();
 
-    $.ajax({
-        url: "/feedConfig",
-        type: "POST",
-        dataType: 'json',
-        data: JSON.stringify({ id: id, op: 'active', value: newValue })
+        var result = window.confirm(name + "\n Are you sure?");
+        if (result == false) {
+            $("#busy-del").remove();
+            button.show();
+            return;
+        }
 
-    }).fail(function() {
-        checkbox.prop('checked', !newValue);
-        alert("Unable to update feed");
 
-    }).always(function() {
-        $("#busy-"+id).remove();
-        checkbox.show();
-    });
-});
-$(".sel-sorting").change(function() {
-    var id = this.id.substr(12);
-    var select = $(this);
-    var newValue = $(select).children(':selected').first().val();
+        $.ajax({
+            url: "/feedConfig",
+            type: "POST",
+            dataType: 'json',
+            data: JSON.stringify({ op: 'del-feed', id: id })
 
-    select.hide();
-    select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+        }).fail(function() {
+            alert("Unable to delete feed");
 
-    $.ajax({
-        url: "/feedConfig",
-        type: "POST",
-        dataType: 'json',
-        data: JSON.stringify({ id: id, op: 'sort', value: (newValue == "true") })
+        }).done(function() {
+            location.reload(true);
 
-    }).fail(function() {
-        $(select).children(':selected').removeProp('selected');
-        $(select).children().each(function(idx, option) {
-            if (option.value != newValue) {
-                $(option).prop('selected', 'selected');
-            }
+        }).always(function() {
+            $("#busy-del").remove();
+            button.show();
         });
-        alert("Unable to update feed");
-
-    }).always(function() {
-      $("#busy-"+id).remove();
-      select.show();
     });
-});
-$(".sel-update").one('focus', function() {
-    var select = $(this);
-    select.data('previous', select.children(':selected').first().val());
-
-}).change(function() {
-    var id = this.id.substr(11);
-    var select = $(this);
-    var prevValue = select.data('previous');
-    var newValue = select.children(':selected').first().val();
-
-    select.hide();
-    select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
-
-    $.ajax({
-        url: "/feedConfig",
-        type: "POST",
-        dataType: 'json',
-        data: JSON.stringify({ id: id, op: 'update', value: newValue })
-
-    }).fail(function() {
-        $(select).children(':selected').removeProp('selected');
-        $(select).children().each(function(idx, option) {
-            if (option.value == prevValue) {
-                $(option).prop('selected', 'selected');
-            }
-        });
-        alert("Unable to update feed");
-
-    }).always(function() {
-      $("#busy-"+id).remove();
-      select.show();
+    $("#add-rss").click(function() {
+        if ( $("#tr-new-rss").css('visibility') == 'visible' ) {
+            $("#tr-new-rss").css('visibility', 'collapse');
+            $("#new-rss-name").val('');
+            $("#new-rss-url").val('');
+        } else {
+            $("#tr-new-rss").css('visibility', 'visible');
+        }
     });
-});
-$(".sel-page").one('focus', function() {
-    var select = $(this);
-    select.data('previous', select.children(':selected').first().val());
+    $("#new-rss-button").click(function() {
+        var name = $("#new-rss-name").val();
+        var url = $("#new-rss-url").val();
+        var button = $('#add-rss');
 
-}).change(function() {
-    var id = this.id.substr(9);
-    var select = $(this);
-    var prevValue = select.data('previous');
-    var newValue = select.children(':selected').first().val();
+        if (name.length == 0) {
+            alert('Name is required');
+            return;
+        }
+        if (!isUrl(url)) {
+            alert('Invalid url: "'+ url +'"');
+            return;
+        }
 
-    select.hide();
-    select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+        button.hide();
+        button.after('<img id="busy-new-rss" src="/static/images/busy.gif" />');
+        $("#new-rss-name").val('');
+        $("#new-rss-url").val('');
+        $("#tr-new-rss").css('visibility', 'collapse');
 
-    $.ajax({
-        url: "/feedConfig",
-        type: "POST",
-        dataType: 'json',
-        data: JSON.stringify({ id: id, op: 'page', value: newValue })
+        $.ajax({
+            url: "/feedConfig",
+            type: "POST",
+            dataType: 'json',
+            data: JSON.stringify({ op: 'new-feed', name: name, url: url })
 
-    }).fail(function() {
-        $(select).children(':selected').removeProp('selected');
-        $(select).children().each(function(idx, option) {
-            if (option.value == prevValue) {
-                $(option).prop('selected', 'selected');
-            }
+        }).fail(function() {
+            alert("Unable to create feed");
+
+        }).done(function() {
+            location.reload(true);
+
+        }).always(function() {
+            $("#busy-new-rss").remove();
+            button.show();
         });
-        alert("Unable to update feed");
-
-    }).always(function() {
-      $("#busy-"+id).remove();
-      select.show();
     });
-});
-$(".sel-folder").one('focus', function() {
-    var select = $(this);
-    select.data('previous', select.children(':selected').first().val());
+    $(".chk-active").click(function() {
+        var id = this.id.substr(11);
+        var checkbox = $(this);
+        var newValue = checkbox.prop('checked');
 
-}).change(function() {
-    var id = this.id.substr(11);
-    var select = $(this);
-    var prevValue = select.data('previous');
-    var newValue = select.children(':selected').first().val();
+        checkbox.hide();
+        checkbox.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
 
-    select.hide();
-    select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+        $.ajax({
+            url: "/feedConfig",
+            type: "POST",
+            dataType: 'json',
+            data: JSON.stringify({ id: id, op: 'active', value: newValue })
 
-    $.ajax({
-        url: "/feedConfig",
-        type: "POST",
-        dataType: 'json',
-        data: JSON.stringify({ id: id, op: 'folder', value: newValue })
+        }).fail(function() {
+            checkbox.prop('checked', !newValue);
+            alert("Unable to update feed");
 
-    }).fail(function() {
-        $(select).children(':selected').removeProp('selected');
-        $(select).children().each(function(idx, option) {
-            if (option.value == prevValue) {
-                $(option).prop('selected', 'selected');
-            }
+        }).always(function() {
+            $("#busy-"+id).remove();
+            checkbox.show();
         });
-        alert("Unable to update feed");
+    });
+    $(".sel-sorting").change(function() {
+        var id = this.id.substr(12);
+        var select = $(this);
+        var newValue = $(select).children(':selected').first().val();
 
-    }).always(function() {
-      $("#busy-"+id).remove();
-      select.show();
+        select.hide();
+        select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+
+        $.ajax({
+            url: "/feedConfig",
+            type: "POST",
+            dataType: 'json',
+            data: JSON.stringify({ id: id, op: 'sort', value: (newValue == "true") })
+
+        }).fail(function() {
+            $(select).children(':selected').removeProp('selected');
+            $(select).children().each(function(idx, option) {
+                if (option.value != newValue) {
+                    $(option).prop('selected', 'selected');
+                }
+            });
+            alert("Unable to update feed");
+
+        }).always(function() {
+          $("#busy-"+id).remove();
+          select.show();
+        });
+    });
+    $(".sel-update").one('focus', function() {
+        var select = $(this);
+        select.data('previous', select.children(':selected').first().val());
+
+    }).change(function() {
+        var id = this.id.substr(11);
+        var select = $(this);
+        var prevValue = select.data('previous');
+        var newValue = select.children(':selected').first().val();
+
+        select.hide();
+        select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+
+        $.ajax({
+            url: "/feedConfig",
+            type: "POST",
+            dataType: 'json',
+            data: JSON.stringify({ id: id, op: 'update', value: newValue })
+
+        }).fail(function() {
+            $(select).children(':selected').removeProp('selected');
+            $(select).children().each(function(idx, option) {
+                if (option.value == prevValue) {
+                    $(option).prop('selected', 'selected');
+                }
+            });
+            alert("Unable to update feed");
+
+        }).always(function() {
+          $("#busy-"+id).remove();
+          select.show();
+        });
+    });
+    $(".sel-page").one('focus', function() {
+        var select = $(this);
+        select.data('previous', select.children(':selected').first().val());
+
+    }).change(function() {
+        var id = this.id.substr(9);
+        var select = $(this);
+        var prevValue = select.data('previous');
+        var newValue = select.children(':selected').first().val();
+
+        select.hide();
+        select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+
+        $.ajax({
+            url: "/feedConfig",
+            type: "POST",
+            dataType: 'json',
+            data: JSON.stringify({ id: id, op: 'page', value: newValue })
+
+        }).fail(function() {
+            $(select).children(':selected').removeProp('selected');
+            $(select).children().each(function(idx, option) {
+                if (option.value == prevValue) {
+                    $(option).prop('selected', 'selected');
+                }
+            });
+            alert("Unable to update feed");
+
+        }).always(function() {
+          $("#busy-"+id).remove();
+          select.show();
+        });
+    });
+    $(".sel-folder").one('focus', function() {
+        var select = $(this);
+        select.data('previous', select.children(':selected').first().val());
+
+    }).change(function() {
+        var id = this.id.substr(11);
+        var select = $(this);
+        var prevValue = select.data('previous');
+        var newValue = select.children(':selected').first().val();
+
+        select.hide();
+        select.after('<img id="busy-'+ id +'" src="/static/images/busy.gif" />');
+
+        $.ajax({
+            url: "/feedConfig",
+            type: "POST",
+            dataType: 'json',
+            data: JSON.stringify({ id: id, op: 'folder', value: newValue })
+
+        }).fail(function() {
+            $(select).children(':selected').removeProp('selected');
+            $(select).children().each(function(idx, option) {
+                if (option.value == prevValue) {
+                    $(option).prop('selected', 'selected');
+                }
+            });
+            alert("Unable to update feed");
+
+        }).always(function() {
+          $("#busy-"+id).remove();
+          select.show();
+        });
     });
 });
 </script>

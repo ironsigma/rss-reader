@@ -4,10 +4,18 @@
  * @package com\izylab\reader
  */
 class FeedDao {
+    public static function insert(Feed $feed) {
+        $feed->id = Database::table(Feed::getTable())->insert($feed);
+        return $feed;
+    }
     public static function update($feed, $columns=null) {
         Database::table(Feed::getTable())
             ->equal('id', $feed->id, Entity::TYPE_INT)
             ->update($feed, $columns);
+    }
+    public static function delete($feed) {
+        $sql = 'DELETE FROM feed WHERE id='. $feed->id;
+        Database::connection()->execute($sql);
     }
     public static function findById($id) {
         return Database::table(Feed::getTable())
