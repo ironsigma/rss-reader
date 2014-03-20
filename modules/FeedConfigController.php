@@ -11,11 +11,15 @@ class FeedConfigController extends JsonController {
         $template = new Template('feed_config');
         $template->feeds = FeedDao::findAll();
         $template->folders = FolderDao::findAll();
+        $template->updates = UpdateDao::findLatestUpdates();
+        $template->unreadPostCount = PostDao::countUnread();
+        $template->totalPostCount = PostDao::countAll();
         $template->page_title = "RSS Feed Configuration";
         $template->display();
     }
 
     public function handlePostRequest() {
+        $request = $this->getJsonRequest();
         if ($request['op'] == 'new-feed') {
             $feed = new Feed(array(
                 'name' => $request['name'],

@@ -72,6 +72,31 @@ class PostDao {
                 ->first();
         return intval($result['count']);
     }
+    public static function countUnread() {
+        $result = Database::table(Post::getTable())
+                ->select(array('feed_id'))
+                ->count('*', 'count')
+                ->false('read')
+                ->groupBy('feed_id')
+                ->fetch();
+        $map = array();
+        foreach ($result as $feed) {
+            $map[$feed['feed_id']] = $feed['count'];
+        }
+        return $map;
+    }
+    public static function countAll() {
+        $result = Database::table(Post::getTable())
+                ->select(array('feed_id'))
+                ->count('*', 'count')
+                ->groupBy('feed_id')
+                ->fetch();
+        $map = array();
+        foreach ($result as $feed) {
+            $map[$feed['feed_id']] = $feed['count'];
+        }
+        return $map;
+    }
     public static function countUnreadInFolder($folder_id) {
         $result = Database::table(Post::getTable())
                 ->count('*', 'count')

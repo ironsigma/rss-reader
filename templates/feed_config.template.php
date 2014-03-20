@@ -17,7 +17,6 @@
                 <th><img id="add-rss" src="/static/images/add-rss.png" width="24" /></th>
                 <th>RSS Feed</th>
                 <th>Folder</th>
-                <th>Sorting</th>
                 <th>Update</th>
                 <th>Display</th>
             </tr>
@@ -33,7 +32,7 @@
             </tr>
             <?php $row = 0; foreach ( $feeds as $feed ) : $row ++ ?>
             <tr class="<?php echo $row % 2 == 0 ? 'even' : 'odd' ?>">
-                <td>
+                <td class="td-active">
                     <input id="chk-active-<?php echo $feed->id ?>" class="chk-active" type="checkbox"<?php echo $feed->active ? ' checked="checked"' : '' ?> />
                 </td>
                 <td class="td-name-url">
@@ -41,21 +40,16 @@
                     <img id="delete-<?php echo $feed->id ?>" class="delete" src="/static/images/delete.png" />
                     <a href="<?php echo $feed->url ?>" class="url"><?php echo $feed->url ?></a>
                 </td>
-                <td>
+                <td class="td-folder">
                     <select id="sel-folder-<?php echo $feed->id ?>" class="sel-folder">
                         <option value="none">None</option>
                         <?php foreach ( $folders as $folder ) : ?>
                         <option value="<?php echo $folder->id ?>"<?php echo $feed->folder_id==$folder->id ? ' selected="selected"' : '' ?>><?php echo $folder->name ?></option>
                         <?php endforeach ?>
-                    </select>
+                    </select><br />
+                    <span class="counts"><?php echo array_key_exists($feed->id, $totalPostCount) ? $totalPostCount[$feed->id] : '0' ?> / <?php echo array_key_exists($feed->id, $unreadPostCount) ? $unreadPostCount[$feed->id] : '0' ?> unread</span>
                 </td>
-                <td>
-                    <select id="sel-sorting-<?php echo $feed->id ?>" class="sel-sorting">
-                        <option value="false" <?php echo !$feed->newest_first ? ' selected="selected"' : '' ?>>Ascending</option>
-                        <option value="true" <?php echo $feed->newest_first ? ' selected="selected"' : '' ?>>Descending</option>
-                    </select>
-                </td>
-                <td>
+                <td class="td-update">
                     <select id="sel-update-<?php echo $feed->id ?>" class="sel-update">
                         <option value="10"<?php echo $feed->update_freq==10 ? ' selected="selected"' : '' ?>>10 mins</option>
                         <option value="30"<?php echo $feed->update_freq==30 ? ' selected="selected"' : '' ?>>30 mins</option>
@@ -66,16 +60,21 @@
                         <option value="480"<?php echo $feed->update_freq==480 ? ' selected="selected"' : '' ?>>8 hrs</option>
                         <option value="720"<?php echo $feed->update_freq==720 ? ' selected="selected"' : '' ?>>12 hrs</option>
                         <option value="1440"<?php echo $feed->update_freq==1440 ? ' selected="selected"' : '' ?>>1 day</option>
-                    </select>
+                    </select><br/>
+                    <span class="last-update"><?php echo array_key_exists($feed->id, $updates) ? date('M j, g:ia', $updates[$feed->id]->updated) : 'Never' ?></span>
                 </td>
-                <td>
+                <td class="td-display">
+                    <select id="sel-sorting-<?php echo $feed->id ?>" class="sel-sorting">
+                        <option value="false" <?php echo !$feed->newest_first ? ' selected="selected"' : '' ?>>Ascending</option>
+                        <option value="true" <?php echo $feed->newest_first ? ' selected="selected"' : '' ?>>Descending</option>
+                    </select><br/>
                     <select id="sel-page-<?php echo $feed->id ?>" class="sel-page">
-                        <option value="10"<?php echo $feed->per_page==10 ? ' selected="selected"' : '' ?>>10</option>
-                        <option value="20"<?php echo $feed->per_page==20 ? ' selected="selected"' : '' ?>>20</option>
-                        <option value="40"<?php echo $feed->per_page==40 ? ' selected="selected"' : '' ?>>40</option>
-                        <option value="50"<?php echo $feed->per_page==50 ? ' selected="selected"' : '' ?>>50</option>
-                        <option value="60"<?php echo $feed->per_page==60 ? ' selected="selected"' : '' ?>>60</option>
-                        <option value="100"<?php echo $feed->per_page==100 ? ' selected="selected"' : '' ?>>100</option>
+                        <option value="10"<?php echo $feed->per_page==10 ? ' selected="selected"' : '' ?>>10 per page</option>
+                        <option value="20"<?php echo $feed->per_page==20 ? ' selected="selected"' : '' ?>>20 per page</option>
+                        <option value="40"<?php echo $feed->per_page==40 ? ' selected="selected"' : '' ?>>40 per page</option>
+                        <option value="50"<?php echo $feed->per_page==50 ? ' selected="selected"' : '' ?>>50 per page</option>
+                        <option value="60"<?php echo $feed->per_page==60 ? ' selected="selected"' : '' ?>>60 per page</option>
+                        <option value="100"<?php echo $feed->per_page==100 ? ' selected="selected"' : '' ?>>100 per page</option>
                     </select>
                 </td>
             </tr>
