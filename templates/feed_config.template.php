@@ -22,10 +22,8 @@
             </tr>
             <tr id="tr-new-rss" class="even">
                 <td>&nbsp;</td>
-                <td id="td-new-name">
-                    <label for="name">Name:</label> <input id="new-rss-name" name="name" type="text"/>
-                </td>
-                <td id="td-new-url" colspan="4">
+                <td id="td-new-name" colspan="7">
+                    <label for="name">Name:</label> <input id="new-rss-name" name="name" type="text"/></br/>
                     <label for="url">URL:</label> <input id="new-rss-url" name="url" type="text"/>
                     <input id="new-rss-button" type="button" value="Add Feed"/>
                 </td>
@@ -124,8 +122,9 @@ $(function() {
     $("#add-rss").click(function() {
         if ( $("#tr-new-rss").css('visibility') == 'visible' ) {
             $("#tr-new-rss").css('visibility', 'collapse');
-            $("#new-rss-name").val('');
             $("#new-rss-url").val('');
+            $("#new-rss-name").val('');
+            $("#new-rss-name").focus();
         } else {
             $("#tr-new-rss").css('visibility', 'visible');
         }
