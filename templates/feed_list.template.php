@@ -17,8 +17,9 @@ function selfURL() {
     </div><!-- header -->
     <div id="navigation">
         <ul>
-            <li><a href="/stats">Feed Stats</a></li>
-            <li><a href="/feedConfig">Feed Management</a></li>
+            <li><a href="/stats">Stats</a></li>
+            <li><a href="/feedConfig">Feeds</a></li>
+            <li><a href="/folderConfig">Folders</a></li>
             <li><a class="right" href="/login?logout">Logout</a></li>
         </ul>
     </div><!-- navigation -->

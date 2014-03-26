@@ -8,7 +8,8 @@
     </div><!-- header -->
     <div id="navigation">
         <ul>
-            <li><a href="/">Feeds</a></li>
+            <li><a href="/">Feed List</a></li>
+            <li><a href="/folderConfig">Folders</a></li>
         </ul>
     </div><!-- navigation -->
     <div id="content">
@@ -124,9 +125,9 @@ $(function() {
             $("#tr-new-rss").css('visibility', 'collapse');
             $("#new-rss-url").val('');
             $("#new-rss-name").val('');
-            $("#new-rss-name").focus();
         } else {
             $("#tr-new-rss").css('visibility', 'visible');
+            $("#new-rss-name").focus();
         }
     });
     $("#new-rss-button").click(function() {

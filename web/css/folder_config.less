@@ -1,0 +1,61 @@
+#folder-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    td {
+        vertical-align: top;
+    }
+    th {
+        background-color: green;
+        color: white;
+        font-size: large;
+        padding: 5px;
+        font-weight: normal;
+    }
+    tr.even td {
+        background-color: #efe;
+    }
+    #tr-new-folder {
+        visibility: collapse;
+    }
+    #td-new-name {
+        text-align: left;
+        padding: 5px;
+        label {
+            display: inline-block;
+            width: 50px;
+            text-align: right;
+        }
+        #new-folder-name {
+            width: 630px;
+            margin-bottom: 5px;
+        }
+    }
+    .td-name {
+        text-align: left;
+        padding: 5px 5px 5px 10px;
+    }
+    .td-sort {
+        width: 140px;
+    }
+    .td-display {
+        width: 140px;
+    }
+    .sel-sorting {
+        width: 100px;
+    }
+    .sel-page {
+        margin-top: 5px;
+        width: 100px;
+    }
+    .delete {
+        float: right;
+    }
+    .name {
+        font-size: large;
+    }
+}
