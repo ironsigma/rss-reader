@@ -24,21 +24,23 @@ function selfURL() {
         </ul>
     </div><!-- navigation -->
     <div id="content">
-        <ul id="tree" class="feedtree">
-            <?php if ( $stared_count != 0 ) : ?>
-            <li><span class="folder star-folder"><a href="/feed/stared/articles?page=1">Stared Items</a> (<?php echo $stared_count ?>)</span></li>
-            <?php endif ?>
-        <?php $folder = '' ?>
-        <?php foreach ( $feeds as $feed ) : ?>
-            <?php if ( $feed->folder != $folder ) : ?>
-                <?php if ( $folder !== '') : ?></ul></li><?php endif ?>
-                <?php $folder = $feed->folder ?>
-                <li><span class="folder"><a href="/folder/<?php echo $feed->folder_id ?>/articles?page=1"><?php echo $folder ?></a> (<?php echo $folder_counts[$feed->folder_id] ?>)</span><ul>
-            <?php endif ?>
-            <li><span class="feed"><a href="/feed/<?php echo $feed->id ?>/articles?page=1"><?php echo $feed->name ?></a> (<?php echo $feed->unread ?>)</span></li>
-        <?php endforeach ?>
-        <?php if ( $folder !== '') : ?></ul><?php endif ?>
-        </ul>
+        <div id="feed-list">
+            <ul id="tree" class="feedtree">
+                <?php if ( $stared_count != 0 ) : ?>
+                <li><span class="folder star-folder"><a href="/feed/stared/articles?page=1">Stared Items</a> (<?php echo $stared_count ?>)</span></li>
+                <?php endif ?>
+            <?php $folder = '' ?>
+            <?php foreach ( $feeds as $feed ) : ?>
+                <?php if ( $feed->folder != $folder ) : ?>
+                    <?php if ( $folder !== '') : ?></ul></li><?php endif ?>
+                    <?php $folder = $feed->folder ?>
+                    <li><span class="folder"><a href="/folder/<?php echo $feed->folder_id ?>/articles?page=1"><?php echo $folder ?></a> (<?php echo $folder_counts[$feed->folder_id] ?>)</span><ul>
+                <?php endif ?>
+                <li><span class="feed"><a href="/feed/<?php echo $feed->id ?>/articles?page=1"><?php echo $feed->name ?></a> (<?php echo $feed->unread ?>)</span></li>
+            <?php endforeach ?>
+            <?php if ( $folder !== '') : ?></ul><?php endif ?>
+            </ul>
+        </div>
     </div><!-- content -->
     <div id="footer">
         &copy; 2013 AxiSym3.net All Right Reserved

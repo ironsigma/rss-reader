@@ -5,7 +5,7 @@
 
 <div id="container">
     <div id="header">
-        <h1><?php echo $feed_name ?> (<?php echo $article_count ?>)</h1>
+        <h1><?php echo $feed_name ?> <span id="header-count">(<?php echo $article_count ?>)</span></h1>
     </div><!-- header -->
     <div id="navigation">
         <ul>
@@ -27,7 +27,7 @@
             <?php if ( $a->feed ) : ?>
             <div class="feed"><?php echo $a->feed ?></div>
             <?php endif ?>
-            <h2><a href="<?php echo $a->link ?>"><?php echo $a->title ?></a></h2>
+            <h2><a href="/link?post=<?php echo $a->id ?>&feed=<?php echo $feed_id ?>&url=<?php echo Base64::encode($a->link) ?>"><?php echo $a->title ?></a></h2>
             <h3><?php echo date('D M j, Y &\m\d\a\s\h; g:i a', $a->published) ?></h3>
             <div class='text'><?php echo $a->text ?></div>
         </div>
