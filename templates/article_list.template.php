@@ -23,6 +23,7 @@
         <?php else : ?>
         <?php foreach($articles as $a) : ?>
         <div class='article'>
+            <div class="read"><a href="/feed/<?php echo $feed_id ?>/read?<?php echo $container ?>=<?php echo $feed_id ?>&amp;page=<?php echo $page ?>&amp;ids=<?php echo $a->id ?>"><img src="/static/images/read.png"/></a></div>
             <div id="star_<?php echo $a->stared?'1':'0' ?>_<?php echo $a->id ?>" class='star'><img id="star_img_<?php echo $a->id ?>" src="/static/images/star_<?php echo $a->stared?'full':'empty' ?>.png"/></div>
             <?php if ( $a->feed ) : ?>
             <div class="feed"><?php echo $a->feed ?></div>

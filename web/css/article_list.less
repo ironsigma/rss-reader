@@ -13,6 +13,12 @@
     font-size: 18px;
 }
 
+hr {
+    height: 1px;
+    border-width: 0;
+    background-color: #ccc;
+}
+
 /* -- Articles --- */
 .article {
     border: 1px solid #ccc;
@@ -23,6 +29,7 @@
     img {
         max-width: 100%;
         height: auto;
+        margin: 10px;
     }
     .feed {
         background: #ffcc99;
@@ -58,13 +65,6 @@
         color: #777;
     }
 
-    a {
-        color: #00aa00;
-        text-decoration: none;
-        font-weight: normal;
-        font-size: 18px;
-    }
-
     .text {
         color: #666;
         font-family: 'Grandesign Neue Serif';
@@ -74,9 +74,19 @@
         .el1 { color: #033 }
         .el2 { color: #606 }
         .el3 { color: #990 }
+
+        a {
+            color: #66a;
+            text-decoration: none;
+            font-weight: normal;
+            font-size: 18px;
+            border-style: dashed;
+            border-width: 0 0 1px 0;
+            border-color: #cce;
+        }
     }
 
-    .star {
+    .star, .read {
         float: right;
         img {
             width: 32px;
