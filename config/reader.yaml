@@ -3,7 +3,6 @@ controllers:
 
 templates:
     path: /var/www/reader/templates
-    themes: { mobile: 'mobile', desktop: '' }
 
 logging:
     file: /var/log/lighttpd/reader-app.log

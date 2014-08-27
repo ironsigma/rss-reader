@@ -17,7 +17,7 @@ class FolderController {
         $template->article_count = PostDao::countUnreadInFolder($args[':id']);
 
         if ( $template->article_count === 0 ) {
-            header('Location: /'.(isset($args['mobi'])?'?mobi':''));
+            header('Location: /');
             return;
         }
 
@@ -29,7 +29,7 @@ class FolderController {
             $per_page, max(0, $per_page * ($template->page-1)));
 
         foreach ( $template->articles as $article ) {
-            $article->text = FeedController::filterHtml($article->text, isset($args['mobi']));
+            $article->text = FeedController::filterHtml($article->text);
         }
 
         $ids = array();

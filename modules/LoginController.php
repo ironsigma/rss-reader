@@ -5,10 +5,9 @@
  */
 class LoginController {
     public function handleRequest($args) {
-        $mobi = isset($args['mobi']) ? '&mobi' : '';
         if ( isset($args['logout']) ) {
             Session::logout();
-            header("Location: /login?msg=4".$mobi);
+            header("Location: /login?msg=4");
             return;
         }
 
@@ -29,15 +28,14 @@ class LoginController {
         $template->display();
     }
     public function handlePostRequest($args) {
-        $mobi = isset($args['mobi']) ? '&mobi' : '';
         // register
         if ( isset($args['register']) ) {
             if ( $_POST['password'] !== $_POST['password2'] ) {
-                header("Location: /login?msg=1".$mobi);
+                header("Location: /login?msg=1");
                 return;
             }
             if ( strlen($_POST['username']) > 30 ) {
-                header("Location: /login?msg=2".$mobi);
+                header("Location: /login?msg=2");
                 return;
             }
             $salt = $this->createSalt();
@@ -47,23 +45,23 @@ class LoginController {
                 'password' => $hash,
                 'salt' => $salt
             )));
-            header("Location: /login?msg=0".$mobi);
+            header("Location: /login?msg=0");
             return;
         }
 
         // login
         $user = UserDao::findByUsername($_POST['username']);
         if( $user === null ) {
-            header("Location: /login?msg=3".$mobi);
+            header("Location: /login?msg=3");
             return;
         }
         $hash = hash('sha256', $user->salt . $_POST['password']);
         if ( $user->password !== $hash ) {
-            header("Location: /login?msg=3".$mobi);
+            header("Location: /login?msg=3");
             return;
         }
         Session::validate($user->id);
-        header("Location: /?ok".$mobi);
+        header("Location: /?ok");
         return;
     }
     protected function createSalt() {

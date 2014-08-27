@@ -5,7 +5,6 @@
  */
 class Template {
     protected static $path = 'templates';
-    protected static $theme = '';
     protected static $suffix = '.template.php';
     protected $vars;
     protected $template_file;
@@ -13,13 +12,9 @@ class Template {
     public static function setTemplateDir($path) {
         static::$path = $path;
     }
-    public static function setTheme($theme) {
-        static::$theme = $theme;
-    }
 
     public function __construct($template_file, $vars=array()) {
-        $this->template_file = static::joinPaths(static::$path, static::$theme,
-            $template_file.static::$suffix);
+        $this->template_file = static::joinPaths(static::$path, $template_file.static::$suffix);
         if ( !file_exists($this->template_file) ) {
             throw new Exception('Template file "'. $this->template_file .'" not found');
         }

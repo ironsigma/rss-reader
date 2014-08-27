@@ -7,10 +7,6 @@ Config::read(APP_PATH.'/config/reader.yaml');
 Session::init();
 Template::setTemplateDir(Config::get('templates.path'));
 
-Template::setTheme(isset($_GET['mobi'])?
-    Config::get('templates.themes.mobile'):
-    Config::get('templates.themes.desktop'));
-
 // helpers
 function get_url() {
     $uri = urldecode($_SERVER['REQUEST_URI']);

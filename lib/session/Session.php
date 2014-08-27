@@ -28,8 +28,7 @@ class Session {
 
     public static function requireLogin() {
         if ( !self::isLoggedin() ) {
-            $mobi = isset($_GET['mobi']) ? '?mobi' : '';
-            header("Location: /login$mobi");
+            header("Location: /login");
             return false;
         }
         return $_SESSION['user_data'];

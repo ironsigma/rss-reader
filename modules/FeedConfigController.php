@@ -14,7 +14,7 @@ class FeedConfigController extends JsonController {
         $template->updates = UpdateDao::findLatestUpdates();
         $template->unreadPostCount = PostDao::countUnread();
         $template->totalPostCount = PostDao::countAll();
-        $template->page_title = "RSS Feed Configuration";
+        $template->page_title = " - Feed Configuration";
         $template->display();
     }
 

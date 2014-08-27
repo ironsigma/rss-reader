@@ -33,7 +33,7 @@ class FeedController {
             }
         }
 
-        $template->page_title = "RSS Reader - $total_count posts";
+        $template->page_title = " ($total_count)";
 
         $template->display();
     }
@@ -60,7 +60,7 @@ class FeedController {
         }
 
         if ( $template->article_count === 0 ) {
-            header('Location: /'.(isset($args['mobi'])?'?mobi':''));
+            header('Location: /');
             return;
         }
 
@@ -78,7 +78,7 @@ class FeedController {
             }
 
             foreach ( $template->articles as $article ) {
-                $article->text = self::filterHtml($article->text, isset($args['mobi']));
+                $article->text = self::filterHtml($article->text);
             }
 
             $ids = array();
@@ -101,7 +101,7 @@ class FeedController {
     public function read($args) {
         if ( isset($args['folder']) && $args['ids'] == 'all' ) {
             PostDao::markFolderRead($args['folder']);
-            header("Location: /folder/{$args['folder']}/articles?page=1".(isset($args['mobi'])?'&mobi':''));
+            header("Location: /folder/{$args['folder']}/articles?page=1");
             exit;
         }
 
@@ -123,22 +123,18 @@ class FeedController {
 
         // need ID or Feed ID otherwise everything gets marked read
         if ( $ids == null && $feed_id == null ) {
-            header("Location: /?err".(isset($args['mobi'])?'&mobi':''));
+            header("Location: /?err");
             exit;
         }
 
         PostDao::markRead($ids, $feed_id);
 
-        header("Location: /$url/$id/articles?page={$args['page']}".(isset($args['mobi'])?'&mobi':''));
+        header("Location: /$url/$id/articles?page={$args['page']}");
         exit;
     }
 
-    public static function filterHtml($html, $forMobile) {
-        if ( $forMobile ) {
-            $html = preg_replace('@<img[^>]*?>.*?</img>@siU', '', $html);
-        } else {
-            $html = str_replace('></img>', '/>', $html);
-        }
+    public static function filterHtml($html) {
+        $html = str_replace('></img>', '/>', $html);
        return preg_replace(array(
             '@<![\s\S]*?--[ \t\n\r]*>@',          // Strip multi-line comments including CDATA
             '@<script[^>]*?>.*?</script>@siU',

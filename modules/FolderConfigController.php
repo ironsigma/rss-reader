@@ -10,7 +10,7 @@ class FolderConfigController extends JsonController {
     public function handleRequest($args) {
         $template = new Template('folder_config');
         $template->folders = FolderDao::findAllWithCount();
-        $template->page_title = "RSS Folder Configuration";
+        $template->page_title = " - Folder Configuration";
         $template->display();
     }
 
