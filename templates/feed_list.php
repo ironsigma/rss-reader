@@ -1,6 +1,6 @@
 <?php $page_css = array('jquery.treeview.css', 'reader.less', 'feeds.less') ?>
 <?php $page_js = array('jquery.js', 'less.js', 'jquery.treeview.js') ?>
-<?php include 'header.layout.php' ?>
+<?php include Template::file('layout/header') ?>
 
 <?php
 function selfURL() {
@@ -58,4 +58,4 @@ $(document).ready(function(){
     }, 30 * 60000); // every 30 mins
 });
 </script>
-<?php include 'footer.layout.php' ?>
+<?php include Template::file('layout/footer') ?>

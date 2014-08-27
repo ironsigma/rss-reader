@@ -8,7 +8,7 @@ class FeedConfigController extends JsonController {
      * Display feed list
      */
     public function handleRequest($args) {
-        $template = new Template('feed_config');
+        $template = new Template('config/feed');
         $template->feeds = FeedDao::findAll();
         $template->folders = FolderDao::findAll();
         $template->updates = UpdateDao::findLatestUpdates();

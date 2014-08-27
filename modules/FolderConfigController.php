@@ -8,7 +8,7 @@ class FolderConfigController extends JsonController {
      * Display folder list
      */
     public function handleRequest($args) {
-        $template = new Template('folder_config');
+        $template = new Template('config/folder');
         $template->folders = FolderDao::findAllWithCount();
         $template->page_title = " - Folder Configuration";
         $template->display();

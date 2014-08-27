@@ -5,7 +5,7 @@
  */
 class Template {
     protected static $path = 'templates';
-    protected static $suffix = '.template.php';
+    protected static $suffix = '.php';
     protected $vars;
     protected $template_file;
 
@@ -14,10 +14,7 @@ class Template {
     }
 
     public function __construct($template_file, $vars=array()) {
-        $this->template_file = static::joinPaths(static::$path, $template_file.static::$suffix);
-        if ( !file_exists($this->template_file) ) {
-            throw new Exception('Template file "'. $this->template_file .'" not found');
-        }
+        $this->template_file = static::file($template_file);
         $this->vars = $vars;
     }
     public function render() {
@@ -36,6 +33,14 @@ class Template {
     }
     public function __get($name) {
         return $this->vars[$name];
+    }
+
+    public static function file($file) {
+        $inc_file = static::joinPaths(static::$path, $file.static::$suffix);
+        if ( !file_exists($inc_file) ) {
+            throw new Exception('Template file "'. $inc_file .'" not found');
+        }
+        return $inc_file;
     }
 
     public static function joinPaths(/*...*/) {

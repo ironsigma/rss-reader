@@ -1,5 +1,5 @@
 <?php $page_js = array('jquery.js', 'jquery.flot.js') ?>
-<?php include 'header.layout.php' ?>
+<?php include Template::file('layout/header') ?>
 
 <p><a href="/">Feed List</a></p>
 
@@ -70,4 +70,4 @@ $(document).ready(function(){
 });
 </script>
 
-<?php include 'footer.layout.php' ?>
+<?php include Template::file('layout/footer') ?>

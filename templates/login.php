@@ -1,6 +1,6 @@
 <?php $page_css = array('reader.less') ?>
 <?php $page_js = array('less.js') ?>
-<?php include 'header.layout.php' ?>
+<?php include Template::file('layout/header') ?>
 
 <div id="container">
     <div id="header">
@@ -29,4 +29,4 @@
     </div><!-- footer -->
 </div><!-- container -->
 
-<?php include 'footer.layout.php' ?>
+<?php include Template::file('layout/footer') ?>
