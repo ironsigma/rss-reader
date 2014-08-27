@@ -28,10 +28,8 @@ class FolderController {
             $args[':id'], $folder->newest_first ? 'DESC' : 'ASC',
             $per_page, max(0, $per_page * ($template->page-1)));
 
-        if ( isset($args['mobi']) ) {
-            foreach ( $template->articles as $article ) {
-                $article->text = FeedController::filterHtml($article->text);
-            }
+        foreach ( $template->articles as $article ) {
+            $article->text = FeedController::filterHtml($article->text, isset($args['mobi']));
         }
 
         $ids = array();

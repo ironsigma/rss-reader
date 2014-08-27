@@ -4,6 +4,14 @@
  * @package com\izylab\reader
  */
 class FeedController {
+    private static $log;
+
+    public function __construct() {
+        if ( self::$log === null ) {
+            self::$log = LogFacility::getLogger('FeedController.class');
+        }
+    }
+
     /*
      * Display feed list
      */
@@ -64,10 +72,8 @@ class FeedController {
                     $per_page, max(0, $per_page * ($template->page-1)));
             }
 
-            if ( isset($args['mobi']) ) {
-                foreach ( $template->articles as $article ) {
-                    $article->text = self::filterHtml($article->text);
-                }
+            foreach ( $template->articles as $article ) {
+                $article->text = self::filterHtml($article->text, isset($args['mobi']));
             }
 
             $ids = array();
@@ -122,7 +128,12 @@ class FeedController {
         exit;
     }
 
-    public static function filterHtml($html){
+    public static function filterHtml($html, $forMobile) {
+        if ( $forMobile ) {
+            $html = preg_replace('@<img[^>]*?>.*?</img>@siU', '', $html);
+        } else {
+            $html = str_replace('></img>', '/>', $html);
+        }
        return preg_replace(array(
             '@<![\s\S]*?--[ \t\n\r]*>@',          // Strip multi-line comments including CDATA
             '@<script[^>]*?>.*?</script>@siU',
@@ -134,7 +145,6 @@ class FeedController {
             '@<frame[^>]*?>.*?</frame>@siU',
             '@<frameset[^>]*?>.*?</frameset>@siU',
             '@<html[^>]*?>.*?</html>@siU',
-            '@<img[^>]*?>.*?</img>@siU',
             '@<layer[^>]*?>.*?</layer>@siU',
             '@<link[^>]*?>.*?</link>@siU',
             '@<ilayer[^>]*?>.*?</ilayer>@siU',
