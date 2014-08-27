@@ -25,6 +25,7 @@ class FeedDao {
 
     public static function findAll() {
         return Database::table(Feed::getTable())
+            ->orderBy('name')
             ->fetch('Feed');
     }
 
