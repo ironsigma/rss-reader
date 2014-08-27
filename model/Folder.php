@@ -12,4 +12,4 @@ Folder::init('folder', array(
     array('name'=>'newest_first', 'type'=>Entity::TYPE_BOOL),
     array('name'=>'per_page', 'type'=>Entity::TYPE_INT),
     array('name'=>'user_id', 'type'=>Entity::TYPE_INT),
-));
+), array('feed_count'));

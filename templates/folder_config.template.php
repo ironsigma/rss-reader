@@ -29,7 +29,7 @@
             </tr>
             <?php $row = 0; foreach ( $folders as $folder ) : $row ++ ?>
             <tr class="<?php echo $row % 2 == 0 ? 'even' : 'odd' ?>">
-                <td>&nbsp;</td>
+                <td><?php echo $folder->feed_count ?></td>
                 <td class="td-name">
                     <span id="name-<?php echo $folder->id ?>" class="name"><?php echo $folder->name ?></span>
                     <img id="delete-<?php echo $folder->id ?>" class="delete" src="/static/images/delete.png" />
