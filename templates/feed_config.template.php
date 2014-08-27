@@ -37,7 +37,7 @@
                 <td class="td-name-url">
                     <span id="name-<?php echo $feed->id ?>" class="name"><?php echo $feed->name ?></span><br/>
                     <img id="delete-<?php echo $feed->id ?>" class="delete" src="/static/images/delete.png" />
-                    <a href="<?php echo $feed->url ?>" class="url"><?php echo $feed->url ?></a>
+                    <a href="<?php echo $feed->url ?>" class="url"><?php echo TemplateUtil::abbr($feed->url) ?></a>
                 </td>
                 <td class="td-folder">
                     <select id="sel-folder-<?php echo $feed->id ?>" class="sel-folder">
