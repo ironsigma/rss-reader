@@ -28,7 +28,7 @@
             <?php if ( $a->feed ) : ?>
             <div class="feed"><?php echo $a->feed ?></div>
             <?php endif ?>
-            <h2><a href="/link?post=<?php echo $a->id ?>&feed=<?php echo $feed_id ?>&url=<?php echo Base64::encode($a->link) ?>"><?php echo $a->title ?></a></h2>
+            <h2><a target="_blank" href="/link?post=<?php echo $a->id ?>&feed=<?php echo $feed_id ?>&url=<?php echo Base64::encode($a->link) ?>"><?php echo $a->title ?></a></h2>
             <hr/>
             <span class="calendar"><?php echo date("j", $a->published) ?></span>
             <h3><?php echo date('D M j, Y &\m\d\a\s\h; g:i a', $a->published) ?></h3>
