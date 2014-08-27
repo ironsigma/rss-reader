@@ -51,6 +51,7 @@
                 <td class="td-update">
                     <select id="sel-update-<?php echo $feed->id ?>" class="sel-update">
                         <option value="10"<?php echo $feed->update_freq==10 ? ' selected="selected"' : '' ?>>10 mins</option>
+                        <option value="15"<?php echo $feed->update_freq==15 ? ' selected="selected"' : '' ?>>15 mins</option>
                         <option value="30"<?php echo $feed->update_freq==30 ? ' selected="selected"' : '' ?>>30 mins</option>
                         <option value="60"<?php echo $feed->update_freq==60 ? ' selected="selected"' : '' ?>>1 hr</option>
                         <option value="120"<?php echo $feed->update_freq==120 ? ' selected="selected"' : '' ?>>2 hrs</option>
