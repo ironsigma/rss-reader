@@ -1,7 +1,7 @@
 <?php
 /**
  * Simple ATOM and RSS feed parser.
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class FeedParser {
     private static $log;

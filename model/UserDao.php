@@ -1,7 +1,7 @@
 <?php
 /**
  * User DAO
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class UserDao {
     public static function insert(User $user) {

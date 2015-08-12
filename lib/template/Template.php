@@ -1,7 +1,7 @@
 <?php
 /**
  * Templating class
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class Template {
     protected static $path = 'templates';

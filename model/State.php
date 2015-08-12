@@ -1,7 +1,7 @@
 <?php
 /**
  * State Log entry
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class State extends Entity {
     protected static $meta_data;

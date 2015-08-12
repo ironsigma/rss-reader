@@ -1,7 +1,7 @@
 <?php
 /**
  * Feed DAO
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class FeedDao {
     public static function insert(Feed $feed) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Logger class
- * @package com\izylab\logger
+ * @package com\hawkprime\logger
  */
 class Logger {
     // level

@@ -1,7 +1,7 @@
 <?php
 /**
  * User entry
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class User extends Entity {
     protected static $meta_data;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Update Log DAO
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class UpdateDao {
     public static function insert(Update $update) {

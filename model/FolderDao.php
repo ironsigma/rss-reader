@@ -1,7 +1,7 @@
 <?php
 /**
  * Folder DAO
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class FolderDao {
     public static function findAll() {

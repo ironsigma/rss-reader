@@ -1,7 +1,7 @@
 <?php
 /**
  * Feed controller
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class FolderController {
 

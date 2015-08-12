@@ -1,7 +1,7 @@
 <?php
 /**
  * Post controller
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class PostController extends JsonController {
     public function handlePostRequest($args) {

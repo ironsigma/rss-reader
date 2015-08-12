@@ -1,7 +1,7 @@
 <?php
 /**
  * Post DAO
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class PostDao {
     public static function findUnreadArticlesInFolder($folder_id, $order, $limit, $offset) {

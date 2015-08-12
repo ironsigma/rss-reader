@@ -25,7 +25,7 @@
         </form>
     </div><!-- content -->
     <div id="footer">
-        &copy; 2013 AxiSym3.net All Right Reserved
+        &copy; 2013 HawkPrime.com All Right Reserved
     </div><!-- footer -->
 </div><!-- container -->
 

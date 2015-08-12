@@ -1,7 +1,7 @@
 <?php
 /**
  * Logging Facility.
- * @package com\izylab\logger
+ * @package com\hawkprime\logger
  */
 class LogFacility {
     // loggers and appenders

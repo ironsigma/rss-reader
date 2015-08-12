@@ -1,7 +1,7 @@
 <?php
 /**
  * Link controller
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class LinkController {
 //    private static $log;

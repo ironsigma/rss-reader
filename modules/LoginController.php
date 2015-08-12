@@ -1,7 +1,7 @@
 <?php
 /**
  * User Login controller
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class LoginController {
     public function handleRequest($args) {

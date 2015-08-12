@@ -1,9 +1,9 @@
 <?php
-define('APP_VERSION', 'com.izylab.reader-v1');
+define('APP_VERSION', 'com.hawkprime.reader-v1');
 
 /**
  * JSON Controller
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class JsonController {
     protected function getRequestMethod() {

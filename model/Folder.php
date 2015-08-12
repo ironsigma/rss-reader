@@ -1,7 +1,7 @@
 <?php
 /**
  * Folder entry
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class Folder extends Entity {
     protected static $meta_data;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Post entry
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class Post extends Entity {
     protected static $meta_data;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Update Log entry
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class Update extends Entity {
     protected static $meta_data;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Session
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class Session {
     public static function init() {

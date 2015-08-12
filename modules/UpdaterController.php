@@ -1,7 +1,7 @@
 <?php
 /**
  * Automatic update controller
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class UpdaterController {
     private static $log;

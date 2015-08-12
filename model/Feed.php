@@ -1,7 +1,7 @@
 <?php
 /**
  * Feed entry
- * @package com\izylab\reader
+ * @package com\hawkprime\reader
  */
 class Feed extends Entity {
     protected static $meta_data;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Abstract log appender.
- * @package com\izylab\logger
+ * @package com\hawkprime\logger
  */
 abstract class LogAppender {
     protected $appenderLevel;
