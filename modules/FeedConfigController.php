@@ -10,6 +10,7 @@ class FeedConfigController extends JsonController {
     public function handleRequest($args) {
         $template = new Template('config/feed');
         $template->feeds = FeedDao::findAll();
+        $template->details = UpdateDao::findUpdates();
         $template->folders = FolderDao::findAll();
         $template->updates = UpdateDao::findLatestUpdates();
         $template->unreadPostCount = PostDao::countUnread();

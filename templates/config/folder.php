@@ -96,11 +96,11 @@ $(function() {
         });
     });
     $("#add-folder").click(function() {
-        if ( $("#tr-new-folder").css('visibility') == 'visible' ) {
-            $("#tr-new-folder").css('visibility', 'collapse');
+        if ( $("#tr-new-folder").css('display') == 'table-row' ) {
+            $("#tr-new-folder").css('display', 'none');
             $("#new-folder-name").val('');
         } else {
-            $("#tr-new-folder").css('visibility', 'visible');
+            $("#tr-new-folder").css('display', 'table-row');
             $("#new-folder-name").focus();
         }
     });
@@ -116,7 +116,7 @@ $(function() {
         button.hide();
         button.after('<img id="busy-new-folder" src="/static/images/busy.gif" />');
         $("#new-folder-name").val('');
-        $("#tr-new-folder").css('visibility', 'collapse');
+        $("#tr-new-folder").css('display', 'none');
 
         $.ajax({
             url: "/folderConfig",

@@ -35,8 +35,10 @@
                     <input id="chk-active-<?php echo $feed->id ?>" class="chk-active" type="checkbox"<?php echo $feed->active ? ' checked="checked"' : '' ?> />
                 </td>
                 <td class="td-name-url">
-                    <span id="name-<?php echo $feed->id ?>" class="name"><?php echo $feed->name ?></span><br/>
+                    <span id="name-<?php echo $feed->id ?>" class="name"><?php echo $feed->name ?></span>
+                    <span class="average counts"><?php echo isset($details[$feed->id]) ? $details[$feed->id]['average'] . '%' : '' ?></span><br/>
                     <img id="delete-<?php echo $feed->id ?>" class="delete" src="/static/images/delete.png" />
+                    <img id="details-<?php echo $feed->id ?>" class="details" src="/static/images/details.png" />
                     <a href="<?php echo $feed->url ?>" class="url"><?php echo TemplateUtil::abbr($feed->url) ?></a>
                 </td>
                 <td class="td-folder">
@@ -78,6 +80,30 @@
                     </select>
                 </td>
             </tr>
+            <tr id="feed-details-<?php echo $feed->id ?>" class="feed-details">
+                <td colspan="8">
+                    <?php if (isset($details[$feed->id])) : ?>
+                    <table>
+                    <tr>
+                    <th>Date Updated</th>
+                    <th>Total</th>
+                    <th>New</th>
+                    <th>% New</th>
+                    </tr>
+                    <?php foreach ($details[$feed->id]['updates'] as $update) : ?>
+                    <tr>
+                    <td><?php echo $update['date'] ?></td>
+                    <td><?php echo $update['total'] ?></td>
+                    <td><?php echo $update['new'] ?></td>
+                    <td><?php echo $update['percent'] ?></td>
+                    </tr>
+                    <?php endforeach ?>
+                    </table>
+                    <?php else: ?>
+                        <p>No updates found</p>
+                    <?php endif ?>
+                </td>
+            </tr>
             <?php endforeach ?>
         </table>
     </div><!-- content -->
@@ -88,6 +114,15 @@
 
 <script type="text/javascript">
 $(function() {
+    $(".details").click(function() {
+        var id = "#feed-details-" + this.id.substr(8);
+        if ( $(id).css('display') == 'none' ) {
+            $(id).css('display', 'table-row');
+        } else {
+            $(id).css('display', 'none');
+        }
+    });
+
     $(".delete").click(function() {
         var button = $(this);
         button.hide();
@@ -122,12 +157,12 @@ $(function() {
         });
     });
     $("#add-rss").click(function() {
-        if ( $("#tr-new-rss").css('visibility') == 'visible' ) {
-            $("#tr-new-rss").css('visibility', 'collapse');
+        if ( $("#tr-new-rss").css('display') == 'table-row' ) {
+            $("#tr-new-rss").css('display', 'none');
             $("#new-rss-url").val('');
             $("#new-rss-name").val('');
         } else {
-            $("#tr-new-rss").css('visibility', 'visible');
+            $("#tr-new-rss").css('display', 'table-row');
             $("#new-rss-name").focus();
         }
     });
@@ -149,7 +184,7 @@ $(function() {
         button.after('<img id="busy-new-rss" src="/static/images/busy.gif" />');
         $("#new-rss-name").val('');
         $("#new-rss-url").val('');
-        $("#tr-new-rss").css('visibility', 'collapse');
+        $("#tr-new-rss").css('display', 'none');
 
         $.ajax({
             url: "/feedConfig",
