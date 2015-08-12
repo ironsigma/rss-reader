@@ -59,16 +59,6 @@ class UpdaterController {
                     if ( $post_data['published'] < $cutoff_date ) {
                         continue;
                     }
-                    if  (
-                            $feed->name == '365 Pool' && (
-                                strpos($post_data['link'], 'dougvalente') !== false ||
-                                strpos($post_data['link'], '67522976@N00') !== false
-                            )
-                        )
-                    {
-                        continue;
-                    }
-
                     $post_data['feed_id'] = $feed->id;
                     $post = new Post($post_data);
                     $count ++;
