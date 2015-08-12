@@ -36,7 +36,9 @@
                 </td>
                 <td class="td-name-url">
                     <span id="name-<?php echo $feed->id ?>" class="name"><?php echo $feed->name ?></span>
-                    <span class="average counts"><?php echo isset($details[$feed->id]) ? $details[$feed->id]['average'] . '%' : '' ?></span><br/>
+                    <span class="average counts"><?php if (isset($details[$feed->id])): ?>
+                     <?php echo $details[$feed->id]['average'] ?>% (<?php echo $details[$feed->id]['high'] ?> / <?php echo $details[$feed->id]['low'] ?>)
+                    <?php endif ?></span><br/>
                     <img id="delete-<?php echo $feed->id ?>" class="delete" src="/static/images/delete.png" />
                     <img id="details-<?php echo $feed->id ?>" class="details" src="/static/images/details.png" />
                     <a href="<?php echo $feed->url ?>" class="url"><?php echo TemplateUtil::abbr($feed->url) ?></a>
@@ -95,7 +97,7 @@
                     <td><?php echo $update['date'] ?></td>
                     <td><?php echo $update['total'] ?></td>
                     <td><?php echo $update['new'] ?></td>
-                    <td><?php echo $update['percent'] ?></td>
+                    <td class="update-level-<?php echo $update['level'] ?>"><?php echo $update['percent'] ?>%</td>
                     </tr>
                     <?php endforeach ?>
                     </table>
