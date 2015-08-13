@@ -2,6 +2,21 @@
 <?php $page_css = array('reader.less', 'article_list.less') ?>
 <?php $page_js = array('jquery.js', 'less.js') ?>
 <?php include Template::file('layout/header') ?>
+<?php
+function track_links($post_id, $feed_id, $text) {
+    return preg_replace_callback('|<\\s*a\\s*[^>]+>|',
+        function ($matches) use ($post_id, $feed_id) {
+            $link = LinkParser::parse_link($matches[0]);
+            if (isset($link['href'])) {
+                $link['href'] = "/link?post=$post_id&feed=$feed_id&url=" . Base64::encode($link['href']);
+                $link['target'] = '_blank';
+                return LinkParser::html_link($link);
+            } else {
+                return $matches[0];
+            }
+        }, $text);
+}
+?>
 
 <div id="container">
     <div id="header">
@@ -32,7 +47,7 @@
             <hr/>
             <span class="calendar"><?php echo date("j", $a->published) ?></span>
             <h3><?php echo date('D M j, Y &\m\d\a\s\h; g:i a', $a->published) ?></h3>
-            <div class='text'><?php echo $a->text ?></div>
+            <div class='text'><?php echo track_links($a->id, $feed_id, $a->text) ?></div>
         </div>
         <?php endforeach ?>
         <div id="pager">
